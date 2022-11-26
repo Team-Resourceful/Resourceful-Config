@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.common.config.fabric;
 
+import com.teamresourceful.resourcefulconfig.common.annotations.InlineCategory;
 import org.jetbrains.annotations.Nullable;
 import com.teamresourceful.resourcefulconfig.common.annotations.Category;
 import com.teamresourceful.resourcefulconfig.common.annotations.Config;
@@ -33,17 +34,25 @@ public final class FabricConfigParser {
         assertValidClass(config, annotation);
         TempConfig builtConfig = new TempConfig(translation);
 
+        for (Field entry : config.getDeclaredFields()) {
+            InlineCategory inlineCategory = entry.getAnnotation(InlineCategory.class);
+            if (inlineCategory != null) {
+                Category data = entry.getType().getAnnotation(Category.class);
+                if (data != null) {
+                    builtConfig.configs.put(data.id(), parseData(entry.getType(), Category.class, data.translation()));
+                }
+                continue;
+            }
+            ConfigEntry data = assertEntry(entry);
+            if (data == null) continue;
+            builtConfig.entries.put(data.id(), FabricResourcefulConfigEntry.create(data, entry));
+        }
+
         for (Class<?> subConfig : config.getDeclaredClasses()) {
             Category data = subConfig.getAnnotation(Category.class);
             if (data != null) {
                 builtConfig.configs.put(data.id(), parseData(subConfig, Category.class, data.translation()));
             }
-        }
-
-        for (Field entry : config.getDeclaredFields()) {
-            ConfigEntry data = assertEntry(entry);
-            if (data == null) continue;
-            builtConfig.entries.put(data.id(), FabricResourcefulConfigEntry.create(data, entry));
         }
 
         return builtConfig;

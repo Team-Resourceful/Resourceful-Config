@@ -1,11 +1,8 @@
 package com.teamresourceful.resourcefulconfig.common.config.forge;
 
+import com.teamresourceful.resourcefulconfig.common.annotations.*;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.Nullable;
-import com.teamresourceful.resourcefulconfig.common.annotations.Category;
-import com.teamresourceful.resourcefulconfig.common.annotations.Comment;
-import com.teamresourceful.resourcefulconfig.common.annotations.Config;
-import com.teamresourceful.resourcefulconfig.common.annotations.ConfigEntry;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -36,16 +33,17 @@ public final class ForgeConfigParser {
         assertValidClass(config, annotation);
         TempConfig builtConfig = new TempConfig(translation);
 
-        for (Class<?> subConfig : config.getDeclaredClasses()) {
-            Category data = subConfig.getAnnotation(Category.class);
-            if (data != null) {
-                builder.push(data.id());
-                builtConfig.configs.put(data.id(), parseData(subConfig, data.translation(), Category.class, builder));
-                builder.pop();
-            }
-        }
-
         for (Field entry : config.getDeclaredFields()) {
+            InlineCategory inlineCategory = entry.getAnnotation(InlineCategory.class);
+            if (inlineCategory != null) {
+                Category data = entry.getType().getAnnotation(Category.class);
+                if (data != null) {
+                    builder.push(data.id());
+                    builtConfig.configs.put(data.id(), parseData(entry.getType(), data.translation(), Category.class, builder));
+                    builder.pop();
+                }
+                continue;
+            }
             ConfigEntry data = assertEntry(entry);
             if (data == null) continue;
             Comment comment = entry.getAnnotation(Comment.class);
@@ -53,6 +51,15 @@ public final class ForgeConfigParser {
                 builder.comment(comment.value());
             }
             builtConfig.entries.put(data.id(), ForgeResourcefulConfigEntry.create(data, entry, builder));
+        }
+
+        for (Class<?> subConfig : config.getDeclaredClasses()) {
+            Category data = subConfig.getAnnotation(Category.class);
+            if (data != null) {
+                builder.push(data.id());
+                builtConfig.configs.put(data.id(), parseData(subConfig, data.translation(), Category.class, builder));
+                builder.pop();
+            }
         }
 
         return builtConfig;

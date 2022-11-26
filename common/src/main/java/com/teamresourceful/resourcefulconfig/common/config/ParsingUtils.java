@@ -53,7 +53,7 @@ public final class ParsingUtils {
 
     public static void assertValidClass(Class<?> config, Class<? extends Annotation> annotation) {
         if (!Modifier.isPublic(config.getModifiers())) throw new IllegalArgumentException("Config class must be public!");
-        if (!Modifier.isStatic(config.getModifiers())) throw new IllegalArgumentException("Config class must be static!");
+        if (config.getEnclosingClass() != null && !Modifier.isStatic(config.getModifiers())) throw new IllegalArgumentException("Config class must be static!");
         if (!Modifier.isFinal(config.getModifiers())) throw new IllegalArgumentException("Config class must be final!");
         if (!config.isAnnotationPresent(annotation)) throw new IllegalArgumentException("Config class must be annotated with @" + annotation.getSimpleName() + "!");
         if (config.isEnum()) throw new IllegalArgumentException("Config class cannot be an enum!");

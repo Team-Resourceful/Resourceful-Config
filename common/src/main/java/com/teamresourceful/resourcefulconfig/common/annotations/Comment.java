@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface Comment {
 
     String value();
+
+    String translation() default "";
 }

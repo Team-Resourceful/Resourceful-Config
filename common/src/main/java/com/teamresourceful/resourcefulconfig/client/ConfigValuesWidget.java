@@ -80,7 +80,7 @@ public class ConfigValuesWidget extends ContainerObjectSelectionList<ConfigValue
             this.reset.active = this.children.active;
 
             var comment = entry.field().getAnnotation(Comment.class);
-            this.tooltip = comment == null ? CommonComponents.EMPTY : Component.literal(comment.value());
+            this.tooltip = comment == null ? CommonComponents.EMPTY : comment.translation().isEmpty() ? Component.literal(comment.value()) : Component.translatable(comment.translation());
         }
 
         public void render(@NotNull PoseStack stack, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {

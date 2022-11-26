@@ -3,6 +3,7 @@ package com.teamresourceful.resourcefulconfig.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -50,6 +52,9 @@ public class ConfigValuesWidget extends ContainerObjectSelectionList<ConfigValue
             if (value.isMouseOver(d, e) && !value.children.isMouseOver(d, e) && !value.reset.isMouseOver(d, e)) {
                 return Optional.of(value);
             }
+            if (value.reset.isMouseOver(d, e)) {
+                return Optional.of(() -> List.of(Language.getInstance().getVisualOrder(Component.translatable("controls.reset"))));
+            }
         }
         return Optional.empty();
     }
@@ -73,7 +78,7 @@ public class ConfigValuesWidget extends ContainerObjectSelectionList<ConfigValue
             var annotation = entry.field().getAnnotation(ConfigEntry.class);
             this.label = annotation == null ? CommonComponents.EMPTY : Component.translatable(annotation.translation());
             this.children = Options.create(right - 110, 0, 100, entry);
-            this.reset = new Button(right - 140, 0, 20, 20, Component.literal("R"), (button) -> {
+            this.reset = new Button(right - 140, 0, 20, 20, Component.literal("\u274C").withStyle(ChatFormatting.BOLD), (button) -> {
                 this.entry.reset();
                 this.children = Options.create(right - 110, 0, 100, entry);
             });

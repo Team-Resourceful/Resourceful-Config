@@ -1,0 +1,16 @@
+{
+    "schemaVersion": 1,
+    "id": "resourcefulconfig",
+    "version": "${version}",
+    "name": "Resourcefulconfig",
+    "description": "",
+    "authors": [],
+    "contact": {},
+    "license": "MIT",
+    "icon": "icon.png",
+    "environment": "*",
+    "depends": {
+        "fabricloader": ">=0.14.10",
+        "minecraft": ">=1.19.2"
+    }
+}

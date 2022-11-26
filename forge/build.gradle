@@ -1,0 +1,101 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier null
+}
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+def ENV = System.getenv()
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact remapJar
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+
+            artifactId = "$archives_base_name-forge-$minecraft_version"
+
+            pom {
+                name = 'Resourceful Config'
+                description = 'Crossplatform config library for Team Resourceful mods and more.'
+                url = 'https://github.com/Team-Resourceful/Resouceful-Config'
+
+                scm {
+                    connection = 'git:https://github.com/Team-Resourceful/Resouceful-Config.git'
+                    developerConnection = 'git:https://github.com/Team-Resourceful/Resouceful-Config.git'
+                    url = 'https://github.com/Team-Resourceful/Resouceful-Config'
+                }
+
+                licenses {
+                    license {
+                        name = 'MIT'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "https://maven.resourcefulbees.com/repository/maven-releases/"
+            credentials {
+                username ENV.MAVEN_USER
+                password ENV.MAVEN_PASS
+            }
+        }
+    }
+}

@@ -36,7 +36,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.define(id, value);
+                        yield builder.defineInRange(id, value, Byte.MIN_VALUE, Byte.MAX_VALUE);
                     }
                 }
             }
@@ -52,7 +52,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.define(id, value);
+                        yield builder.defineInRange(id, value, Short.MIN_VALUE, Short.MAX_VALUE);
                     }
                 }
             }
@@ -68,7 +68,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.define(id, value);
+                        yield builder.defineInRange(id, value, Integer.MIN_VALUE, Integer.MAX_VALUE);
                     }
                 }
             }
@@ -84,7 +84,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.define(id, value);
+                        yield builder.defineInRange(id, value, Long.MIN_VALUE, Long.MAX_VALUE);
                     }
                 }
             }
@@ -100,7 +100,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.define(id, value);
+                        yield builder.defineInRange(id, value, Float.MIN_VALUE, Float.MAX_VALUE);
                     }
                 }
             }
@@ -116,7 +116,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.define(id, value);
+                        yield builder.defineInRange(id, value, Double.MIN_VALUE, Double.MAX_VALUE);
                     }
                 }
             }

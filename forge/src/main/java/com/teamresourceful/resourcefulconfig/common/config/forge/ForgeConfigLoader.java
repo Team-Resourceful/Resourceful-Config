@@ -2,6 +2,10 @@ package com.teamresourceful.resourcefulconfig.common.config.forge;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import com.teamresourceful.resourcefulconfig.common.config.ConfigLoader;
+import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
+import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -9,10 +13,6 @@ import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import com.teamresourceful.resourcefulconfig.common.config.ConfigLoader;
-import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,18 +82,21 @@ public final class ForgeConfigLoader implements ConfigLoader {
                 case ENUM -> data.setEnum(ParsingUtils.getEnum(data.field().getType(), string));
                 default -> false;
             };
-        } else if (o instanceof Short shortValue) {
-            return data.setShort(shortValue);
-        } else if (o instanceof Byte byteValue) {
-            return data.setByte(byteValue);
-        } else if (o instanceof Float floatValue) {
-            return data.setFloat(floatValue);
-        } else if (o instanceof Integer integerValue) {
-            return data.setInt(integerValue);
-        } else if (o instanceof Long longValue) {
-            return data.setLong(longValue);
-        } else if (o instanceof Double doubleValue) {
-            return data.setDouble(doubleValue);
+        } else if (o instanceof Number number) {
+            try {
+                return switch (data.type()) {
+                    case BYTE -> data.setByte(number.byteValue());
+                    case SHORT -> data.setShort(number.shortValue());
+                    case INTEGER -> data.setInt(number.intValue());
+                    case LONG -> data.setLong(number.longValue());
+
+                    case FLOAT -> data.setFloat(number.floatValue());
+                    case DOUBLE -> data.setDouble(number.doubleValue());
+                    default -> false;
+                };
+            } catch (final ArithmeticException e) {
+                return false;
+            }
         } else if (o instanceof Enum<?> enumValue) {
             return data.setEnum(enumValue);
         } else if (o instanceof Boolean booleanValue) {

@@ -73,7 +73,8 @@ public final class Options {
         if (range == null) {
             return new NumberInputBox(Minecraft.getInstance().font, x, y, width, height, ParsingUtils.getField(entry.field()).toString(), false, setter, null);
         }
-        return new LongSlider(x, y, width, height, Component.literal(entry.field().getName()), (int) ParsingUtils.getField(entry.field()), range.firstLong(), range.secondLong(), setter);
+        Number number = (Number) ParsingUtils.getField(entry.field());
+        return new LongSlider(x, y, width, height, Component.literal(entry.field().getName()), number.longValue(), range.firstLong(), range.secondLong(), setter);
     }
 
     public static AbstractWidget createFloat(int x, int y, int width, int height, ResourcefulConfigEntry entry) {

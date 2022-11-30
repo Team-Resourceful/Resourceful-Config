@@ -1,5 +1,7 @@
 package com.teamresourceful.resourcefulconfig.common.config.forge;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfigSpec;
 import com.teamresourceful.resourcefulconfig.common.annotations.*;
 import com.teamresourceful.resourcefulconfig.common.config.EntryType;
@@ -36,7 +38,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.defineInRange(id, value, Byte.MIN_VALUE, Byte.MAX_VALUE);
+                        yield defineNumber(id, value, Byte.class, builder);
                     }
                 }
             }
@@ -52,7 +54,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.defineInRange(id, value, Short.MIN_VALUE, Short.MAX_VALUE);
+                        yield defineNumber(id, value, Short.class, builder);
                     }
                 }
             }
@@ -68,7 +70,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.defineInRange(id, value, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                        yield defineNumber(id, value, Integer.class, builder);
                     }
                 }
             }
@@ -84,7 +86,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.defineInRange(id, value, Long.MIN_VALUE, Long.MAX_VALUE);
+                        yield defineNumber(id, value, Long.class, builder);
                     }
                 }
             }
@@ -100,7 +102,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.defineInRange(id, value, Float.MIN_VALUE, Float.MAX_VALUE);
+                        yield defineNumber(id, value, Float.class, builder);
                     }
                 }
             }
@@ -116,7 +118,7 @@ public final class ForgeConfigUtils {
                         }
                         yield builder.defineInRange(id, value, range.min(), range.max());
                     } else {
-                        yield builder.defineInRange(id, value, Double.MIN_VALUE, Double.MAX_VALUE);
+                        yield defineNumber(id, value, Double.class, builder);
                     }
                 }
             }
@@ -136,5 +138,9 @@ public final class ForgeConfigUtils {
                 }
             }
         };
+    }
+
+    public static ForgeConfigSpec.ConfigValue<?> defineNumber(String id, Number defaultValue, Class<? extends Number> clazz, ForgeConfigSpec.Builder builder) {
+        return builder.define(Lists.newArrayList(Splitter.on(".").split(id)), () -> defaultValue, o -> o instanceof Number, clazz);
     }
 }

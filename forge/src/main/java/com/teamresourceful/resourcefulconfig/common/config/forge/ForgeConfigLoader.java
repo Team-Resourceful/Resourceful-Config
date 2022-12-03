@@ -2,18 +2,24 @@ package com.teamresourceful.resourcefulconfig.common.config.forge;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
 import com.teamresourceful.resourcefulconfig.common.config.ConfigLoader;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.IConfigEvent;
 import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,24 +27,42 @@ import java.util.Map;
 public final class ForgeConfigLoader implements ConfigLoader {
 
     private final Map<ForgeConfigSpec, ForgeResourcefulConfig> configCache = new HashMap<>();
+    private final boolean forceLoad;
 
-    public ForgeConfigLoader() {
+    public ForgeConfigLoader(boolean forceLoad) {
+        this.forceLoad = forceLoad;
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::onConfigLoad);
         bus.addListener(this::onConfigReloaded);
     }
 
+    @Override
     public ResourcefulConfig registerConfig(Class<?> configClass) {
         try {
+            ModLoadingContext context = ModLoadingContext.get();
             ForgeResourcefulConfig config = ForgeConfigParser.parseConfig(configClass);
             configCache.put(config.getSpec(), config);
-            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, config.getSpec(), config.getFileName() + ".toml");
+            ModContainer container = context.getActiveContainer();
+            ModConfig modConfig = new ModConfig(ModConfig.Type.COMMON, config.getSpec(), container, config.getFileName() + ".toml");
+            container.addConfig(modConfig);
+            if (this.forceLoad) forceLoad(modConfig, container);
             return config;
         }catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to create config for " + configClass.getName());
         }
         return null;
+    }
+
+    private static void forceLoad(ModConfig config, ModContainer container) {
+        try {
+            Path path = FMLPaths.CONFIGDIR.get().resolve(config.getFileName());
+            if (!path.toFile().exists()) return;
+            CommentedFileConfig data = CommentedFileConfig.builder(path).sync().preserveInsertionOrder().autosave().writingMode(WritingMode.REPLACE).build();
+            data.load();
+            config.getSpec().acceptConfig(data);
+            container.dispatchConfigEvent(IConfigEvent.loading(config));
+        }catch (Exception ignored) {}
     }
 
     public void onConfigReloaded(ModConfigEvent.Reloading event) {

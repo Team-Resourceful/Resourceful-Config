@@ -14,7 +14,14 @@ public class Configurator {
     private final ConfigLoader creator;
 
     public Configurator() {
-        this.creator = getCreator();
+        this(false);
+    }
+
+    /**
+     * @param forceLoad if true, the config will be loaded on startup on forge otherwise it will be loaded when forge loads the config.
+     */
+    public Configurator(boolean forceLoad) {
+        this.creator = getCreator(forceLoad);
     }
 
     public void registerConfig(Class<?> configClass) {
@@ -69,7 +76,7 @@ public class Configurator {
     }
 
     @ExpectPlatform
-    public static ConfigLoader getCreator() {
+    public static ConfigLoader getCreator(boolean forceLoad) {
         throw new NotImplementedException();
     }
 }

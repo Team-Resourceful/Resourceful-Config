@@ -91,7 +91,8 @@ public final class Options {
         if (range == null) {
             return new NumberInputBox(Minecraft.getInstance().font, x, y, width, height, ParsingUtils.getField(entry.field()).toString(), true, null, setter);
         }
-        return new DoubleSlider(x, y, width, height, Component.literal(entry.field().getName()), (double) ParsingUtils.getField(entry.field()), range.firstDouble(), range.secondDouble(), setter);
+        Number number = (Number) ParsingUtils.getField(entry.field());
+        return new DoubleSlider(x, y, width, height, Component.literal(entry.field().getName()), number.doubleValue(), range.firstDouble(), range.secondDouble(), setter);
     }
 
     private static DoubleDoublePair getFloatingMinMax(ResourcefulConfigEntry entry) {

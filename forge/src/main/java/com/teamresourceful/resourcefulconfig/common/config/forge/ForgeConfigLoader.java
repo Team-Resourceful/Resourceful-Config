@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.common.config.forge;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
+import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
@@ -43,7 +44,7 @@ public final class ForgeConfigLoader implements ConfigLoader {
             ForgeResourcefulConfig config = ForgeConfigParser.parseConfig(configClass);
             configCache.put(config.getSpec(), config);
             ModContainer container = context.getActiveContainer();
-            ModConfig modConfig = new ModConfig(ModConfig.Type.COMMON, config.getSpec(), container, config.getFileName() + ".toml");
+            ResourcefulModConfig modConfig = new ResourcefulModConfig(ModConfig.Type.COMMON, config.getSpec(), container, config.getFileName() + ".toml");
             container.addConfig(modConfig);
             if (this.forceLoad) forceLoad(modConfig, container);
             return config;
@@ -54,13 +55,13 @@ public final class ForgeConfigLoader implements ConfigLoader {
         return null;
     }
 
-    private static void forceLoad(ModConfig config, ModContainer container) {
+    private static void forceLoad(ResourcefulModConfig config, ModContainer container) {
         try {
             Path path = FMLPaths.CONFIGDIR.get().resolve(config.getFileName());
             if (!path.toFile().exists()) return;
             CommentedFileConfig data = CommentedFileConfig.builder(path).sync().preserveInsertionOrder().autosave().writingMode(WritingMode.REPLACE).build();
             data.load();
-            config.getSpec().acceptConfig(data);
+            config.setTempConfig(data);
             container.dispatchConfigEvent(IConfigEvent.loading(config));
         }catch (Exception ignored) {}
     }
@@ -127,5 +128,38 @@ public final class ForgeConfigLoader implements ConfigLoader {
             return data.setBoolean(booleanValue);
         }
         return true;
+    }
+
+    private static final class ResourcefulModConfig extends ModConfig {
+
+        private CommentedConfig tempConfig;
+
+        public ResourcefulModConfig(Type type, IConfigSpec<?> spec, ModContainer container, String fileName) {
+            super(type, spec, container, fileName);
+        }
+
+        /**
+         * Sets the temporary config for this mod config. Should only be used by the force config loader.
+         */
+        public void setTempConfig(final CommentedConfig configData) {
+            this.tempConfig = configData;
+            this.getSpec().acceptConfig(configData);
+        }
+
+        @Override
+        public CommentedConfig getConfigData() {
+            final CommentedConfig config = super.getConfigData();
+            return config == null ? tempConfig : config;
+        }
+
+        @Override
+        public void save() {
+            ((CommentedFileConfig)getConfigData()).save();
+        }
+
+        @Override
+        public Path getFullPath() {
+            return ((CommentedFileConfig)getConfigData()).getNioPath();
+        }
     }
 }

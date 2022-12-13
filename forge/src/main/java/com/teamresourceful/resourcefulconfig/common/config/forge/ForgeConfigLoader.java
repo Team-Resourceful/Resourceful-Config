@@ -2,9 +2,11 @@ package com.teamresourceful.resourcefulconfig.common.config.forge;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.ConfigFormat;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import com.mojang.logging.LogUtils;
 import com.teamresourceful.resourcefulconfig.common.config.ConfigLoader;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
@@ -18,14 +20,20 @@ import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class ForgeConfigLoader implements ConfigLoader {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private final Map<ForgeConfigSpec, ForgeResourcefulConfig> configCache = new HashMap<>();
     private final boolean forceLoad;
@@ -46,11 +54,13 @@ public final class ForgeConfigLoader implements ConfigLoader {
             ModContainer container = context.getActiveContainer();
             ResourcefulModConfig modConfig = new ResourcefulModConfig(ModConfig.Type.COMMON, config.getSpec(), container, config.getFileName() + ".toml");
             container.addConfig(modConfig);
-            if (this.forceLoad) forceLoad(modConfig, container);
+            if (this.forceLoad) {
+                forceLoad(modConfig, container);
+            }
             return config;
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Failed to create config for " + configClass.getName());
+            LOGGER.error("Failed to register config for class: {}", configClass.getName());
         }
         return null;
     }
@@ -58,12 +68,30 @@ public final class ForgeConfigLoader implements ConfigLoader {
     private static void forceLoad(ResourcefulModConfig config, ModContainer container) {
         try {
             Path path = FMLPaths.CONFIGDIR.get().resolve(config.getFileName());
-            if (!path.toFile().exists()) return;
-            CommentedFileConfig data = CommentedFileConfig.builder(path).sync().preserveInsertionOrder().autosave().writingMode(WritingMode.REPLACE).build();
+            CommentedFileConfig data = CommentedFileConfig.builder(path)
+                .sync()
+                .preserveInsertionOrder()
+                .autosave()
+                .onFileNotFound((file, format) -> setupConfigFile(config, file, format))
+                .writingMode(WritingMode.REPLACE)
+                .build();
             data.load();
             config.setTempConfig(data);
             container.dispatchConfigEvent(IConfigEvent.loading(config));
         }catch (Exception ignored) {}
+    }
+
+    private static boolean setupConfigFile(final ModConfig modConfig, final Path file, final ConfigFormat<?> conf) throws IOException {
+        Files.createDirectories(file.getParent());
+        Path p = FMLPaths.GAMEDIR.get().resolve(FMLConfig.defaultConfigPath()).resolve(modConfig.getFileName());
+        if (Files.exists(p)) {
+            LOGGER.info("Loading default config file from path {}", p);
+            Files.copy(p, file);
+        } else {
+            Files.createFile(file);
+            conf.initEmptyFile(file);
+        }
+        return true;
     }
 
     public void onConfigReloaded(ModConfigEvent.Reloading event) {
@@ -91,7 +119,7 @@ public final class ForgeConfigLoader implements ConfigLoader {
             } else {
                 config.getEntry(id).ifPresent(entry -> {
                     if (!setValue(value, entry)) {
-                        System.out.println("Failed to set value for " + id);
+                        LOGGER.error("Failed to set value for entry: {}", id);
                     }
                 });
             }

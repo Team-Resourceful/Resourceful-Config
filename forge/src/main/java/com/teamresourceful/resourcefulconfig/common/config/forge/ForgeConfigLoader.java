@@ -27,15 +27,15 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class ForgeConfigLoader implements ConfigLoader {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final Map<ForgeConfigSpec, ForgeResourcefulConfig> configCache = new HashMap<>();
+    private final Map<ForgeConfigSpec, ForgeResourcefulConfig> configCache = new ConcurrentHashMap<>();
     private final boolean forceLoad;
 
     public ForgeConfigLoader(boolean forceLoad) {
@@ -113,17 +113,19 @@ public final class ForgeConfigLoader implements ConfigLoader {
     }
 
     private void loadConfig(ResourcefulConfig config, UnmodifiableConfig spec) {
-        spec.valueMap().forEach((id, value) -> {
-            if (value instanceof AbstractConfig subConfig) {
-                config.getSubConfig(id).ifPresent(cat -> loadConfig(cat, subConfig));
-            } else {
-                config.getEntry(id).ifPresent(entry -> {
-                    if (!setValue(value, entry)) {
-                        LOGGER.error("Failed to set value for entry: {}", id);
-                    }
-                });
-            }
-        });
+        synchronized (spec.valueMap()) {
+            spec.valueMap().forEach((id, value) -> {
+                if (value instanceof AbstractConfig subConfig) {
+                    config.getSubConfig(id).ifPresent(cat -> loadConfig(cat, subConfig));
+                } else {
+                    config.getEntry(id).ifPresent(entry -> {
+                        if (!setValue(value, entry)) {
+                            LOGGER.error("Failed to set value for entry: {}", id);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private boolean setValue(Object o, ResourcefulConfigEntry data) {

@@ -113,8 +113,10 @@ public final class ForgeConfigLoader implements ConfigLoader {
     }
 
     private void loadConfig(ResourcefulConfig config, UnmodifiableConfig spec) {
-        synchronized (spec.valueMap()) {
-            spec.valueMap().forEach((id, value) -> {
+        final Map<String, Object> values = spec.valueMap();
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
+        synchronized (values) {
+            values.forEach((id, value) -> {
                 if (value instanceof AbstractConfig subConfig) {
                     config.getSubConfig(id).ifPresent(cat -> loadConfig(cat, subConfig));
                 } else {

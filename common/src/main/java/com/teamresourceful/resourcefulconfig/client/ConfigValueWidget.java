@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.teamresourceful.resourcefulconfig.client.options.Options;
 import com.teamresourceful.resourcefulconfig.common.annotations.Comment;
@@ -34,10 +35,12 @@ public class ConfigValueWidget extends ValueWidget {
         var annotation = entry.field().getAnnotation(ConfigEntry.class);
         this.label = annotation == null ? CommonComponents.EMPTY : Component.translatable(annotation.translation());
         this.children = Options.create(right - 110, 0, 100, entry);
-        this.reset = new Button(right - 140, 0, 20, 20, Component.literal("\u274C").withStyle(ChatFormatting.BOLD), (button) -> {
-            entry.reset();
-            this.children = Options.create(right - 110, 0, 100, entry);
-        });
+        this.reset = Button.builder(Component.literal("\u274C").withStyle(ChatFormatting.BOLD), (button) -> {
+                    entry.reset();
+                    this.children = Options.create(right - 110, 0, 100, entry);
+                })
+                .bounds(right - 140, 0, 20, 20)
+                .build();
         this.reset.active = this.children.active;
 
         var comment = entry.field().getAnnotation(Comment.class);
@@ -49,19 +52,19 @@ public class ConfigValueWidget extends ValueWidget {
         Font font = Minecraft.getInstance().font;
         font.draw(stack, this.label, left + 10, (float) (j + 5), 16777215);
 
-        this.reset.y = j;
+        this.reset.setY(j);
         this.reset.render(stack, n, o, f);
 
-        this.children.y = j;
+        this.children.setY(j);
         this.children.render(stack, n, o, f);
     }
 
     public List<? extends GuiEventListener> children() {
-        return List.of(this.children, this.reset);
+        return Lists.newArrayList(this.children, this.reset);
     }
 
     public List<? extends NarratableEntry> narratables() {
-        return List.of(this.children, this.reset);
+        return Lists.newArrayList(this.children, this.reset);
     }
 
     public AbstractWidget getChildren() {

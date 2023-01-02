@@ -33,6 +33,7 @@ public class SeparatorValueWidget extends ValueWidget {
         Font font = Minecraft.getInstance().font;
         font.draw(stack, this.text, left + 10, (float) (j + 3), 5592405);
         drawLine(this.left + 5, this.right - 5, (j + 5 + font.lineHeight), (j + 5 + font.lineHeight), 5592405);
+        super.render(stack, i, j, k, l, m, n, o, bl, f);
     }
 
     public static void drawLine(int x1, int x2, int y1, int y2, int colour) {

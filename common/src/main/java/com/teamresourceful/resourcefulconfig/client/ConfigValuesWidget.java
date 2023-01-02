@@ -4,9 +4,9 @@ import com.teamresourceful.resourcefulconfig.common.annotations.ConfigSeparator;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +29,25 @@ public class ConfigValuesWidget extends ContainerObjectSelectionList<ValueWidget
         }
     }
 
+    @Override
     public int getRowWidth() {
         return this.width;
     }
 
+    @Override
     protected int getScrollbarPosition() {
         return this.x1 - 6;
+    }
+
+    @Override
+    public boolean mouseClicked(double d, double e, int i) {
+        for (ValueWidget child : children()) {
+            if (child instanceof ConfigValueWidget value && value.getChildren().isFocused() && !value.getChildren().isMouseOver(d, e)) {
+                value.getChildren().changeFocus(true);
+                value.setFocused(null);
+            }
+        }
+        return super.mouseClicked(d, e, i);
     }
 
     public Optional<TooltipAccessor> getMouseOver(double d, double e) {

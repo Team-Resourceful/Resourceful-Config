@@ -19,7 +19,7 @@ public final class Options {
 
     public static AbstractWidget create(int x, int y, int width, ResourcefulConfigEntry entry) {
         if (entry.field().getType().isArray()) {
-            Button button = new Button(x, y, width, 20, CommonComponents.ELLIPSIS, (buttonWidget) -> {});
+            Button button = Button.builder(CommonComponents.ELLIPSIS, widget -> {}).bounds(x, y, width, 20).build();
             button.active = false;
             return button;
         }

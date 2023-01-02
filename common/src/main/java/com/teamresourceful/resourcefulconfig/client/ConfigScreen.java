@@ -1,18 +1,17 @@
 package com.teamresourceful.resourcefulconfig.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.teamresourceful.resourcefulconfig.common.config.Configurator;
+import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import dev.architectury.injectables.targets.ArchitecturyTarget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.teamresourceful.resourcefulconfig.common.config.Configurator;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 
 import java.util.ArrayList;
 
@@ -51,19 +50,23 @@ public class ConfigScreen extends Screen {
         this.categories = new CategoriesWidget(this.minecraft, (int) (this.width * 0.35), this.height, 32, this.height - 32, 25);
         this.categories.addSmall(this, new ArrayList<>(this.config.getSubConfigs().values()));
 
-        this.addWidget(this.list);
-        this.addWidget(this.categories);
+        this.addRenderableWidget(this.list);
+        this.addRenderableWidget(this.categories);
         this.createFooter();
     }
 
     protected void createFooter() {
-        this.addRenderableWidget(new Button(20, this.height - 27, (int) (this.width * 0.35) - 40, 20, this.parent == null ? CommonComponents.GUI_DONE : CommonComponents.GUI_BACK, (button) -> {
-            if (this.parent == null) {
-                this.onClose();
-            } else {
-                this.minecraft.setScreen(this.parent);
-            }
-        }));
+        this.addRenderableWidget(
+            Button.builder(this.parent == null ? CommonComponents.GUI_DONE : CommonComponents.GUI_BACK, (ignored) -> {
+                if (this.parent == null) {
+                    this.onClose();
+                } else {
+                    this.minecraft.setScreen(this.parent);
+                }
+            })
+            .bounds(20, this.height - 27, (int) (this.width * 0.35) - 40, 20)
+            .build()
+        );
     }
 
     public void render(@NotNull PoseStack stack, int i, int j, float f) {

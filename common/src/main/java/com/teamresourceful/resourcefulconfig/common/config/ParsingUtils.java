@@ -48,6 +48,7 @@ public final class ParsingUtils {
             type = type.componentType();
         }
         if (!data.type().test(type)) throw new IllegalArgumentException("Entry " + field.getName() + " is not of type " + data.type().name() + "!");
+        if (data.id().contains(".")) throw new IllegalArgumentException("Entry " + field.getName() + " has an invalid id! Ids must not contain '.'");
         return data;
     }
 

@@ -113,20 +113,21 @@ public final class ForgeConfigLoader implements ConfigLoader {
     }
 
     private void loadConfig(ResourcefulConfig config, UnmodifiableConfig spec) {
-        final Map<String, Object> values = spec.valueMap();
-        //noinspection SynchronizationOnLocalVariableOrMethodParameter
-        synchronized (values) {
-            values.forEach((id, value) -> {
-                if (value instanceof AbstractConfig subConfig) {
-                    config.getSubConfig(id).ifPresent(cat -> loadConfig(cat, subConfig));
-                } else {
-                    config.getEntry(id).ifPresent(entry -> {
-                        if (!setValue(value, entry)) {
-                            LOGGER.error("Failed to set value for entry: {}", id);
-                        }
-                    });
-                }
-            });
+        //The reason to do it this way is that none of the calls in this throw concurrent modifications exceptions.
+        final Map<String, Object> configValues = spec.valueMap();
+        //This operation does not throw concurrent modifications and copies the current keys to a primitive array.
+        final String[] keys = spec.valueMap().keySet().toArray(new String[0]);
+        for (String key : keys) {
+            final Object value = configValues.get(key);
+            if (value instanceof AbstractConfig subConfig) {
+                config.getSubConfig(key).ifPresent(cat -> loadConfig(cat, subConfig));
+            } else {
+                config.getEntry(key).ifPresent(configEntry -> {
+                    if (!setValue(value, configEntry)) {
+                        LOGGER.error("Failed to set value for entry: {}", value);
+                    }
+                });
+            }
         }
     }
 

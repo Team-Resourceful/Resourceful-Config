@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.common.config;
 
 import com.teamresourceful.resourcefulconfig.common.annotations.*;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 public interface ResourcefulConfigEntry {
@@ -19,11 +20,20 @@ public interface ResourcefulConfigEntry {
                     return false;
                 }
             }
-            field().set(null, array);
+            field().set(null, castArray(array, field().getType().componentType()));
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T[] castArray(Object[] array, Class<T> clazz) {
+        T[] newArray = (T[]) Array.newInstance(clazz, array.length);
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = clazz.cast(array[i]);
+        }
+        return newArray;
     }
 
     default boolean setByte(byte value) {

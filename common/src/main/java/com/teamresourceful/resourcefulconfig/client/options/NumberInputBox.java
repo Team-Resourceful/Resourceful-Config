@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class NumberInputBox extends EditBox {
 
     private static final Pattern INTEGER_PATTERN = Pattern.compile("-?\\d*");
-    private static final Pattern FLOAT_PATTERN = Pattern.compile("-?\\d*(.\\d+)?");
+    private static final Pattern FLOAT_PATTERN = Pattern.compile("-?\\d*(.\\d*)?");
 
     public NumberInputBox(Font font, int x, int y, int width, int height, String value, boolean floating, LongConsumer longConsumer, DoubleConsumer doubleConsumer) {
         super(font, x, y, width, height, CommonComponents.EMPTY);

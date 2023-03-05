@@ -13,7 +13,7 @@ public record WebServerConfig(boolean enabled, int port, Optional<String> config
 
     public static final Codec<WebServerConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.BOOL.fieldOf("enabled").forGetter(WebServerConfig::enabled),
-            Codec.intRange(0, 2^16 - 1).fieldOf("port").orElse(7903).forGetter(WebServerConfig::port),
+            Codec.intRange(0, 65535).fieldOf("port").orElse(7903).forGetter(WebServerConfig::port),
             Codec.STRING.optionalFieldOf("config_site").forGetter(WebServerConfig::configSite),
             Validators.CODEC.fieldOf("validator").forGetter(WebServerConfig::validator)
     ).apply(instance, WebServerConfig::new));

@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.common.config;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class Configurator {
         if (config != null) {
             configs.put(config.getFileName(), config);
             configClasses.put(configClass, config.getFileName());
+            Configurations.INSTANCE.addConfig(config);
         }
     }
 
@@ -75,6 +77,7 @@ public class Configurator {
         return null;
     }
 
+    @ApiStatus.Internal
     @ExpectPlatform
     public static ConfigLoader getCreator(boolean forceLoad) {
         throw new NotImplementedException();

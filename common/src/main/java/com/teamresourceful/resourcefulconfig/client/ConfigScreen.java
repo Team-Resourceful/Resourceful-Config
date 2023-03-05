@@ -20,14 +20,22 @@ public class ConfigScreen extends Screen {
     private final String fileName;
 
     @Nullable
+    private final Screen lastScreen;
+
+    @Nullable
     private final ConfigScreen parent;
 
     protected final ResourcefulConfig config;
     private ConfigValuesWidget list;
     private CategoriesWidget categories;
 
-    public ConfigScreen(@Nullable ConfigScreen screen, ResourcefulConfig config) {
+    public ConfigScreen(@Nullable ConfigScreen configScreen, ResourcefulConfig config) {
+        this(configScreen, configScreen, config);
+    }
+
+    public ConfigScreen(@Nullable Screen lastScreen, @Nullable ConfigScreen screen, ResourcefulConfig config) {
         super(CommonComponents.EMPTY);
+        this.lastScreen = lastScreen;
         this.parent = screen;
         this.config = config;
         this.fileName = getFileName();
@@ -108,6 +116,10 @@ public class ConfigScreen extends Screen {
     @Override
     public void onClose() {
         saveConfig();
-        super.onClose();
+        if (this.lastScreen != null) {
+            this.minecraft.setScreen(this.lastScreen);
+        } else {
+            super.onClose();
+        }
     }
 }

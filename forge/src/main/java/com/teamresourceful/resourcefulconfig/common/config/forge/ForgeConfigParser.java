@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.common.config.forge;
 
 import com.teamresourceful.resourcefulconfig.common.annotations.*;
+import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,12 +27,12 @@ public final class ForgeConfigParser {
     private static ForgeResourcefulConfig createConfig(TempConfig config, @Nullable String file, ForgeConfigSpec spec) {
         Map<String, ForgeResourcefulConfig> subConfigs = new LinkedHashMap<>();
         config.configs.forEach((key, value) -> subConfigs.put(key, createConfig(value, null, null)));
-        return new ForgeResourcefulConfig(new LinkedHashMap<>(config.entries), subConfigs, file, config.translation, spec);
+        return new ForgeResourcefulConfig(config.web(), new LinkedHashMap<>(config.entries()), subConfigs, file, config.translation(), spec);
     }
 
     private static TempConfig parseData(Class<?> config, String translation, Class<? extends Annotation> annotation, ForgeConfigSpec.Builder builder) {
         assertValidClass(config, annotation);
-        TempConfig builtConfig = new TempConfig(translation);
+        TempConfig builtConfig = new TempConfig(config, translation);
 
         for (Field entry : config.getDeclaredFields()) {
             InlineCategory inlineCategory = entry.getAnnotation(InlineCategory.class);
@@ -65,10 +66,10 @@ public final class ForgeConfigParser {
         return builtConfig;
     }
 
-    private record TempConfig(Map<String, ForgeResourcefulConfigEntry> entries, Map<String, TempConfig> configs, String translation) {
+    private record TempConfig(ResourcefulWebConfig web, Map<String, ForgeResourcefulConfigEntry> entries, Map<String, TempConfig> configs, String translation) {
 
-        private TempConfig(String translation) {
-            this(new LinkedHashMap<>(), new LinkedHashMap<>(), translation);
+        private TempConfig(Class<?> config, String translation) {
+            this(ResourcefulWebConfig.of(config), new LinkedHashMap<>(), new LinkedHashMap<>(), translation);
         }
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public final class ForgeConfigUtils {
 
     @SuppressWarnings("unchecked")
-    public static  <T> void setEntry(ForgeConfigSpec.ConfigValue<T> value, Object object) {
+    public static <T> void setEntry(ForgeConfigSpec.ConfigValue<T> value, Object object) {
         if (object.getClass().isArray()) {
             value.set((T) new ArrayList<>(List.of((Object[]) object)));
         } else {

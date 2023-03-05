@@ -2,8 +2,10 @@ package com.teamresourceful.resourcefulconfig.common.config;
 
 import com.teamresourceful.resourcefulconfig.common.annotations.*;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public interface ResourcefulConfigEntry {
 
@@ -12,6 +14,16 @@ public interface ResourcefulConfigEntry {
     Field field();
 
     Object defaultValue();
+
+    @SuppressWarnings("unchecked")
+    default <T> T getDefaultOrElse(T value) {
+        final Object defaultValue = defaultValue();
+        return defaultValue == null ? value : (T) defaultValue;
+    }
+
+    default <T extends Annotation> T getAnnotation(Class<T> annotation) {
+        return field().getAnnotation(annotation);
+    }
 
     default boolean setArray(Object[] array) {
         try {
@@ -155,6 +167,13 @@ public interface ResourcefulConfigEntry {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    default boolean isDefault(Object object) {
+        return switch (type()) {
+            case BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE, BOOLEAN, STRING -> Objects.equals(object, defaultValue());
+            case ENUM -> object instanceof Enum<?> value && value.name().equals(((Enum<?>) defaultValue()).name());
+        };
     }
 
     default void reset() {

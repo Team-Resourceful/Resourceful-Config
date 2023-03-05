@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.common.config.fabric;
 
 import com.teamresourceful.resourcefulconfig.common.annotations.InlineCategory;
+import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import org.jetbrains.annotations.Nullable;
 import com.teamresourceful.resourcefulconfig.common.annotations.Category;
 import com.teamresourceful.resourcefulconfig.common.annotations.Config;
@@ -27,12 +28,12 @@ public final class FabricConfigParser {
     private static FabricResourcefulConfig createConfig(TempConfig config, @Nullable String file) {
         Map<String, FabricResourcefulConfig> subConfigs = new LinkedHashMap<>();
         config.configs.forEach((key, value) -> subConfigs.put(key, createConfig(value, null)));
-        return new FabricResourcefulConfig(new LinkedHashMap<>(config.entries), subConfigs, file, config.translation);
+        return new FabricResourcefulConfig(config.web(), new LinkedHashMap<>(config.entries()), subConfigs, file, config.translation());
     }
 
     private static TempConfig parseData(Class<?> config, Class<? extends Annotation> annotation, String translation) {
         assertValidClass(config, annotation);
-        TempConfig builtConfig = new TempConfig(translation);
+        TempConfig builtConfig = new TempConfig(config, translation);
 
         for (Field entry : config.getDeclaredFields()) {
             InlineCategory inlineCategory = entry.getAnnotation(InlineCategory.class);
@@ -58,10 +59,10 @@ public final class FabricConfigParser {
         return builtConfig;
     }
 
-    private record TempConfig(Map<String, FabricResourcefulConfigEntry> entries, Map<String, TempConfig> configs, String translation) {
+    private record TempConfig(ResourcefulWebConfig web, Map<String, FabricResourcefulConfigEntry> entries, Map<String, TempConfig> configs, String translation) {
 
-        private TempConfig(String translation) {
-            this(new LinkedHashMap<>(), new LinkedHashMap<>(), translation);
+        private TempConfig(Class<?> config, String translation) {
+            this(ResourcefulWebConfig.of(config), new LinkedHashMap<>(), new LinkedHashMap<>(), translation);
         }
     }
 }

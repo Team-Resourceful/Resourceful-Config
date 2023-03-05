@@ -3,8 +3,10 @@ package com.teamresourceful.resourcefulconfig.common.config.fabric;
 import com.google.gson.JsonObject;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -13,12 +15,15 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class FabricResourcefulConfig implements ResourcefulConfig {
+
+    private final ResourcefulWebConfig web;
     private final Map<String, FabricResourcefulConfigEntry> entries;
     private final Map<String, FabricResourcefulConfig> configs;
     private final String fileName;
     private final String translation;
 
-    public FabricResourcefulConfig(Map<String, FabricResourcefulConfigEntry> entries, Map<String, FabricResourcefulConfig> configs, String fileName, String translation) {
+    public FabricResourcefulConfig(ResourcefulWebConfig web, Map<String, FabricResourcefulConfigEntry> entries, Map<String, FabricResourcefulConfig> configs, String fileName, String translation) {
+        this.web = web;
         this.entries = entries;
         this.configs = configs;
         this.fileName = fileName;
@@ -42,6 +47,11 @@ public class FabricResourcefulConfig implements ResourcefulConfig {
     @Override
     public Map<String, ? extends ResourcefulConfig> getSubConfigs() {
         return configs;
+    }
+
+    @Override
+    public @NotNull ResourcefulWebConfig getWebConfig() {
+        return web;
     }
 
     @Override

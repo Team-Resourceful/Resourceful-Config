@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Config {
 
-    @Pattern("^[a-z0-9_-]+$")
+    @Pattern("^[a-z0-9_/-]+$")
     String value();
 }

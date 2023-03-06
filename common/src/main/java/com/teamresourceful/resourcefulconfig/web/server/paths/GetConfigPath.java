@@ -60,15 +60,16 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         json.add("entries", createEntries(config));
         JsonArray categories = new JsonArray();
         config.getSubConfigs().forEach((id, category) -> {
-            ResourcefulWebConfig info = ResourcefulWebConfig.of(category.getClass());
+            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.getClass());
             if (!info.hidden()) {
                 JsonObject categoryJson = createWebConfigData(category);
                 categoryJson.addProperty("id", id);
                 categoryJson.addProperty("icon", info.icon());
-                categoryJson.addProperty("title", info.title());
+                categoryJson.addProperty("title", getTitle(info.title(), category));
                 categories.add(createWebConfig(category));
             }
         });
+        json.add("categories", categories);
         return json;
     }
 
@@ -166,6 +167,10 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
             return I18n.get(configEntry.translation());
         }
         return def;
+    }
+
+    private static String getTitle(String input, ResourcefulConfig config) {
+        return input.isBlank() ? config.getDisplayName().getString() : input;
     }
 
     private static String getDescription(ResourcefulConfigEntry entry) {

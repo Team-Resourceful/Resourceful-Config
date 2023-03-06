@@ -41,7 +41,7 @@ public record GetConfigsPath(WebVerifier verifier) implements BasePath {
         json.addProperty("title", resourcefulWebConfig.title());
         json.addProperty("description", resourcefulWebConfig.description());
         json.addProperty("icon", resourcefulWebConfig.icon());
-        json.addProperty("color", resourcefulWebConfig.color());
+        json.add("color", resourcefulWebConfig.toColor());
         json.add("links", resourcefulWebConfig.toJsonLinks());
         return json;
     }

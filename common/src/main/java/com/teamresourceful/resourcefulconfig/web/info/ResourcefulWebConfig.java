@@ -1,18 +1,40 @@
 package com.teamresourceful.resourcefulconfig.web.info;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.teamresourceful.resourcefulconfig.web.annotations.Gradient;
 import com.teamresourceful.resourcefulconfig.web.annotations.Link;
 import com.teamresourceful.resourcefulconfig.web.annotations.WebInfo;
 
-public record ResourcefulWebConfig(boolean hidden, String icon, String color, String title, String description, Link[] links) {
+public record ResourcefulWebConfig(boolean hidden, String icon, String color, Gradient gradient, String title, String description, Link[] links) {
 
-    public static final ResourcefulWebConfig DEFAULT = new ResourcefulWebConfig(true, "box", "#ffffff", "", "", new Link[0]);
+    public static final ResourcefulWebConfig DEFAULT = new ResourcefulWebConfig(true, "box", "#ffffff", null, "", "", new Link[0]);
+    public static final ResourcefulWebConfig NO_HIDE = new ResourcefulWebConfig(false, "box", "#ffffff", null, "", "", new Link[0]);
 
     public static ResourcefulWebConfig of(Class<?> clazz) {
         WebInfo config = clazz.getAnnotation(WebInfo.class);
         if (config == null) return DEFAULT;
-        return new ResourcefulWebConfig(config.hidden(), config.icon(), config.color(), config.title(), config.description(), config.links());
+        return new ResourcefulWebConfig(config.hidden(), config.icon(), config.color(), config.gradient(), config.title(), config.description(), config.links());
+    }
+
+    public static ResourcefulWebConfig showOf(Class<?> clazz) {
+        WebInfo config = clazz.getAnnotation(WebInfo.class);
+        if (config == null) return NO_HIDE;
+        return new ResourcefulWebConfig(config.hidden(), config.icon(), config.color(), config.gradient(), config.title(), config.description(), config.links());
+    }
+
+    public JsonElement toColor() {
+        if (gradient().disabled()) {
+            return new JsonPrimitive(color());
+        } else {
+            JsonObject json = new JsonObject();
+            json.addProperty("degree", gradient().value());
+            json.addProperty("first", gradient().first());
+            json.addProperty("second", gradient().second());
+            return json;
+        }
     }
 
     public JsonArray toJsonLinks() {

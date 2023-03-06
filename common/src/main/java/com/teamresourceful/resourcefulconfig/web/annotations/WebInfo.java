@@ -17,6 +17,8 @@ public @interface WebInfo {
     @Pattern("^#(?:[0-9a-fA-F]{3}){1,2}$")
     String color() default "#ffffff";
 
+    Gradient gradient() default @Gradient(disabled = true, value = "0deg", first = "#ffffff", second = "#ffffff");
+
     @Nls(capitalization = Nls.Capitalization.Title)
     String title() default "";
 

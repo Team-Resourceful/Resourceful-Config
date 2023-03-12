@@ -56,7 +56,7 @@ public final class WebServerUtils {
     public static boolean handleCors(@NotNull HttpExchange exchange, @NotNull String allowedOrigin, @NotNull String allowedMethods) throws IOException {
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
             String origin = exchange.getRequestHeaders().getFirst("Origin");
-            if (origin.equalsIgnoreCase(allowedOrigin)) {
+            if (allowedOrigin.equalsIgnoreCase(origin)) {
                 exchange.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
                 exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "Origin, X-Requested-With, Content-Type, Accept, Authorization");

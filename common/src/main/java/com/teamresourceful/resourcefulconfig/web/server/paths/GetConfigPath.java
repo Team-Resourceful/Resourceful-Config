@@ -66,7 +66,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
                 categoryJson.addProperty("id", id);
                 categoryJson.addProperty("icon", info.icon());
                 categoryJson.addProperty("title", getTitle(info.title(), category));
-                categories.add(createWebConfig(category));
+                categories.add(categoryJson);
             }
         });
         json.add("categories", categories);

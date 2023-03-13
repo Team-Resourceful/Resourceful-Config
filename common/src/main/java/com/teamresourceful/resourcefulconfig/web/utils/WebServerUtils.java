@@ -54,15 +54,15 @@ public final class WebServerUtils {
     }
 
     public static boolean handleCors(@NotNull HttpExchange exchange, @NotNull String allowedOrigin, @NotNull String allowedMethods) throws IOException {
+        String origin = exchange.getRequestHeaders().getFirst("Origin");
+        if (allowedOrigin.equalsIgnoreCase(origin)) {
+            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
+            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, authorization");
+            exchange.getResponseHeaders().add("Access-Control-Max-Age", "86400");
+        }
+        exchange.getResponseHeaders().add("Allow", "OPTIONS, " + allowedMethods);
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
-            String origin = exchange.getRequestHeaders().getFirst("Origin");
-            if (allowedOrigin.equalsIgnoreCase(origin)) {
-                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
-                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-                exchange.getResponseHeaders().add("Access-Control-Max-Age", "86400");
-            }
-            exchange.getResponseHeaders().add("Allow", "OPTIONS, " + allowedMethods);
             WebServerUtils.send(exchange, HttpURLConnection.HTTP_NO_CONTENT, null, new byte[0]);
             return true;
         }

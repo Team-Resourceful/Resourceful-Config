@@ -48,6 +48,7 @@ public record PostSavePath(WebVerifier verifier) implements BasePath {
 
     private static void saveConfig(ResourcefulConfig config, JsonObject object) {
         object.asMap().forEach((key, value) -> saveEntry(config, key, value));
+        config.save();
     }
 
     private static void saveEntry(ResourcefulConfig config, String key, JsonElement element) {

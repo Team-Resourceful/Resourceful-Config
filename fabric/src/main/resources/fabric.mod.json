@@ -4,14 +4,20 @@
     "version": "${version}",
     "name": "Resourcefulconfig",
     "description": "",
-    "authors": [],
-    "contact": {},
+    "authors": [
+        "ThatGravyBoat"
+    ],
+    "contact": {
+        "issues": "https://github.com/Team-Resourceful/Resouceful-Config/issues",
+        "sources": "https://github.com/Team-Resourceful/Resouceful-Config",
+        "homepage": "https://resourcefulbees.com"
+    },
     "license": "MIT",
     "icon": "icon.png",
     "environment": "*",
     "depends": {
-        "fabricloader": ">=0.14.10",
-        "minecraft": ">=1.19.2"
+        "fabricloader": ">=0.14.17",
+        "minecraft": ">=1.19.4"
     },
     "entrypoints": {
         "main": [

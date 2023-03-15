@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +42,7 @@ public class ConfigValuesWidget extends ContainerObjectSelectionList<ValueWidget
     public boolean mouseClicked(double d, double e, int i) {
         for (ValueWidget child : children()) {
             if (child instanceof ConfigValueWidget value && value.getChildren().isFocused() && !value.getChildren().isMouseOver(d, e)) {
-                value.getChildren().changeFocus(true);
+                value.getChildren().setFocused(false);
                 value.setFocused(null);
             }
         }

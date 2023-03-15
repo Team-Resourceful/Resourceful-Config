@@ -48,7 +48,7 @@ public record HashedPasswordValidator(HashType type, String hash) implements Val
                 case "sha256" -> DataResult.success(SHA256);
                 case "sha512" -> DataResult.success(SHA512);
                 case "md5" -> DataResult.success(MD5);
-                default -> DataResult.error("Unknown hash type: " + string);
+                default -> DataResult.error(() -> "Unknown hash type: " + string);
             };
         }
     }

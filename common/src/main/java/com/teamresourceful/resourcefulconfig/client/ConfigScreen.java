@@ -78,7 +78,7 @@ public class ConfigScreen extends Screen {
     }
 
     public void render(@NotNull PoseStack stack, int i, int j, float f) {
-        this.renderDirtBackground(0);
+        this.renderDirtBackground(stack);
         this.list.render(stack, i, j, f);
         this.categories.render(stack, i, j, f);
         drawCenteredString(stack, this.font, Component.literal("Categories").withStyle(ChatFormatting.BOLD), (int) (this.width * 0.36 / 2), 11, 16777215);

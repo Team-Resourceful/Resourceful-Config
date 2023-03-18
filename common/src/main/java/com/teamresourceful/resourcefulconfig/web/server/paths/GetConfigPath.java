@@ -60,7 +60,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         json.add("entries", createEntries(config));
         JsonArray categories = new JsonArray();
         config.getSubConfigs().forEach((id, category) -> {
-            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.getClass());
+            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.getWebConfig());
             if (!info.hidden()) {
                 JsonObject categoryJson = createWebConfigData(category);
                 categoryJson.addProperty("id", id);

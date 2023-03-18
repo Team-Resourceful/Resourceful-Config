@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.teamresourceful.resourcefulconfig.client.options.Options;
 import com.teamresourceful.resourcefulconfig.common.annotations.Comment;
 import com.teamresourceful.resourcefulconfig.common.annotations.ConfigEntry;
+import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,8 @@ public class ConfigValueWidget extends ValueWidget {
 
     private final int left;
 
+    private final ResourcefulConfigEntry entry;
+
     private final Component label;
     private AbstractWidget children;
     private final AbstractWidget reset;
@@ -31,6 +34,7 @@ public class ConfigValueWidget extends ValueWidget {
 
     public ConfigValueWidget(int left, int right, ResourcefulConfigEntry entry) {
         this.left = left;
+        this.entry = entry;
         var annotation = entry.field().getAnnotation(ConfigEntry.class);
         this.label = annotation == null ? CommonComponents.EMPTY : Component.translatable(annotation.translation());
         this.children = Options.create(right - 110, 0, 100, entry);
@@ -38,7 +42,7 @@ public class ConfigValueWidget extends ValueWidget {
             entry.reset();
             this.children = Options.create(right - 110, 0, 100, entry);
         });
-        this.reset.active = this.children.active;
+        this.reset.active = this.children.active && !entry.isDefault(ParsingUtils.getField(entry.field()));
 
         var comment = entry.field().getAnnotation(Comment.class);
         this.tooltip = comment == null ? CommonComponents.EMPTY : comment.translation().isEmpty() ? Component.literal(comment.value()) : Component.translatable(comment.translation());
@@ -48,6 +52,8 @@ public class ConfigValueWidget extends ValueWidget {
 
         Font font = Minecraft.getInstance().font;
         font.draw(stack, this.label, left + 10, (float) (j + 5), 16777215);
+
+        this.reset.active = this.children.active && !entry.isDefault(ParsingUtils.getField(entry.field()));
 
         this.reset.y = j;
         this.reset.render(stack, n, o, f);

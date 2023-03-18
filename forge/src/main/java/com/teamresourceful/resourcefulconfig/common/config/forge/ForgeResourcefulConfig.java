@@ -1,6 +1,8 @@
 package com.teamresourceful.resourcefulconfig.common.config.forge;
 
+import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
@@ -9,6 +11,7 @@ import java.util.Map;
 
 public class ForgeResourcefulConfig implements ResourcefulConfig {
 
+    private final ResourcefulWebConfig web;
     private final Map<String, ForgeResourcefulConfigEntry> entries;
     private final Map<String, ForgeResourcefulConfig> configs;
     private final String fileName;
@@ -16,7 +19,8 @@ public class ForgeResourcefulConfig implements ResourcefulConfig {
     @Nullable
     private final ForgeConfigSpec spec;
 
-    public ForgeResourcefulConfig(Map<String, ForgeResourcefulConfigEntry> entries, Map<String, ForgeResourcefulConfig> configs, String fileName, String translation, @Nullable ForgeConfigSpec spec) {
+    public ForgeResourcefulConfig(ResourcefulWebConfig web, Map<String, ForgeResourcefulConfigEntry> entries, Map<String, ForgeResourcefulConfig> configs, String fileName, String translation, @Nullable ForgeConfigSpec spec) {
+        this.web = web;
         this.entries = entries;
         this.configs = configs;
         this.fileName = fileName;
@@ -32,6 +36,11 @@ public class ForgeResourcefulConfig implements ResourcefulConfig {
     @Override
     public Map<String, ? extends ResourcefulConfig> getSubConfigs() {
         return configs;
+    }
+
+    @Override
+    public @NotNull ResourcefulWebConfig getWebConfig() {
+        return web;
     }
 
     @Override

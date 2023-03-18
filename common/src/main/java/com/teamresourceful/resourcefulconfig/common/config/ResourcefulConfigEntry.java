@@ -2,7 +2,10 @@ package com.teamresourceful.resourcefulconfig.common.config;
 
 import com.teamresourceful.resourcefulconfig.common.annotations.*;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public interface ResourcefulConfigEntry {
 
@@ -12,6 +15,16 @@ public interface ResourcefulConfigEntry {
 
     Object defaultValue();
 
+    @SuppressWarnings("unchecked")
+    default <T> T getDefaultOrElse(T value) {
+        final Object defaultValue = defaultValue();
+        return defaultValue == null ? value : (T) defaultValue;
+    }
+
+    default <T extends Annotation> T getAnnotation(Class<T> annotation) {
+        return field().getAnnotation(annotation);
+    }
+
     default boolean setArray(Object[] array) {
         try {
             for (Object o : array) {
@@ -19,12 +32,23 @@ public interface ResourcefulConfigEntry {
                     return false;
                 }
             }
-            field().set(null, array);
+            field().set(null, castArray(array, field().getType().componentType()));
             return true;
         } catch (Exception e) {
             return false;
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T[] castArray(Object[] array, Class<T> clazz) {
+        T[] newArray = (T[]) Array.newInstance(clazz, array.length);
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = clazz.cast(array[i]);
+        }
+        return newArray;
+    }
+
+
 
     default boolean setByte(byte value) {
         if (type() != EntryType.BYTE) return false;
@@ -145,6 +169,13 @@ public interface ResourcefulConfigEntry {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    default boolean isDefault(Object object) {
+        return switch (type()) {
+            case BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE, BOOLEAN, STRING -> Objects.equals(object, defaultValue());
+            case ENUM -> object instanceof Enum<?> value && value.name().equals(((Enum<?>) defaultValue()).name());
+        };
     }
 
     default void reset() {

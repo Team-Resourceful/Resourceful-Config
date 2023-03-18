@@ -12,5 +12,10 @@
     "depends": {
         "fabricloader": ">=0.14.10",
         "minecraft": ">=1.19.2"
+    },
+    "entrypoints": {
+        "main": [
+            "com.teamresourceful.resourcefulconfig.web.server.WebServer::start"
+        ]
     }
 }

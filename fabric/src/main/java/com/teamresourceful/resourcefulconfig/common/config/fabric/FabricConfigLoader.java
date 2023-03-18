@@ -7,7 +7,6 @@ import com.google.gson.JsonPrimitive;
 import com.teamresourceful.resourcefulconfig.common.annotations.Comment;
 import com.teamresourceful.resourcefulconfig.common.config.*;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,32 +27,22 @@ public final class FabricConfigLoader implements ConfigLoader {
         return null;
     }
 
-    public static JsonObject saveConfig(ResourcefulConfig config, JsonObject object) {
+    public static JsoncObject saveConfig(ResourcefulConfig config, JsoncObject object) {
         for (var value : config.getEntries().entrySet()) {
             String id = value.getKey();
             ResourcefulConfigEntry entry = value.getValue();
             JsonElement element = getElement(ParsingUtils.getField(entry.field()));
             if (element != null) {
-                writeComment(id, entry.field(), object);
-                object.add(id, element);
+                Comment comment = entry.field().getAnnotation(Comment.class);
+                object.add(id, comment != null ? comment.value() : null, indent -> element.toString());
             }
         }
 
         for (var value : config.getSubConfigs().entrySet()) {
-            object.add(value.getKey(), saveConfig(value.getValue(), new JsonObject()));
+            object.add(value.getKey(), null, saveConfig(value.getValue(), new JsoncObject()));
         }
 
         return object;
-    }
-
-    private static void writeComment(String id, Field field, JsonObject object) {
-        Comment comment = field.getAnnotation(Comment.class);
-        if (comment != null) {
-            String[] comments = comment.value().split("\\R");
-            for (int i = 0; i < comments.length; i++) {
-                object.addProperty("#".repeat(i + 1) + id, comments[i]);
-            }
-        }
     }
 
     private static JsonElement getElement(Object value) {
@@ -74,7 +63,7 @@ public final class FabricConfigLoader implements ConfigLoader {
 
     public static void loadConfig(ResourcefulConfig config, JsonObject json) {
         for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-            if (entry.getKey().startsWith("#")) continue; //Comment
+            if (entry.getKey().startsWith("#")) continue; //Legacy Comment
             if (entry.getValue() instanceof JsonObject subConfig) {
                 config.getSubConfig(entry.getKey()).ifPresent(cat -> loadConfig(cat, subConfig));
             } else {

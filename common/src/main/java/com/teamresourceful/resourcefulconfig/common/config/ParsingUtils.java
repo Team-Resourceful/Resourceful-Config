@@ -62,4 +62,76 @@ public final class ParsingUtils {
         if (config.isAnnotation()) throw new IllegalArgumentException("Config class cannot be an annotation!");
         if (config.isRecord()) throw new IllegalArgumentException("Config class cannot be a record!");
     }
+
+    public static byte getByte(Field field, byte def) {
+        try {
+            return field.getByte(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static short getShort(Field field, short def) {
+        try {
+            return field.getShort(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static int getInt(Field field, int def) {
+        try {
+            return field.getInt(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static long getLong(Field field, long def) {
+        try {
+            return field.getLong(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static float getFloat(Field field, float def) {
+        try {
+            return field.getFloat(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static double getDouble(Field field, double def) {
+        try {
+            return field.getDouble(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static boolean getBoolean(Field field, boolean def) {
+        try {
+            return field.getBoolean(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static Enum<?> getEnum(Field field, Enum<?> def) {
+        try {
+            return (Enum<?>) field.get(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
+
+    public static String getString(Field field, String def) {
+        try {
+            return (String) field.get(null);
+        } catch (IllegalAccessException e) {
+            return def;
+        }
+    }
 }

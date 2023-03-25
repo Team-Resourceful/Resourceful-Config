@@ -60,7 +60,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         json.add("entries", createEntries(config));
         JsonArray categories = new JsonArray();
         config.getSubConfigs().forEach((id, category) -> {
-            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.getClass());
+            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.getWebConfig());
             if (!info.hidden()) {
                 JsonObject categoryJson = createWebConfigData(category);
                 categoryJson.addProperty("id", id);
@@ -86,7 +86,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
                 case SHORT -> {
                     ShortRange shortRange = entry.getAnnotation(ShortRange.class);
                     NumberRange range = shortRange != null ? new NumberRange(shortRange.min(), shortRange.max()) : null;
-                    createNumber(json, entry,range, ParsingUtils::getShort);
+                    createNumber(json, entry, range, ParsingUtils::getShort);
                 }
                 case INTEGER -> {
                     IntRange intRange = entry.getAnnotation(IntRange.class);
@@ -143,10 +143,10 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
 
     @SuppressWarnings("unchecked")
     private static <T extends Number> void createNumber(JsonObject json, ResourcefulConfigEntry entry, NumberRange range, BiFunction<Field, T, T> getter) {
-        T def = entry.getDefaultOrElse((T)WebServerUtils.ZERO);
+        T def = entry.getDefaultOrElse((T) WebServerUtils.ZERO);
         T current = getter.apply(entry.field(), def);
 
-        json.addProperty("type",  range != null ? "range" : "number");
+        json.addProperty("type", range != null ? "range" : "number");
         json.addProperty("decimals", def instanceof Float || def instanceof Double);
         json.addProperty("current", current);
         json.addProperty("default", def);
@@ -181,6 +181,6 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         return "";
     }
 
-    private record NumberRange(Number min, Number max) {}
+    private record NumberRange(Number min, Number max) { }
 
 }

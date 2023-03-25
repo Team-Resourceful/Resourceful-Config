@@ -19,11 +19,10 @@ public record ResourcefulWebConfig(boolean hidden, String icon, String color, Gr
         return new ResourcefulWebConfig(config.hidden(), config.icon(), config.color(), config.gradient(), config.title(), config.description(), config.links());
     }
 
-    public static ResourcefulWebConfig showOf(Class<?> clazz) {
-        WebInfo config = clazz.getAnnotation(WebInfo.class);
-        if (config == null) return NO_HIDE;
-        return new ResourcefulWebConfig(config.hidden(), config.icon(), config.color(), config.gradient(), config.title(), config.description(), config.links());
-    }
+    public static ResourcefulWebConfig showOf(ResourcefulWebConfig config) {
+         if (config == DEFAULT) return NO_HIDE;
+         return config;
+     }
 
     public JsonElement toColor() {
         if (gradient().disabled()) {

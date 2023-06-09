@@ -1,7 +1,6 @@
 package com.teamresourceful.resourcefulconfig.common.config;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
-import org.apache.commons.lang3.NotImplementedException;
+import com.teamresourceful.resourcefulconfig.common.config.impl.ConfigLoaderImpl;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
@@ -12,17 +11,17 @@ public class Configurator {
     private final Map<String, ResourcefulConfig> configs = new HashMap<>();
     private final Map<Class<?>, String> configClasses = new HashMap<>();
 
-    private final ConfigLoader creator;
+    private final ConfigLoader creator = new ConfigLoaderImpl();
 
-    public Configurator() {
-        this(false);
-    }
+    public Configurator() {}
 
     /**
-     * @param forceLoad if true, the config will be loaded on startup on forge otherwise it will be loaded when forge loads the config.
+     * @deprecated Use {@link #Configurator()} instead.
      */
-    public Configurator(boolean forceLoad) {
-        this.creator = getCreator(forceLoad);
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.1")
+    public Configurator(boolean ignored) {
+        this();
     }
 
     public void registerConfig(Class<?> configClass) {
@@ -75,11 +74,5 @@ public class Configurator {
             return getConfig(configClasses.get(config));
         }
         return null;
-    }
-
-    @ApiStatus.Internal
-    @ExpectPlatform
-    public static ConfigLoader getCreator(boolean forceLoad) {
-        throw new NotImplementedException();
     }
 }

@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -12,17 +12,17 @@ import java.util.List;
 public class ValueWidget extends ContainerObjectSelectionList.Entry<ValueWidget> implements TooltipAccessor {
 
     @Override
-    public List<? extends NarratableEntry> narratables() {
+    public @NotNull List<? extends NarratableEntry> narratables() {
         return List.of();
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
+    public void render(@NotNull GuiGraphics graphics, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
 
     }
 
     @Override
-    public List<? extends GuiEventListener> children() {
+    public @NotNull List<? extends GuiEventListener> children() {
         return List.of();
     }
 

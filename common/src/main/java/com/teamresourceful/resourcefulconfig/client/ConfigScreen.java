@@ -1,11 +1,11 @@
 package com.teamresourceful.resourcefulconfig.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.teamresourceful.resourcefulconfig.common.config.Configurator;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import dev.architectury.injectables.targets.ArchitecturyTarget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -68,7 +68,7 @@ public class ConfigScreen extends Screen {
             Button.builder(this.parent == null ? CommonComponents.GUI_DONE : CommonComponents.GUI_BACK, (ignored) -> {
                 if (this.parent == null) {
                     this.onClose();
-                } else {
+                } else if (this.minecraft != null) {
                     this.minecraft.setScreen(this.parent);
                 }
             })
@@ -77,20 +77,20 @@ public class ConfigScreen extends Screen {
         );
     }
 
-    public void render(@NotNull PoseStack stack, int i, int j, float f) {
-        this.renderDirtBackground(stack);
-        this.list.render(stack, i, j, f);
-        this.categories.render(stack, i, j, f);
-        drawCenteredString(stack, this.font, Component.literal("Categories").withStyle(ChatFormatting.BOLD), (int) (this.width * 0.36 / 2), 11, 16777215);
-        drawCenteredString(stack, this.font, Component.literal("Options").withStyle(ChatFormatting.BOLD), (int) (this.width * 0.36 + this.width * 0.64 / 2), 11, 16777215);
+    public void render(@NotNull GuiGraphics graphics, int i, int j, float f) {
+        this.renderDirtBackground(graphics);
+        this.list.render(graphics, i, j, f);
+        this.categories.render(graphics, i, j, f);
+        graphics.drawCenteredString(this.font, Component.literal("Categories").withStyle(ChatFormatting.BOLD), (int) (this.width * 0.36 / 2), 11, 16777215);
+        graphics.drawCenteredString(this.font, Component.literal("Options").withStyle(ChatFormatting.BOLD), (int) (this.width * 0.36 + this.width * 0.64 / 2), 11, 16777215);
         Component fileNameComponent = Component.literal(this.fileName).append(ArchitecturyTarget.getCurrentTarget().equals("fabric") ? ".json" : ".toml");
 
-        drawString(stack, this.font, fileNameComponent, this.width - 10 - this.font.width(fileNameComponent), this.height - 20, 5592405);
-        super.render(stack, i, j, f);
+        graphics.drawString(this.font, fileNameComponent, this.width - 10 - this.font.width(fileNameComponent), this.height - 20, 5592405);
+        super.render(graphics, i, j, f);
 
         this.list.getMouseOver(i, j)
             .map(TooltipAccessor::getTooltip)
-            .ifPresent(tooltip -> this.renderTooltip(stack, tooltip, i, j));
+            .ifPresent(ClientUtils::setTooltip);
     }
 
     @Override
@@ -117,7 +117,9 @@ public class ConfigScreen extends Screen {
     public void onClose() {
         saveConfig();
         if (this.lastScreen != null) {
-            this.minecraft.setScreen(this.lastScreen);
+            if (this.minecraft != null) {
+                this.minecraft.setScreen(this.lastScreen);
+            }
         } else {
             super.onClose();
         }

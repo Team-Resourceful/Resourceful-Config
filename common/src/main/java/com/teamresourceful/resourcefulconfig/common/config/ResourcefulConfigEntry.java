@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Objects;
+import java.util.Optional;
 
 public interface ResourcefulConfigEntry {
 
@@ -23,6 +24,10 @@ public interface ResourcefulConfigEntry {
 
     default <T extends Annotation> T getAnnotation(Class<T> annotation) {
         return field().getAnnotation(annotation);
+    }
+
+    default <T extends Annotation> Optional<T> getOptAnnotation(Class<T> annotation) {
+        return Optional.ofNullable(getAnnotation(annotation));
     }
 
     default boolean setArray(Object[] array) {
@@ -169,8 +174,8 @@ public interface ResourcefulConfigEntry {
         }
     }
 
-    default boolean isDefault(Object object) {
-        return switch (type()) {
+    default boolean isModified(Object object) {
+        return !switch (type()) {
             case BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE, BOOLEAN, STRING -> Objects.equals(object, defaultValue());
             case ENUM -> object instanceof Enum<?> value && value.name().equals(((Enum<?>) defaultValue()).name());
         };

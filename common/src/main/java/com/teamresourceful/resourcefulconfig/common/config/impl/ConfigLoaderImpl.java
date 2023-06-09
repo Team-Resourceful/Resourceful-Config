@@ -1,26 +1,30 @@
-package com.teamresourceful.resourcefulconfig.common.config.fabric;
+package com.teamresourceful.resourcefulconfig.common.config.impl;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.teamresourceful.resourcefulconfig.common.annotations.Comment;
+import com.teamresourceful.resourcefulconfig.common.annotations.*;
 import com.teamresourceful.resourcefulconfig.common.config.*;
+import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncArray;
+import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncElement;
+import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncObject;
+import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class FabricConfigLoader implements ConfigLoader {
+public final class ConfigLoaderImpl implements ConfigLoader {
 
 
     public ResourcefulConfig registerConfig(Class<?> configClass) {
         try {
-            FabricResourcefulConfig config = FabricConfigParser.parseConfig(configClass);
+            ResourcefulConfigImpl config = ConfigParser.parseConfig(configClass);
             config.load();
             config.save(); //We save after we load to clear out old values that are no longer in the config and to add new ones.
             return config;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to create config for " + configClass.getName());
         }
@@ -31,28 +35,60 @@ public final class FabricConfigLoader implements ConfigLoader {
         for (var value : config.getEntries().entrySet()) {
             String id = value.getKey();
             ResourcefulConfigEntry entry = value.getValue();
-            JsonElement element = getElement(ParsingUtils.getField(entry.field()));
+            JsoncElement element = getElement(ParsingUtils.getField(entry.field()));
             if (element != null) {
-                Comment comment = entry.field().getAnnotation(Comment.class);
-                object.add(id, comment != null ? comment.value() : null, indent -> element.toString());
+                element.comment(getCommentAndInfo(entry));
+                object.add(id, element);
             }
         }
 
         for (var value : config.getSubConfigs().entrySet()) {
-            object.add(value.getKey(), null, saveConfig(value.getValue(), new JsoncObject()));
+            object.add(value.getKey(), saveConfig(value.getValue(), new JsoncObject()));
         }
 
         return object;
     }
 
-    private static JsonElement getElement(Object value) {
+    private static String getCommentAndInfo(ResourcefulConfigEntry entry) {
+        StringBuilder builder = new StringBuilder();
+        entry.getOptAnnotation(Comment.class).map(Comment::value).ifPresent(builder::append);
+        List<String> rangeString = getInfoString(entry);
+        if (!rangeString.isEmpty()) {
+            if (builder.length() > 0) builder.append("\n");
+            builder.append(String.join("\n", rangeString));
+        }
+        return builder.toString();
+    }
+
+    private static List<String> getInfoString(ResourcefulConfigEntry entry) {
+        List<String> list = new ArrayList<>();
+        entry.getOptAnnotation(ByteRange.class).ifPresent(range -> list.add("Range: " + range.min() + " - " + range.max()));
+        entry.getOptAnnotation(ShortRange.class).ifPresent(range -> list.add("Range: " + range.min() + " - " + range.max()));
+        entry.getOptAnnotation(IntRange.class).ifPresent(range -> list.add("Range: " + range.min() + " - " + range.max()));
+        entry.getOptAnnotation(LongRange.class).ifPresent(range -> list.add("Range: " + range.min() + " - " + range.max()));
+        entry.getOptAnnotation(FloatRange.class).ifPresent(range -> list.add("Range: " + range.min() + " - " + range.max()));
+        entry.getOptAnnotation(DoubleRange.class).ifPresent(range -> list.add("Range: " + range.min() + " - " + range.max()));
+        if (entry.type() == EntryType.ENUM) {
+            List<String> enumNames = new ArrayList<>();
+            for (Enum<?> enumConstant : ((Enum<?>[]) entry.field().getType().getEnumConstants())) {
+                enumNames.add(enumConstant.name());
+            }
+            list.add("Valid Values: " + String.join(", ", enumNames));
+        }
+        if (list.isEmpty() && entry.type() != EntryType.BOOLEAN && entry.type() != EntryType.STRING) {
+            list.add("Type: " + entry.type().name().charAt(0) + entry.type().name().substring(1).toLowerCase());
+        }
+        return list;
+    }
+
+    private static JsoncElement getElement(Object value) {
         if (value == null) throw new NullPointerException("Config value cannot be null!");
-        if (value instanceof String string) return new JsonPrimitive(string);
-        if (value instanceof Number number) return new JsonPrimitive(number);
-        if (value instanceof Boolean bool) return new JsonPrimitive(bool);
-        if (value instanceof Enum<?> enumValue) return new JsonPrimitive(enumValue.name());
+        if (value instanceof String string) return new JsoncPrimitive(string);
+        if (value instanceof Number number) return new JsoncPrimitive(number);
+        if (value instanceof Boolean bool) return new JsoncPrimitive(bool);
+        if (value instanceof Enum<?> enumValue) return new JsoncPrimitive(enumValue.name());
         if (value.getClass().isArray()) {
-            JsonArray array = new JsonArray();
+            JsoncArray array = new JsoncArray();
             for (Object o : (Object[]) value) {
                 array.add(getElement(o));
             }

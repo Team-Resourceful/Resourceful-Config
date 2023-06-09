@@ -1,10 +1,11 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.1.+" apply false
+    id "com.teamresourceful.resourcefulgradle"
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
+    minecraft = mc_version
 }
 
 subprojects {
@@ -15,11 +16,8 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
+        minecraft "com.mojang:minecraft:$mc_version"
         mappings loom.officialMojangMappings()
-        // The following line declares the yarn mappings you may select this one as well.
-        // mappings "net.fabricmc:yarn:@YARN_MAPPINGS@:v2"
     }
 }
 
@@ -32,14 +30,6 @@ allprojects {
     version = rootProject.mod_version
     group = rootProject.maven_group
 
-    repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
-    }
-
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
         options.release = 17
@@ -47,5 +37,74 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+
+    publishing {
+        if (project != rootProject) {
+            publications {
+                mavenJava(MavenPublication) {
+                    artifactId = "$archives_base_name-${project.name}-$mc_version"
+                    from components.java
+
+                    pom {
+                        name = 'Resourceful Config'
+                        description = 'Crossplatform config library for Team Resourceful mods and more.'
+                        url = 'https://github.com/Team-Resourceful/Resouceful-Config'
+
+                        scm {
+                            connection = 'git:https://github.com/Team-Resourceful/Resouceful-Config.git'
+                            developerConnection = 'git:https://github.com/Team-Resourceful/Resouceful-Config.git'
+                            url = 'https://github.com/Team-Resourceful/Resouceful-Config'
+                        }
+
+                        licenses {
+                            license {
+                                name = 'MIT'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                url = nightly.toBoolean()
+                        ? "https://nexus.resourcefulbees.com/repository/maven-nightly/"
+                        : "https://nexus.resourcefulbees.com/repository/maven-releases/"
+                credentials {
+                    def ENV = System.getenv()
+                    username ENV.MAVEN_USER
+                    password ENV.MAVEN_PASS
+                }
+            }
+        }
+    }
+}
+
+resourcefulGradle {
+    templates {
+        //I have no idea how to get rid of the warnings in idea. switching from interface to abstract
+        //gets rid of *some* warnings. so we just have to live with them as they are now since that's how
+        //the gradle docs say to make a plugin with nested DSL
+
+        readme {
+            source = file("templates/README.md.template")
+            injectedValues = [
+                    "version"            : libs.versions.mod.version.get(),
+                    "mc_version"         : mc_version
+            ]
+        }
+        discordEmbed {
+            injectedValues = [
+                    "version"      : libs.versions.mod.version.get(),
+                    "mc_version"   : mc_version,
+                    "forge_version": forge_version,
+                    "fabric_version": fabric_loader_version
+            ]
+
+            def template = nightly.toBoolean() ? "nightly_embed.json.template" : "release_embed.json.template"
+            source = file("templates/$template")
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import com.teamresourceful.resourcefulconfig.common.annotations.ConfigSeparator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -29,11 +30,11 @@ public class SeparatorValueWidget extends ValueWidget {
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
+    public void render(@NotNull GuiGraphics graphics, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
         Font font = Minecraft.getInstance().font;
-        font.draw(stack, this.text, left + 10, (float) (j + 3), 5592405);
+        graphics.drawString(font, this.text, left + 10, j + 3, 5592405, false);
         drawLine(this.left + 5, this.right - 5, (j + 5 + font.lineHeight), (j + 5 + font.lineHeight), 5592405);
-        super.render(stack, i, j, k, l, m, n, o, bl, f);
+        super.render(graphics, i, j, k, l, m, n, o, bl, f);
     }
 
     public static void drawLine(int x1, int x2, int y1, int y2, int colour) {

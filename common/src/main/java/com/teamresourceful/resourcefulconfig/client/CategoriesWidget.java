@@ -1,10 +1,10 @@
 package com.teamresourceful.resourcefulconfig.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -47,16 +47,19 @@ public class CategoriesWidget extends ContainerObjectSelectionList<CategoriesWid
                     .build();
         }
 
-        public void render(@NotNull PoseStack stack, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
+        @Override
+        public void render(@NotNull GuiGraphics graphics, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
             this.children.setY(j);
-            this.children.render(stack, n, o, f);
+            this.children.render(graphics, n, o, f);
         }
 
-        public List<? extends GuiEventListener> children() {
+        @Override
+        public @NotNull List<? extends GuiEventListener> children() {
             return List.of(this.children);
         }
 
-        public List<? extends NarratableEntry> narratables() {
+        @Override
+        public @NotNull List<? extends NarratableEntry> narratables() {
             return List.of(this.children);
         }
     }

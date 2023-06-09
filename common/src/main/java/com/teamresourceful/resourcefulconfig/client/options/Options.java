@@ -79,7 +79,7 @@ public final class Options {
 
     public static AbstractWidget createFloat(int x, int y, int width, int height, ResourcefulConfigEntry entry) {
         if (entry.type() != EntryType.FLOAT && entry.type() != EntryType.DOUBLE) {
-            throw new IllegalArgumentException("Entry is not an float!");
+            throw new IllegalArgumentException("Entry is not a float!");
         }
         DoubleConsumer setter = value -> {
             switch (entry.type()) {

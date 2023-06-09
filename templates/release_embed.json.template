@@ -1,0 +1,49 @@
+{
+  "username": "Beekeeper",
+  "avatar_url": "https://cdn.discordapp.com/avatars/738571182101626930/72ad643b1ee4036cd79f8c457ed1d420.png",
+  "content": "<@&1070878228924858370>",
+  "embeds": [
+    {
+      "title": "Resourceful Config",
+      "color": 10481823,
+      "description": "A new update is available!",
+      "timestamp": "",
+      "author": {
+        "name": "Team Resourceful",
+        "url": "https://teamresourceful.com"
+      },
+      "image": {
+        "url": ""
+      },
+      "thumbnail": {
+        "url": "https://www.bisecthosting.com/images/CF/RESOURCECONFIG/BH_RC_LOGO.png"
+      },
+      "footer": {
+        "text": "Support us on Patreon or by using code TEAMRESOURCEFUL to get a discounted server from Bisect Hosting"
+      },
+      "fields": [
+        {
+          "name": "Mod Version",
+          "value": "${version}"
+        },
+        {
+          "name": "Minecraft Version",
+          "value": "${mc_version}"
+        },
+        {
+          "name": "Forge Version",
+          "value": "${forge_version}"
+        },
+        {
+          "name": "Fabric Version",
+          "value": "${fabric_version}"
+        },
+        {
+          "name": "Download",
+          "value": "[Curseforge](https://www.curseforge.com/minecraft/mc-mods/resourceful-config)\\n[Modrinth](https://modrinth.com/mod/resourceful-config)"
+        }
+      ]
+    }
+  ],
+  "components": []
+}

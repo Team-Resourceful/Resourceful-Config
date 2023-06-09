@@ -37,16 +37,19 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadowCommon]
+    archiveAppendix.set "$project.name-$mc_version"
     archiveClassifier.set "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
+    archiveAppendix.set "$project.name-$mc_version"
     archiveClassifier.set null
 }
 
 jar {
+    archiveAppendix.set "$project.name-$mc_version"
     archiveClassifier.set "dev"
 }
 

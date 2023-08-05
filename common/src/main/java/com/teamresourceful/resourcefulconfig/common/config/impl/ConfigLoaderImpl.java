@@ -89,7 +89,7 @@ public final class ConfigLoaderImpl implements ConfigLoader {
         if (value instanceof Enum<?> enumValue) return new JsoncPrimitive(enumValue.name());
         if (value.getClass().isArray()) {
             JsoncArray array = new JsoncArray();
-            for (Object o : (Object[]) value) {
+            for (Object o : ParsingUtils.forceObjectArray(value)) {
                 array.add(getElement(o));
             }
             return array;

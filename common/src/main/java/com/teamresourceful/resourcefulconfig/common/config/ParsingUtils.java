@@ -3,6 +3,7 @@ package com.teamresourceful.resourcefulconfig.common.config;
 import com.teamresourceful.resourcefulconfig.common.annotations.ConfigEntry;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -14,6 +15,22 @@ public final class ParsingUtils {
     @SuppressWarnings("unchecked")
     public static <T> List<T> toList(Object value) {
         return new ArrayList<>(List.of((T[]) value));
+    }
+
+    public static Object[] forceObjectArray(Object value) {
+        if (value.getClass().getComponentType().isPrimitive()) {
+            // Primitive arrays like int[], byte[], etc, are different from Object arrays.
+            // Directly casting primitive arrays int[] into Object[] will throw an exception; manual copying is required
+            int length = Array.getLength(value);
+            Object[] array = new Object[length];
+
+            for (int i = 0; i < length; i++)
+                array[i] = Array.get(value, i);
+
+            return array;
+        } else {
+            return (Object[]) value;
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

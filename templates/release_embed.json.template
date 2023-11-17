@@ -2,6 +2,26 @@
   "username": "Beekeeper",
   "avatar_url": "https://cdn.discordapp.com/avatars/738571182101626930/72ad643b1ee4036cd79f8c457ed1d420.png",
   "content": "<@&1070878228924858370>",
+  "components": [
+      {
+          "type": 1,
+          "components": [
+              {
+                  "type": 2,
+                  "label": "Fabric",
+                  "style": 5,
+                  "url": "https://modrinth.com/mod/resourceful-config/version/${fabric_link}"
+              },
+              {
+                  "type": 2,
+                  "label": "Forge",
+                  "style": 5,
+                  "url": "https://modrinth.com/mod/resourceful-config/version/${forge_link}"
+              }
+          ]
+
+      }
+  ],
   "embeds": [
     {
       "title": "Resourceful Config",
@@ -37,13 +57,8 @@
         {
           "name": "Fabric Version",
           "value": "${fabric_version}"
-        },
-        {
-          "name": "Download",
-          "value": "[Curseforge](https://www.curseforge.com/minecraft/mc-mods/resourceful-config)\\n[Modrinth](https://modrinth.com/mod/resourceful-config)"
         }
       ]
     }
-  ],
-  "components": []
+  ]
 }

@@ -1,9 +1,10 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
+
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge()
 }
 
 configurations {
@@ -15,7 +16,7 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:$forge_version"
+    neoForge "net.neoforged:neoforge:$neoforge_version"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }

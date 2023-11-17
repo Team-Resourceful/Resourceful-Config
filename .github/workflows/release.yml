@@ -78,7 +78,7 @@ jobs:
       ### Need to duplicate this block for fabric
       - name: Upload Forge Releases (Curse/Modrinth/Github)
         if: contains(steps.props.outputs.enabled_platforms, 'forge')
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: ${{ vars.CURSE_ID }}
           curseforge-token: ${{ secrets.CURSE_API_KEY }}
@@ -97,9 +97,32 @@ jobs:
           game-versions: ${{ steps.props.outputs.mc_version }}
           version-resolver: exact
 
+      - name: Upload NeoForge Releases (Curse/Modrinth/Github)
+        id: forge_release
+        if: contains(steps.props.outputs.enabled_platforms, 'neoforge')
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          curseforge-id: ${{ vars.CURSE_ID }}
+          curseforge-token: ${{ secrets.CURSE_API_KEY }}
+
+          modrinth-id: ${{ vars.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_API_KEY }}
+
+          github-tag: "v${{ steps.version.outputs.version }}"
+          github-token: ${{ secrets.TEAM_RESOURCEFUL_BOT }}
+
+          files: ./forge/build/libs/!(*-@(dev|sources|dev-shadow)).jar
+          name: "[NeoForge] Resourceful Config ${{ steps.version.outputs.version }}"
+          version: ${{ steps.version.outputs.version }}
+          changelog-file: changelog.md
+          loaders: neoforge
+          game-versions: ${{ steps.props.outputs.mc_version }}
+          version-resolver: exact
+
       - name: Upload Fabric Releases (Curse/Modrinth/Github)
+        id: fabric_release
         if: contains(steps.props.outputs.enabled_platforms, 'fabric')
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: ${{ vars.CURSE_ID }}
           curseforge-token: ${{ secrets.CURSE_API_KEY }}
@@ -125,6 +148,9 @@ jobs:
 
       - name: Create Discord Embed
         run: ./gradlew injectDiscordEmbed
+        env:
+          FORGE_RELEASE_URL: ${{ steps.forge_release.outputs.modrinth-version }}
+          FABRIC_RELEASE_URL: ${{ steps.fabric_release.outputs.modrinth-version }}
 
       - name: Send Discord Webhook
         uses: tsickert/discord-webhook@v5.3.0

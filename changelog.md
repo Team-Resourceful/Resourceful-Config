@@ -1,1 +1,1 @@
-Fix primitive arrays creating an exception with casting to object arrays ([#10](https://github.com/Team-Resourceful/Resouceful-Config/pull/10)) - Drullkus 
+1.20.2 Update

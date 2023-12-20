@@ -13,7 +13,7 @@ repositories {
   maven {
     // Location of the maven that hosts Team Resourceful's jars.
     name = "Resourceful Bees Maven"
-    url = "https://maven.teamresourceful.com/repository/maven-public/"
+    url = "https://nexus.resourcefulbees.com/repository/maven-public/"
   }
 }
 ```
@@ -23,21 +23,21 @@ In an Architectury project, you would implement it like so:
 Common
 ```groovy
 dependencies {
-  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-1.20.2:2.2.1"
+  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-1.20.2:2.2.2"
 }
 ```
 
 Fabric
 ```groovy
 dependencies {
-  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.20.2:2.2.1"
+  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.20.2:2.2.2"
 }
 ```
 
 Forge
 ```groovy
 dependencies {
-  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-1.20.2:2.2.1"
+  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-1.20.2:2.2.2"
 }
 ```
 

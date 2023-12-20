@@ -1,12 +1,12 @@
-package com.teamresourceful.resourcefulconfig.forge;
+package com.teamresourceful.resourcefulconfig.neoforge;
 
 import com.teamresourceful.resourcefulconfig.web.server.WebServer;
 import net.neoforged.fml.common.Mod;
 
 @Mod("resourcefulconfig")
-public class ResourcefulconfigForge {
+public class ResourcefulconfigNeoForge {
 
-    public ResourcefulconfigForge() {
+    public ResourcefulconfigNeoForge() {
         WebServer.start();
     }
 }

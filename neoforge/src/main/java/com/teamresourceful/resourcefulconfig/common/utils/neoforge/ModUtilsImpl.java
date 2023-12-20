@@ -1,4 +1,4 @@
-package com.teamresourceful.resourcefulconfig.common.utils.forge;
+package com.teamresourceful.resourcefulconfig.common.utils.neoforge;
 
 import net.neoforged.fml.loading.FMLPaths;
 

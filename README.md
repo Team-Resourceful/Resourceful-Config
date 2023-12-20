@@ -13,7 +13,7 @@ repositories {
   maven {
     // Location of the maven that hosts Team Resourceful's jars.
     name = "Resourceful Bees Maven"
-    url = "https://nexus.resourcefulbees.com/repository/maven-public/"
+    url = "https://maven.teamresourceful.com/repository/maven-public/"
   }
 }
 ```

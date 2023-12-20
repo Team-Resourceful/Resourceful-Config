@@ -1,1 +1,1 @@
-1.20.2 Update
+Fix crash on neoforge

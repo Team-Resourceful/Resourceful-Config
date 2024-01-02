@@ -53,7 +53,7 @@ public class ConfigScreen extends Screen {
     protected void init() {
         this.list = new ConfigValuesWidget(this.minecraft, (int) (this.width * 0.64), this.height, 32, this.height - 32, 25);
         this.list.setLeftPos((int) (this.width * 0.36));
-        this.list.addSmall(new ArrayList<>(this.config.getEntries().values()));
+        this.list.addSmall(this.config.getEntries(), this.config.getButtons());
 
         this.categories = new CategoriesWidget(this.minecraft, (int) (this.width * 0.35), this.height, 32, this.height - 32, 25);
         this.categories.addSmall(this, new ArrayList<>(this.config.getSubConfigs().values()));

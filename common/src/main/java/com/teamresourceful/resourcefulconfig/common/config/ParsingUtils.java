@@ -1,10 +1,12 @@
 package com.teamresourceful.resourcefulconfig.common.config;
 
+import com.teamresourceful.resourcefulconfig.common.annotations.ConfigButton;
 import com.teamresourceful.resourcefulconfig.common.annotations.ConfigEntry;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +122,15 @@ public final class ParsingUtils {
         } catch (IllegalAccessException e) {
             return def;
         }
+    }
+
+    public static ConfigButton assertButton(Method method) {
+        ConfigButton data = method.getAnnotation(ConfigButton.class);
+        if (data == null) return null;
+        if (!Modifier.isPublic(method.getModifiers())) throw new IllegalArgumentException("Button " + method.getName() + " is not public!");
+        if (!Modifier.isStatic(method.getModifiers())) throw new IllegalArgumentException("Button " + method.getName() + " is not static!");
+        if (method.getParameterCount() != 0) throw new IllegalArgumentException("Button " + method.getName() + " has parameters!");
+        return data;
     }
 
     public static ConfigEntry assertEntry(Field field) {

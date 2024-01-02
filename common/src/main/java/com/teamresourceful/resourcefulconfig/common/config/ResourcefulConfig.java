@@ -5,12 +5,18 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public interface ResourcefulConfig {
 
     Map<String, ? extends ResourcefulConfigEntry> getEntries();
+
+    default List<? extends ResourcefulConfigButton> getButtons() {
+        return List.of();
+    }
+
     Map<String, ? extends ResourcefulConfig> getSubConfigs();
 
     @NotNull

@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.common.config.impl;
 
 import com.google.gson.JsonObject;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncObject;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
@@ -13,19 +14,22 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 public class ResourcefulConfigImpl implements ResourcefulConfig {
 
     private final ResourcefulWebConfig web;
     private final Map<String, ResourcefulConfigEntryImpl> entries;
+    private final List<ResourcefulConfigButton> buttons;
     private final Map<String, ResourcefulConfigImpl> configs;
     private final String fileName;
     private final String translation;
 
-    public ResourcefulConfigImpl(ResourcefulWebConfig web, Map<String, ResourcefulConfigEntryImpl> entries, Map<String, ResourcefulConfigImpl> configs, String fileName, String translation) {
+    public ResourcefulConfigImpl(ResourcefulWebConfig web, Map<String, ResourcefulConfigEntryImpl> entries, List<ResourcefulConfigButton> buttons, Map<String, ResourcefulConfigImpl> configs, String fileName, String translation) {
         this.web = web;
         this.entries = entries;
+        this.buttons = buttons;
         this.configs = configs;
         this.fileName = fileName;
         this.translation = translation;
@@ -43,6 +47,11 @@ public class ResourcefulConfigImpl implements ResourcefulConfig {
     @Override
     public Map<String, ? extends ResourcefulConfigEntry> getEntries() {
         return entries;
+    }
+
+    @Override
+    public List<? extends ResourcefulConfigButton> getButtons() {
+        return buttons;
     }
 
     @Override

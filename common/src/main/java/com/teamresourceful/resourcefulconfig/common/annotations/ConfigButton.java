@@ -5,11 +5,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Comment {
+public @interface ConfigButton {
 
-    String value();
+    /**
+     * The config entry it will be after.
+     */
+    String after() default "";
 
-    String translation() default "";
+    String translation();
+
+    String text();
 }

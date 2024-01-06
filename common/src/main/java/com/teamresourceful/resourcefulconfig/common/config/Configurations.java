@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.common.config;
 
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +21,8 @@ public record Configurations(Map<String, ResourcefulConfig> configs, Map<Class<?
     }
 
     public void addConfig(ResourcefulConfig config) {
-        configs.put(config.getFileName(), config);
-        configClasses.put(config.getClass(), config.getFileName());
+        configs.put(config.id(), config);
+        configClasses.put(config.getClass(), config.id());
     }
 
     @NotNull

@@ -3,9 +3,11 @@ package com.teamresourceful.resourcefulconfig.web.server.paths;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 import com.teamresourceful.resourcefulconfig.web.utils.WebServerUtils;
 import com.teamresourceful.resourcefulconfig.web.utils.WebVerifier;
@@ -24,7 +26,7 @@ public record PostSavePath(WebVerifier verifier) implements BasePath {
         String query = WebServerUtils.getQueryValue(exchange, "id");
         if (query != null) {
             ResourcefulConfig config = Configurations.INSTANCE.configs().get(query);
-            if (config != null && !config.getWebConfig().hidden()) {
+            if (config != null && !config.webConfig().hidden()) {
                 try {
                     String data = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.UTF_8);
                     JsonObject object = WebServerUtils.GSON.fromJson(data, JsonObject.class);
@@ -56,31 +58,34 @@ public record PostSavePath(WebVerifier verifier) implements BasePath {
             String[] split = key.split(";", 2);
             if (split.length == 2) {
                 String id = split[0];
-                config.getSubConfig(id)
-                    .ifPresent(subConfig -> saveEntry(subConfig, split[1], element));
+                ResourcefulConfig category = config.categories().get(id);
+                if (category != null) {
+                    saveEntry(category, split[1], element);
+                }
             }
         } else if (key.contains(":")) {
             String[] split = key.split(":", 2);
             if (split.length == 2) {
                 String id = split[0];
-                config.getSubConfig(id)
-                    .ifPresent(subConfig -> saveEntry(subConfig, split[1], element));
+                ResourcefulConfig category = config.categories().get(id);
+                if (category != null) {
+                    saveEntry(category, split[1], element);
+                }
             }
         } else {
-            config.getEntry(key)
-                .ifPresent(entry -> {
-                    switch (entry.type()) {
-                        case BOOLEAN -> entry.setBoolean(element.getAsBoolean());
-                        case BYTE -> entry.setByte(element.getAsByte());
-                        case SHORT -> entry.setShort(element.getAsShort());
-                        case INTEGER -> entry.setInt(element.getAsInt());
-                        case LONG -> entry.setLong(element.getAsLong());
-                        case FLOAT -> entry.setFloat(element.getAsFloat());
-                        case DOUBLE -> entry.setDouble(element.getAsDouble());
-                        case STRING -> entry.setString(element.getAsString());
-                        case ENUM -> entry.setEnum(ParsingUtils.getEnum(entry.field().getType(), element.getAsString()));
-                    }
-                });
+            ResourcefulConfigEntry entry = config.entries().get(key);
+            if (!(entry instanceof ResourcefulConfigValueEntry valueEntry)) return;
+            switch (entry.type()) {
+                case BOOLEAN -> valueEntry.setBoolean(element.getAsBoolean());
+                case BYTE -> valueEntry.setByte(element.getAsByte());
+                case SHORT -> valueEntry.setShort(element.getAsShort());
+                case INTEGER -> valueEntry.setInt(element.getAsInt());
+                case LONG -> valueEntry.setLong(element.getAsLong());
+                case FLOAT -> valueEntry.setFloat(element.getAsFloat());
+                case DOUBLE -> valueEntry.setDouble(element.getAsDouble());
+                case STRING -> valueEntry.setString(element.getAsString());
+                case ENUM -> valueEntry.setEnum(ParsingUtils.parseEnum(valueEntry.objectType(), element.getAsString()));
+            }
         }
     }
 }

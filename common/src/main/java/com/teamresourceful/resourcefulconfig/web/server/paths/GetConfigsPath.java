@@ -3,10 +3,10 @@ package com.teamresourceful.resourcefulconfig.web.server.paths;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
+import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 import com.teamresourceful.resourcefulconfig.web.utils.WebServerUtils;
 import com.teamresourceful.resourcefulconfig.web.utils.WebVerifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -21,7 +21,7 @@ public record GetConfigsPath(WebVerifier verifier) implements BasePath {
     public void handleCall(HttpExchange exchange, UserJwtPayload payload) throws IOException {
         JsonArray array = new JsonArray();
         for (ResourcefulConfig config : Configurations.INSTANCE) {
-            if (!config.getWebConfig().hidden()) {
+            if (!config.webConfig().hidden()) {
                 array.add(createConfigJson(config));
             }
         }
@@ -35,9 +35,9 @@ public record GetConfigsPath(WebVerifier verifier) implements BasePath {
     }
 
     private static JsonObject createConfigJson(ResourcefulConfig config) {
-        final ResourcefulWebConfig resourcefulWebConfig = config.getWebConfig();
+        final ResourcefulWebConfig resourcefulWebConfig = config.webConfig();
         JsonObject json = new JsonObject();
-        json.addProperty("id", config.getFileName());
+        json.addProperty("id", config.id());
         json.addProperty("title", resourcefulWebConfig.title());
         json.addProperty("description", resourcefulWebConfig.description());
         json.addProperty("icon", resourcefulWebConfig.icon());

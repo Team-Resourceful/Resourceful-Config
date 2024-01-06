@@ -3,12 +3,13 @@ package com.teamresourceful.resourcefulconfig.web.server.paths;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
-import com.teamresourceful.resourcefulconfig.common.annotations.*;
+import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.config.EntryOptions;
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
-import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfigEntry;
-import com.teamresourceful.resourcefulconfig.web.annotations.Multiline;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 import com.teamresourceful.resourcefulconfig.web.utils.WebServerUtils;
@@ -17,9 +18,8 @@ import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @ApiStatus.Internal
 public record GetConfigPath(WebVerifier verifier) implements BasePath {
@@ -29,7 +29,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         String query = WebServerUtils.getQueryValue(exchange, "id");
         if (query != null) {
             ResourcefulConfig config = Configurations.INSTANCE.configs().get(query);
-            if (config != null && !config.getWebConfig().hidden()) {
+            if (config != null && !config.webConfig().hidden()) {
                 JsonObject json = createWebConfig(config);
                 WebServerUtils.send(exchange, HttpURLConnection.HTTP_OK, "application/json", json.toString().getBytes());
             } else {
@@ -46,7 +46,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
     }
 
     private static JsonObject createWebConfig(ResourcefulConfig config) {
-        final ResourcefulWebConfig resourcefulWebConfig = config.getWebConfig();
+        final ResourcefulWebConfig resourcefulWebConfig = config.webConfig();
         JsonObject json = createWebConfigData(config);
         json.addProperty("icon", resourcefulWebConfig.icon());
         json.addProperty("title", resourcefulWebConfig.title());
@@ -59,8 +59,8 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         JsonObject json = new JsonObject();
         json.add("entries", createEntries(config));
         JsonArray categories = new JsonArray();
-        config.getSubConfigs().forEach((id, category) -> {
-            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.getWebConfig());
+        config.categories().forEach((id, category) -> {
+            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.webConfig());
             if (!info.hidden()) {
                 JsonObject categoryJson = createWebConfigData(category);
                 categoryJson.addProperty("id", id);
@@ -75,62 +75,37 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
 
     private static JsonArray createEntries(ResourcefulConfig config) {
         JsonArray array = new JsonArray();
-        config.getEntries().forEach((id, entry) -> {
+        config.entries().forEach((id, entry) -> {
             JsonObject json = new JsonObject();
+            if (!(entry instanceof ResourcefulConfigValueEntry valueEntry)) return;
+            if (valueEntry.objectType().isArray()) return;
             switch (entry.type()) {
-                case BYTE -> {
-                    ByteRange byteRange = entry.getAnnotation(ByteRange.class);
-                    NumberRange range = byteRange != null ? new NumberRange(byteRange.min(), byteRange.max()) : null;
-                    createNumber(json, entry, range, ParsingUtils::getByte);
-                }
-                case SHORT -> {
-                    ShortRange shortRange = entry.getAnnotation(ShortRange.class);
-                    NumberRange range = shortRange != null ? new NumberRange(shortRange.min(), shortRange.max()) : null;
-                    createNumber(json, entry, range, ParsingUtils::getShort);
-                }
-                case INTEGER -> {
-                    IntRange intRange = entry.getAnnotation(IntRange.class);
-                    NumberRange range = intRange != null ? new NumberRange(intRange.min(), intRange.max()) : null;
-                    createNumber(json, entry, range, ParsingUtils::getInt);
-                }
-                case LONG -> {
-                    LongRange longRange = entry.getAnnotation(LongRange.class);
-                    NumberRange range = longRange != null ? new NumberRange(longRange.min(), longRange.max()) : null;
-                    createNumber(json, entry, range, ParsingUtils::getLong);
-                }
-                case FLOAT -> {
-                    FloatRange floatRange = entry.getAnnotation(FloatRange.class);
-                    NumberRange range = floatRange != null ? new NumberRange(floatRange.min(), floatRange.max()) : null;
-                    createNumber(json, entry, range, ParsingUtils::getFloat);
-                }
-                case DOUBLE -> {
-                    DoubleRange doubleRange = entry.getAnnotation(DoubleRange.class);
-                    NumberRange range = doubleRange != null ? new NumberRange(doubleRange.min(), doubleRange.max()) : null;
-                    createNumber(json, entry, range, ParsingUtils::getDouble);
-                }
+                case BYTE -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getByte);
+                case SHORT -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getShort);
+                case INTEGER -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getInt);
+                case LONG -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getLong);
+                case FLOAT -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getFloat);
+                case DOUBLE -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getDouble);
                 case ENUM -> {
-                    Enum<?> def = (Enum<?>) entry.defaultValue();
+                    Enum<?> def = (Enum<?>) valueEntry.defaultValue();
                     json.addProperty("type", "dropdown");
-                    json.addProperty("current", ParsingUtils.getEnum(entry.field(), def).name());
+                    json.addProperty("current", valueEntry.getEnum().name());
                     json.addProperty("default", def.name());
                     JsonArray options = new JsonArray();
-                    for (var e : getEnumConstants(entry.field().getType())) {
+                    for (var e : getEnumConstants(valueEntry.objectType())) {
                         options.add(e.name());
                     }
                     json.add("options", options);
                 }
                 case BOOLEAN -> {
-                    boolean def = entry.getDefaultOrElse(false);
                     json.addProperty("type", "toggle");
-                    json.addProperty("current", ParsingUtils.getBoolean(entry.field(), def));
-                    json.addProperty("default", def);
+                    json.addProperty("current", valueEntry.getBoolean());
+                    json.addProperty("default", valueEntry.defaultOrElse(false));
                 }
                 case STRING -> {
-                    boolean multiline = entry.getAnnotation(Multiline.class) != null;
-                    String def = entry.getDefaultOrElse("");
-                    json.addProperty("type", multiline ? "large-textbox" : "small-textbox");
-                    json.addProperty("current", ParsingUtils.getString(entry.field(), def));
-                    json.addProperty("default", def);
+                    json.addProperty("type", valueEntry.options().isMultiline() ? "large-textbox" : "small-textbox");
+                    json.addProperty("current", valueEntry.getString());
+                    json.addProperty("default", valueEntry.defaultOrElse(""));
                 }
             }
             json.addProperty("id", id);
@@ -142,17 +117,18 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Number> void createNumber(JsonObject json, ResourcefulConfigEntry entry, NumberRange range, BiFunction<Field, T, T> getter) {
-        T def = entry.getDefaultOrElse((T) WebServerUtils.ZERO);
-        T current = getter.apply(entry.field(), def);
+    private static <T extends Number> void createNumber(JsonObject json, ResourcefulConfigValueEntry entry, Function<ResourcefulConfigValueEntry, T> getter) {
+        final EntryOptions options = entry.options();
+        T def = entry.defaultOrElse((T) WebServerUtils.ZERO);
+        T current = getter.apply(entry);
 
-        json.addProperty("type", range != null ? "range" : "number");
+        json.addProperty("type", options.hasRange() ? "range" : "number");
         json.addProperty("decimals", def instanceof Float || def instanceof Double);
         json.addProperty("current", current);
         json.addProperty("default", def);
-        if (range != null) {
-            json.addProperty("min", range.min());
-            json.addProperty("max", range.max());
+        if (options.hasRange()) {
+            json.addProperty("min", options.min());
+            json.addProperty("max", options.max());
             json.addProperty("step", 1);
         }
     }
@@ -163,14 +139,17 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
 
     private static String getTitle(ResourcefulConfigEntry entry, String def) {
         ConfigEntry configEntry = entry.getAnnotation(ConfigEntry.class);
-        if (configEntry != null) {
+        if (configEntry != null && I18n.exists(configEntry.translation())) {
             return I18n.get(configEntry.translation());
         }
         return def;
     }
 
     private static String getTitle(String input, ResourcefulConfig config) {
-        return input.isBlank() ? config.getDisplayName().getString() : input;
+        if (input.isBlank()) {
+            return I18n.get(config.translation());
+        }
+        return input;
     }
 
     private static String getDescription(ResourcefulConfigEntry entry) {
@@ -180,7 +159,5 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         }
         return "";
     }
-
-    private record NumberRange(Number min, Number max) { }
 
 }

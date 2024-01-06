@@ -11,6 +11,9 @@ issueTrackerURL = "https://github.com/Team-Resourceful/Resourceful-Config/issues
     logoFile = "icon.png"
     description = "A library for creating config files for your mod across multiple platforms."
 
+[[mixins]]
+    config = "resourcefulconfig.mixins.json"
+
 [[dependencies.resourcefulconfig]]
     modId = "neoforge"
     mandatory = true

@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigObjectEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
@@ -8,6 +8,8 @@ import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import net.minecraft.client.gui.GuiGraphics;
+
+import java.util.List;
 
 public class ObjectOptionWidget extends BaseWidget {
 
@@ -66,7 +68,7 @@ public class ObjectOptionWidget extends BaseWidget {
 
             OptionsListWidget list = addRenderableWidget(new OptionsListWidget(this.contentWidth, this.contentHeight));
             list.setPosition(this.left, this.top);
-            Options.populateOptions(list, this.entry.entries());
+            Options.populateOptions(list, this.entry.entries(), List.of());
         }
 
         @Override

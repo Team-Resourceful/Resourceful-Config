@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client;
 
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.components.categories.CategoriesListWidget;
 import com.teamresourceful.resourcefulconfig.client.components.categories.CategoryItem;
 import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidget;
@@ -60,7 +60,7 @@ public class ConfigScreen extends Screen {
         }
 
         this.optionsList = body.addChild(new OptionsListWidget(optionsWidth, contentHeight));
-        Options.populateOptions(this.optionsList, this.config.entries());
+        Options.populateOptions(this.optionsList, this.config.entries(), this.config.buttons());
 
         layout.arrangeElements();
         layout.setPosition(UIConstants.PAGE_PADDING, UIConstants.PAGE_PADDING);

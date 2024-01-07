@@ -1,7 +1,7 @@
 package com.teamresourceful.resourcefulconfig.api.loader;
 
 
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.common.loader.Parser;
 import org.jetbrains.annotations.ApiStatus;

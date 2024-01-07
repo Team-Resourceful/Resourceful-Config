@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.header;
 
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
@@ -31,7 +31,7 @@ public class HeaderContentWidget extends ContainerWidget {
 
         LinearLayout titleDesc = LinearLayout
                 .vertical()
-                .spacing(4);
+                .spacing(UIConstants.SPACING);
 
         titleDesc.addChild(
                 new StringWidget(twoThirds, 9, config.toComponent().withColor(UIConstants.TEXT_TITLE), font)
@@ -40,7 +40,7 @@ public class HeaderContentWidget extends ContainerWidget {
 
         LinearLayout links = LinearLayout
                 .horizontal()
-                .spacing(4);
+                .spacing(UIConstants.SPACING);
 
         for (Link link : config.webConfig().links()) {
             SpriteButton button = SpriteButton.builder(12, 12)

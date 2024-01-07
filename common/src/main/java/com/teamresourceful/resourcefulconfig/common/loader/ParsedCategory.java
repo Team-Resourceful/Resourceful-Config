@@ -1,9 +1,9 @@
 package com.teamresourceful.resourcefulconfig.common.loader;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.Category;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigButton;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import org.jetbrains.annotations.NotNull;
 

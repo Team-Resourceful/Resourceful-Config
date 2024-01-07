@@ -1,8 +1,8 @@
 package com.teamresourceful.resourcefulconfig.common.loader;
 
-import com.teamresourceful.resourcefulconfig.api.config.EntryOptions;
-import com.teamresourceful.resourcefulconfig.api.config.EntryType;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigFieldBackedValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 
 import java.lang.reflect.Field;
@@ -10,13 +10,13 @@ import java.lang.reflect.Field;
 public record ParsedInstanceEntry(
     EntryType type,
     Field field,
-    EntryOptions options,
+    EntryData options,
     Object instance,
     Object defaultValue
-) implements ResourcefulConfigValueEntry {
+) implements ResourcefulConfigFieldBackedValueEntry {
 
     public ParsedInstanceEntry(EntryType type, Field field, Object instance) {
-        this(type, field, EntryOptions.of(field), instance, ParsingUtils.getField(field, instance));
+        this(type, field, EntryData.of(field), instance, ParsingUtils.getField(field, instance));
     }
 
     @Override

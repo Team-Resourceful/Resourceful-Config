@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.header;
 
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;

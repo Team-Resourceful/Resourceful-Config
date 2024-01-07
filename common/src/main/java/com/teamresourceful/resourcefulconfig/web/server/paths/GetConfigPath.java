@@ -3,12 +3,10 @@ package com.teamresourceful.resourcefulconfig.web.server.paths;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
-import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.config.EntryOptions;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.options.TranslatableValue;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
@@ -109,8 +107,8 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
                 }
             }
             json.addProperty("id", id);
-            json.addProperty("title", getTitle(entry, id));
-            json.addProperty("description", getDescription(entry));
+            json.addProperty("title", toLocalString(valueEntry.options().title()));
+            json.addProperty("description", toLocalString(valueEntry.options().comment()));
             array.add(json);
         });
         return array;
@@ -118,7 +116,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
 
     @SuppressWarnings("unchecked")
     private static <T extends Number> void createNumber(JsonObject json, ResourcefulConfigValueEntry entry, Function<ResourcefulConfigValueEntry, T> getter) {
-        final EntryOptions options = entry.options();
+        final EntryData options = entry.options();
         T def = entry.defaultOrElse((T) WebServerUtils.ZERO);
         T current = getter.apply(entry);
 
@@ -137,14 +135,6 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         return (Enum<?>[]) clazz.getEnumConstants();
     }
 
-    private static String getTitle(ResourcefulConfigEntry entry, String def) {
-        ConfigEntry configEntry = entry.getAnnotation(ConfigEntry.class);
-        if (configEntry != null && I18n.exists(configEntry.translation())) {
-            return I18n.get(configEntry.translation());
-        }
-        return def;
-    }
-
     private static String getTitle(String input, ResourcefulConfig config) {
         if (input.isBlank()) {
             return I18n.get(config.translation());
@@ -152,12 +142,11 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         return input;
     }
 
-    private static String getDescription(ResourcefulConfigEntry entry) {
-        Comment comment = entry.getAnnotation(Comment.class);
-        if (comment != null) {
-            return comment.value();
+    private static String toLocalString(TranslatableValue value) {
+        if (I18n.exists(value.translation())) {
+            return I18n.get(value.translation());
         }
-        return "";
+        return value.value();
     }
 
 }

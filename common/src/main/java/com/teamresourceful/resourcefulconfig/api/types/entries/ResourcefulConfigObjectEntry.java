@@ -1,4 +1,4 @@
-package com.teamresourceful.resourcefulconfig.api.config;
+package com.teamresourceful.resourcefulconfig.api.types.entries;
 
 import org.jetbrains.annotations.NotNull;
 

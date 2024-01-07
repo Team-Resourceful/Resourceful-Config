@@ -1,8 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options;
 
-import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
@@ -27,16 +25,10 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
     private final Component description;
     private final List<AbstractWidget> widgets;
 
-    public OptionItem(ResourcefulConfigEntry entry, String id, List<AbstractWidget> widgets) {
+    public OptionItem(ResourcefulConfigEntry entry, List<AbstractWidget> widgets) {
         this(
-            entry.getOptionalAnnotation(ConfigEntry.class)
-                .map(ConfigEntry::translation)
-                .map(translation -> Component.translatableWithFallback(translation, id))
-                .orElseGet(() -> Component.literal(id)),
-            entry.getOptionalAnnotation(Comment.class)
-                .map(comment -> comment.translation().isBlank() ? comment.value() : comment.translation())
-                .map(Component::translatable)
-                .orElseGet(Component::empty),
+            entry.options().title().toComponent(),
+            entry.options().comment().toComponent(),
             widgets
         );
     }
@@ -60,7 +52,7 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
 
         LinearLayout titleDesc = LinearLayout
                 .vertical()
-                .spacing(4);
+                .spacing(UIConstants.SPACING);
 
         titleDesc.addChild(
                 new StringWidget(half, 9, this.title, font)
@@ -75,7 +67,7 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
 
         LinearLayout options = LinearLayout
                 .horizontal()
-                .spacing(4);
+                .spacing(UIConstants.SPACING);
 
         for (AbstractWidget widget : widgets) {
             options.addChild(widget);

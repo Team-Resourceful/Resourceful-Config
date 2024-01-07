@@ -1,25 +1,15 @@
-package com.teamresourceful.resourcefulconfig.api.config;
+package com.teamresourceful.resourcefulconfig.api.types.entries;
 
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 
-public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
+public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfigValueEntry {
 
-    Object defaultValue();
-
-    Class<?> objectType();
-
-    default Object instance() {
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    default <T> T defaultOrElse(T value) {
-        final Object defaultValue = defaultValue();
-        return defaultValue == null ? value : (T) defaultValue;
-    }
-
+    Field field();
     default Object get() {
         try {
             return field().get(instance());
@@ -54,7 +44,7 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
     default boolean setByte(byte value) {
         if (type() != EntryType.BYTE) return false;
         try {
-            EntryOptions options = options();
+            EntryData options = options();
             if (options.hasRange() && !options.inRange(value)) {
                 reset();
                 return false;
@@ -78,7 +68,7 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
     default boolean setShort(short value) {
         if (type() != EntryType.SHORT) return false;
         try {
-            EntryOptions options = options();
+            EntryData options = options();
             if (options.hasRange() && !options.inRange(value)) {
                 reset();
                 return false;
@@ -102,13 +92,9 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
     default boolean setInt(int value) {
         if (type() != EntryType.INTEGER) return false;
         try {
-            EntryOptions options = options();
+            EntryData options = options();
             if (options.hasRange() && !options.inRange(value)) {
-                if (!options.inRange(((Integer) defaultValue()))) {
-                    System.out.println("Default value is not in range!");
-                } else {
-                    reset();
-                }
+                reset();
                 return false;
             }
             field().setInt(instance(), value);
@@ -130,7 +116,7 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
     default boolean setLong(long value) {
         if (type() != EntryType.LONG) return false;
         try {
-            EntryOptions options = options();
+            EntryData options = options();
             if (options.hasRange() && !options.inRange(value)) {
                 reset();
                 return false;
@@ -154,7 +140,7 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
     default boolean setFloat(float value) {
         if (type() != EntryType.FLOAT) return false;
         try {
-            EntryOptions options = options();
+            EntryData options = options();
             if (options.hasRange() && !options.inRange(value)) {
                 reset();
                 return false;
@@ -178,7 +164,7 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
     default boolean setDouble(double value) {
         if (type() != EntryType.DOUBLE) return false;
         try {
-            EntryOptions options = options();
+            EntryData options = options();
             if (options.hasRange() && !options.inRange(value)) {
                 reset();
                 return false;
@@ -260,5 +246,4 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
         }
         return newArray;
     }
-
 }

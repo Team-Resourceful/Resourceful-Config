@@ -25,6 +25,9 @@
     "entrypoints": {
         "main": [
             "com.teamresourceful.resourcefulconfig.web.server.WebServer::start"
+        ],
+        "client": [
+            "com.teamresourceful.resourcefulconfig.demo.Demo"
         ]
     }
 }

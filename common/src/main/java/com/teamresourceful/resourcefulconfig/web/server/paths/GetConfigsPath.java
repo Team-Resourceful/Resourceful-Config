@@ -3,7 +3,7 @@ package com.teamresourceful.resourcefulconfig.web.server.paths;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;

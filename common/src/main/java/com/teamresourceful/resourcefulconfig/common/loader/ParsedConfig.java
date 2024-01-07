@@ -2,9 +2,9 @@ package com.teamresourceful.resourcefulconfig.common.loader;
 
 import com.google.gson.JsonObject;
 import com.teamresourceful.resourcefulconfig.api.annotations.Config;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigButton;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncObject;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;

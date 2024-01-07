@@ -1,7 +1,11 @@
 package com.teamresourceful.resourcefulconfig.common.loader;
 
-import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
-import com.teamresourceful.resourcefulconfig.api.config.*;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncArray;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncElement;
@@ -68,8 +72,9 @@ public class Writer {
     private static String getComments(ResourcefulConfigEntry entry) {
         List<String> comments = new ArrayList<>();
 
+        final EntryData options = entry.options();
+
         if (entry instanceof ResourcefulConfigValueEntry valueEntry) {
-            final EntryOptions options = valueEntry.options();
 
             if (options.hasRange()) {
                 DecimalFormat format = new DecimalFormat();
@@ -96,9 +101,7 @@ public class Writer {
             comments.add("Type: " + entry.type().name().charAt(0) + entry.type().name().substring(1).toLowerCase());
         }
 
-        entry.getOptionalAnnotation(Comment.class)
-                .map(Comment::value)
-                .ifPresent(comment -> comments.add(0, comment));
+        options.comment().ifPresent((comment, translation) -> comments.add(0, comment));
 
         return String.join("\n", comments);
     }

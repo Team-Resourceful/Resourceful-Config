@@ -10,6 +10,7 @@ public class UIConstants {
     public static final int TEXT_PARAGRAPH = 0xFF727478;
 
     public static final int PAGE_PADDING = 10;
+    public static final int SPACING = 4;
 
     public static final Component BACK = CommonComponents.GUI_BACK;
     public static final Component CLOSE = Component.literal("Close");

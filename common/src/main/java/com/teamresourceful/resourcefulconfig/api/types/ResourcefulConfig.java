@@ -1,5 +1,6 @@
-package com.teamresourceful.resourcefulconfig.api.config;
+package com.teamresourceful.resourcefulconfig.api.types;
 
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,7 +18,7 @@ public interface ResourcefulConfig {
     LinkedHashMap<String, ResourcefulConfig> categories();
 
     @NotNull
-    List<? extends ResourcefulConfigButton> buttons();
+    List<ResourcefulConfigButton> buttons();
 
     @NotNull
     ResourcefulWebConfig webConfig();

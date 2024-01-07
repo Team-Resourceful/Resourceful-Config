@@ -2,15 +2,17 @@ package com.teamresourceful.resourcefulconfig.common.loader;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.Category;
 import com.teamresourceful.resourcefulconfig.api.annotations.Config;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigButton;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.config.EntryType;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public class Parser {
@@ -53,6 +55,12 @@ public class Parser {
             );
         }
 
+        for (Method method : clazz.getDeclaredMethods()) {
+            ConfigButton data = assertButton(method);
+            if (data == null) continue;
+            config.buttons().add(ParsedButton.of(method));
+        }
+
         return config;
     }
 
@@ -66,6 +74,15 @@ public class Parser {
             }
             entry.entries().put(data.id(), new ParsedInstanceEntry(data.type(), field, instance));
         }
+    }
+
+    private static ConfigButton assertButton(Method method) {
+        ConfigButton data = method.getAnnotation(ConfigButton.class);
+        if (data == null) return null;
+        if (!Modifier.isPublic(method.getModifiers())) throw new IllegalArgumentException("Button " + method.getName() + " is not public!");
+        if (!Modifier.isStatic(method.getModifiers())) throw new IllegalArgumentException("Button " + method.getName() + " is not static!");
+        if (method.getParameterCount() != 0) throw new IllegalArgumentException("Button " + method.getName() + " has parameters!");
+        return data;
     }
 
     private static ConfigEntry assertEntry(Field field) {

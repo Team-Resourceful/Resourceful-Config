@@ -1,4 +1,4 @@
-package com.teamresourceful.resourcefulconfig.api.config;
+package com.teamresourceful.resourcefulconfig.api.types.options;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigObject;
 
@@ -13,28 +13,22 @@ public enum EntryType {
     DOUBLE(type -> type == double.class),
     BOOLEAN(type -> type == boolean.class),
     STRING(type -> type == String.class),
-    ENUM(false, Class::isEnum),
-    OBJECT(false, type -> type.isAnnotationPresent(ConfigObject.class))
+    ENUM(Class::isEnum),
+    OBJECT(type -> type.isAnnotationPresent(ConfigObject.class))
     ;
 
-    private final boolean arrayed;
     private final Predicate<Class<?>> predicate;
 
-    EntryType(boolean arrayed, Predicate<Class<?>> predicate) {
-        this.arrayed = arrayed;
-        this.predicate = predicate;
-    }
-
     EntryType(Predicate<Class<?>> predicate) {
-        this(true, predicate);
-    }
-
-    public boolean isAllowedInArrays() {
-        return arrayed;
+        this.predicate = predicate;
     }
 
     public boolean test(Class<?> type) {
         return predicate.test(type);
+    }
+
+    public boolean isAllowedInArrays() {
+        return this != OBJECT && this != ENUM;
     }
 
     public boolean mustBeFinal() {

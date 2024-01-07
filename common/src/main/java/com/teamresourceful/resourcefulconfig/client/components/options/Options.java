@@ -1,11 +1,15 @@
 package com.teamresourceful.resourcefulconfig.client.components.options;
 
-import com.teamresourceful.resourcefulconfig.api.config.EntryOptions;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigObjectEntry;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigValueEntry;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
+import com.teamresourceful.resourcefulconfig.client.components.base.CustomButton;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import com.teamresourceful.resourcefulconfig.client.components.options.range.DecimalOptionRange;
 import com.teamresourceful.resourcefulconfig.client.components.options.range.OptionRange;
@@ -14,30 +18,53 @@ import com.teamresourceful.resourcefulconfig.client.components.options.types.*;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public final class Options {
 
-    public static void populateOptions(OptionsListWidget widget, Map<String, ResourcefulConfigEntry> entries) {
+    public static void populateOptions(OptionsListWidget widget, Map<String, ResourcefulConfigEntry> entries, List<ResourcefulConfigButton> buttons) {
+        Multimap<String, ResourcefulConfigButton> buttonsBefore = Multimaps.newListMultimap(new HashMap<>(), ArrayList::new);
+        Multimap<String, ResourcefulConfigButton> buttonsAfter = Multimaps.newListMultimap(new HashMap<>(), ArrayList::new);
+        buttons.forEach(button -> {
+            switch (button.position()) {
+                case BEFORE -> buttonsBefore.put(button.target(), button);
+                case AFTER -> buttonsAfter.put(button.target(), button);
+            }
+        });
+
         for (var value : entries.entrySet()) {
-            final EntryOptions options = value.getValue().options();
+            final EntryData options = value.getValue().options();
 
             if (options.separator() != null) {
                 widget.add(new OptionItem(Component.literal(options.separator()), Component.nullToEmpty(options.separatorDescription()), List.of()));
             }
 
+            for (ResourcefulConfigButton button : buttonsBefore.get(value.getKey())) {
+                widget.add(new OptionItem(value.getValue(), List.of(
+                        new CustomButton(96, 12, Component.translatable(button.text()), button::invoke)
+                )));
+            }
+
             if (value.getValue() instanceof ResourcefulConfigValueEntry entry) {
-                populateValueEntry(widget, value.getKey(), entry);
+                populateValueEntry(widget, entry);
             } else if (value.getValue() instanceof ResourcefulConfigObjectEntry entry) {
-                widget.add(new OptionItem(entry, value.getKey(), List.of(new ObjectOptionWidget(entry))));
+                widget.add(new OptionItem(entry, List.of(new ObjectOptionWidget(entry))));
+            }
+
+            for (ResourcefulConfigButton button : buttonsAfter.get(value.getKey())) {
+                widget.add(new OptionItem(value.getValue(), List.of(
+                    new CustomButton(96, 12, Component.translatable(button.text()), button::invoke)
+                )));
             }
         }
     }
 
-    private static void populateValueEntry(OptionsListWidget list, String id, ResourcefulConfigValueEntry entry) {
-        final EntryOptions options = entry.options();
+    private static void populateValueEntry(OptionsListWidget list, ResourcefulConfigValueEntry entry) {
+        final EntryData options = entry.options();
 
         AbstractWidget widget = switch (entry.type()) {
             case BOOLEAN -> new BooleanOptionWidget(entry::getBoolean, entry::setBoolean);
@@ -89,7 +116,7 @@ public final class Options {
                 .onPress(resetValue(entry, widget))
                 .build();
 
-        list.add(new OptionItem(entry, id, List.of(widget, reset)));
+        list.add(new OptionItem(entry, List.of(widget, reset)));
     }
 
     private static Runnable resetValue(ResourcefulConfigEntry entry, AbstractWidget widget) {
@@ -101,7 +128,7 @@ public final class Options {
         };
     }
 
-    private static <T extends Number> Function<String, T> parseNumber(EntryOptions options, Function<String, T> parser) {
+    private static <T extends Number> Function<String, T> parseNumber(EntryData options, Function<String, T> parser) {
         return s -> {
             T value = parser.apply(s);
             if (options.hasRange()) {

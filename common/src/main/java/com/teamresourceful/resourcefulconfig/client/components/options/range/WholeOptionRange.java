@@ -1,7 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.range;
 
-import com.teamresourceful.resourcefulconfig.api.config.EntryOptions;
-import com.teamresourceful.resourcefulconfig.api.config.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -27,7 +27,7 @@ public record WholeOptionRange(LongConsumer setter, LongSupplier getter, long mi
     private static WholeOptionRange ofByte(ResourcefulConfigValueEntry entry) {
         final LongConsumer setter = value -> entry.setByte((byte) value);
         final LongSupplier getter = entry::getByte;
-        final EntryOptions options = entry.options();
+        final EntryData options = entry.options();
         if (options.hasRange()) {
             return new WholeOptionRange(setter, getter, options.min(), options.max(), 1);
         }
@@ -37,7 +37,7 @@ public record WholeOptionRange(LongConsumer setter, LongSupplier getter, long mi
     private static WholeOptionRange ofShort(ResourcefulConfigValueEntry entry) {
         final LongConsumer setter = value -> entry.setShort((short) value);
         final LongSupplier getter = entry::getShort;
-        final EntryOptions options = entry.options();
+        final EntryData options = entry.options();
         if (options.hasRange()) {
             return new WholeOptionRange(setter, getter, options.min(), options.max(), 1);
         }
@@ -47,7 +47,7 @@ public record WholeOptionRange(LongConsumer setter, LongSupplier getter, long mi
     private static WholeOptionRange ofInteger(ResourcefulConfigValueEntry entry) {
         final LongConsumer setter = value -> entry.setInt((int) value);
         final LongSupplier getter = entry::getInt;
-        final EntryOptions options = entry.options();
+        final EntryData options = entry.options();
         if (options.hasRange()) {
             return new WholeOptionRange(setter, getter, options.min(), options.max(), 1);
         }
@@ -57,7 +57,7 @@ public record WholeOptionRange(LongConsumer setter, LongSupplier getter, long mi
     private static WholeOptionRange ofLong(ResourcefulConfigValueEntry entry) {
         final LongConsumer setter = entry::setLong;
         final LongSupplier getter = entry::getLong;
-        final EntryOptions options = entry.options();
+        final EntryData options = entry.options();
         if (options.hasRange()) {
             return new WholeOptionRange(setter, getter, options.min(), options.max(), 1);
         }

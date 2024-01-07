@@ -4,7 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.teamresourceful.resourcefulconfig.api.config.*;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 
 import java.util.ArrayList;

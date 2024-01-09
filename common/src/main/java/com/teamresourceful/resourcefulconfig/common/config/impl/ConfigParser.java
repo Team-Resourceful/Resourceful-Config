@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.common.config.impl;
 
+import com.mojang.datafixers.util.Pair;
 import com.teamresourceful.resourcefulconfig.common.annotations.*;
 import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import org.jetbrains.annotations.Nullable;
@@ -7,10 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.teamresourceful.resourcefulconfig.common.config.ParsingUtils.assertEntry;
 import static com.teamresourceful.resourcefulconfig.common.config.ParsingUtils.assertButton;
@@ -28,7 +26,13 @@ public final class ConfigParser {
 
     private static ResourcefulConfigImpl createConfig(TempConfig config, @Nullable String file) {
         Map<String, ResourcefulConfigImpl> subConfigs = new LinkedHashMap<>();
-        config.configs.forEach((key, value) -> subConfigs.put(key, createConfig(value, null)));
+
+        List<Pair<Integer, Pair<String, TempConfig>>> sortedConfigs = new ArrayList<>();
+        config.configs.forEach((key, value) -> sortedConfigs.add(Pair.of(value.getFirst(), Pair.of(key, value.getSecond()))));
+        sortedConfigs.stream()
+                .sorted(Comparator.comparingInt(Pair::getFirst))
+                .map(Pair::getSecond)
+                .forEach(pair -> subConfigs.put(pair.getFirst(), createConfig(pair.getSecond(), null)));
         return new ResourcefulConfigImpl(config.web(), new LinkedHashMap<>(config.entries()), new ArrayList<>(config.buttons()), subConfigs, file, config.translation());
     }
 
@@ -41,7 +45,7 @@ public final class ConfigParser {
             if (inlineCategory != null) {
                 Category data = entry.getType().getAnnotation(Category.class);
                 if (data != null) {
-                    builtConfig.configs.put(data.id(), parseData(entry.getType(), Category.class, data.translation()));
+                    builtConfig.configs.put(data.id(), Pair.of(data.sortOrder(), parseData(entry.getType(), Category.class, data.translation())));
                 }
                 continue;
             }
@@ -60,7 +64,7 @@ public final class ConfigParser {
         for (Class<?> subConfig : config.getDeclaredClasses()) {
             Category data = subConfig.getAnnotation(Category.class);
             if (data != null) {
-                builtConfig.configs.put(data.id(), parseData(subConfig, Category.class, data.translation()));
+                builtConfig.configs.put(data.id(), Pair.of(data.sortOrder(), parseData(subConfig, Category.class, data.translation())));
             }
         }
 
@@ -71,7 +75,7 @@ public final class ConfigParser {
             ResourcefulWebConfig web,
             Map<String, ResourcefulConfigEntryImpl> entries,
             List<ResourcefulButtonEntryImpl> buttons,
-            Map<String, TempConfig> configs,
+            Map<String, Pair<Integer, TempConfig>> configs,
             String translation
     ) {
 

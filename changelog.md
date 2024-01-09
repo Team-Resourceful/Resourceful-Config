@@ -1,1 +1,2 @@
-Add button annotation to be used in configs.
+Add sort order for category annotations.
+Make config screen a pause screen. 

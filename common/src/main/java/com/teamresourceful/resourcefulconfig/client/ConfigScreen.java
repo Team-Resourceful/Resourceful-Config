@@ -93,11 +93,6 @@ public class ConfigScreen extends Screen {
             .ifPresent(ClientUtils::setTooltip);
     }
 
-    @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
     public String getFileName() {
         if (parent != null) {
             return parent.getFileName();

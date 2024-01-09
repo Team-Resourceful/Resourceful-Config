@@ -13,4 +13,11 @@ public @interface Category {
     String id();
 
     String translation();
+
+    /**
+     * The sort order of the category.
+     *
+     * @apiNote This is temporary as in future versions categories will be defined in the config annotation.
+     */
+    int sortOrder() default 1000;
 }

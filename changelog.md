@@ -1,1 +1,1 @@
-Fix crash on neoforge
+1.20.4 Release

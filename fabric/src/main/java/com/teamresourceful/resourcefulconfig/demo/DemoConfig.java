@@ -13,8 +13,10 @@ import net.minecraft.ChatFormatting;
 @WebInfo(
         title = "Demo",
         description = "Description for a demo.",
+        color = "#ff0000",
+        icon = "planet",
         links = {
-                @Link(title = "Link 1", value = "https://www.google.com", icon = "box"),
+                @Link(title = "Link 1", value = "https://www.google.com", icon = "aperture"),
                 @Link(title = "Link 2", value = "https://www.google.com", icon = "box")
         }
 )
@@ -79,6 +81,14 @@ public final class DemoConfig {
     )
     public static ChatFormatting demoEnum = ChatFormatting.RED;
 
+    @ConfigEntry(
+        type = EntryType.STRING,
+        id = "demoRegex",
+        translation = "regex"
+    )
+    @ConfigOption.Regex("#[a-fA-F0-9]{6}")
+    public static String demoRegex = "#ff0000";
+
     @ConfigButton(
         target = "demoEnum",
         text = "Click ME!",
@@ -95,5 +105,10 @@ public final class DemoConfig {
     )
     public static void clickMe2() {
         System.out.println("Clicked! 2");
+    }
+
+    @ConfigButton(target = "test", text = "Click Me!", position = Position.BEFORE)
+    public static void button() {
+        System.out.println("clicked me!");
     }
 }

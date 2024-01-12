@@ -137,7 +137,9 @@ jobs:
           name: "[Fabric] Resourceful Config ${{ steps.version.outputs.version }}"
           version: ${{ steps.version.outputs.version }}
           changelog-file: changelog.md
-          loaders: fabric
+          loaders: |
+            fabric
+            quilt
           game-versions: ${{ steps.props.outputs.mc_version }}
           version-resolver: exact
 
@@ -145,6 +147,12 @@ jobs:
         run: |
           ./gradlew injectReadme
           mv -f ./build/README.md .
+
+      - name: Commit Version Updates
+        run: |
+          git config --global user.name "TeamResourcefulBot"
+          git config --global user.email "teamresourcefulbot@users.noreply.github.com"
+          git diff-index --quiet HEAD || { git commit -am "Released v${{ steps.version.outputs.version }}"; git push; }
 
       - name: Create Discord Embed
         run: ./gradlew injectDiscordEmbed
@@ -157,9 +165,3 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
           raw-data: ./build/release_embed.json
-
-      - name: Commit Version Updates
-        run: |
-          git config --global user.name "TeamResourcefulBot"
-          git config --global user.email "teamresourcefulbot@users.noreply.github.com"
-          git diff-index --quiet HEAD || { git commit -am "Released v${{ steps.version.outputs.version }}"; git push; }

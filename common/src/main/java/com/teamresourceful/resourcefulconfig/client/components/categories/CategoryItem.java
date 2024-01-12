@@ -31,7 +31,7 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
         int color = this.isHovered() ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;
         renderScrollingString(
                 graphics, Minecraft.getInstance().font,
-                this.config.toComponent(),
+                this.config.info().title().toComponent(),
                 getX() + PADDING * 2, getY() + PADDING,
                 getX() + PADDING * 2 + getWidth() - PADDING * 4, getY() + getHeight() - PADDING,
                 color

@@ -20,6 +20,10 @@ public final class ModUtils {
         LOGGER.info("[ResourcefulConfig] " + message);
     }
 
+    public static void log(String message, Throwable throwable) {
+        LOGGER.info("[ResourcefulConfig] " + message, throwable);
+    }
+
     public static void debug(String message) {
         LOGGER.debug("[ResourcefulConfig] " + message);
     }

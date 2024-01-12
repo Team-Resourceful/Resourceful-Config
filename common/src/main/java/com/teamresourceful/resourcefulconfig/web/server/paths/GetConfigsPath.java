@@ -4,8 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
-import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 import com.teamresourceful.resourcefulconfig.web.utils.WebServerUtils;
 import com.teamresourceful.resourcefulconfig.web.utils.WebVerifier;
@@ -21,7 +22,7 @@ public record GetConfigsPath(WebVerifier verifier) implements BasePath {
     public void handleCall(HttpExchange exchange, UserJwtPayload payload) throws IOException {
         JsonArray array = new JsonArray();
         for (ResourcefulConfig config : Configurations.INSTANCE) {
-            if (!config.webConfig().hidden()) {
+            if (!config.info().isHidden()) {
                 array.add(createConfigJson(config));
             }
         }
@@ -35,14 +36,18 @@ public record GetConfigsPath(WebVerifier verifier) implements BasePath {
     }
 
     private static JsonObject createConfigJson(ResourcefulConfig config) {
-        final ResourcefulWebConfig resourcefulWebConfig = config.webConfig();
+        final ResourcefulConfigInfo info = config.info();
         JsonObject json = new JsonObject();
         json.addProperty("id", config.id());
-        json.addProperty("title", resourcefulWebConfig.title());
-        json.addProperty("description", resourcefulWebConfig.description());
-        json.addProperty("icon", resourcefulWebConfig.icon());
-        json.add("color", resourcefulWebConfig.toColor());
-        json.add("links", resourcefulWebConfig.toJsonLinks());
+        json.addProperty("title", info.title().toLocalizedString());
+        json.addProperty("description", info.description().toLocalizedString());
+        json.addProperty("icon", info.icon());
+        json.add("color", info.color().toJson());
+        JsonArray links = new JsonArray();
+        for (ResourcefulConfigLink link : info.links()) {
+            links.add(link.toJson());
+        }
+        json.add("links", links);
         return json;
     }
 }

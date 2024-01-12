@@ -6,21 +6,21 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.teamresourceful.resourcefulconfig.web.annotations.Gradient;
 import com.teamresourceful.resourcefulconfig.web.annotations.Link;
-import com.teamresourceful.resourcefulconfig.web.annotations.WebInfo;
+import org.jetbrains.annotations.ApiStatus;
 
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.20.5")
+@SuppressWarnings("unused")
 public record ResourcefulWebConfig(boolean hidden, String icon, String color, Gradient gradient, String title, String description, Link[] links) {
 
     public static final ResourcefulWebConfig DEFAULT = new ResourcefulWebConfig(true, "box", "#ffffff", null, "", "", new Link[0]);
     public static final ResourcefulWebConfig NO_HIDE = new ResourcefulWebConfig(false, "box", "#ffffff", null, "", "", new Link[0]);
 
     public static ResourcefulWebConfig of(Class<?> clazz) {
-        WebInfo config = clazz.getAnnotation(WebInfo.class);
-        if (config == null) return DEFAULT;
-        return new ResourcefulWebConfig(config.hidden(), config.icon(), config.color(), config.gradient(), config.title(), config.description(), config.links());
+        return DEFAULT;
     }
 
     public static ResourcefulWebConfig showOf(ResourcefulWebConfig config) {
-         if (config == DEFAULT) return NO_HIDE;
          return config;
      }
 

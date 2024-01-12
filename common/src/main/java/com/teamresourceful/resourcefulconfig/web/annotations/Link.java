@@ -1,10 +1,13 @@
 package com.teamresourceful.resourcefulconfig.web.annotations;
 
 import org.intellij.lang.annotations.Pattern;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nls;
 
 import java.lang.annotation.*;
 
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.20.5")
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Link {

@@ -1,6 +1,8 @@
 package com.teamresourceful.resourcefulconfig.api.types.options;
 
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.function.BiConsumer;
 
@@ -14,13 +16,25 @@ public record TranslatableValue(
 
     public static final TranslatableValue EMPTY = new TranslatableValue("", "");
 
+    public TranslatableValue(String value) {
+        this(value, "");
+    }
+
     public void ifPresent(BiConsumer<String, String> value) {
         if (!this.value.isBlank()) {
             value.accept(this.value, this.translation);
         }
     }
 
-    public Component toComponent() {
+    public MutableComponent toComponent() {
         return Component.translatableWithFallback(translation(), value());
+    }
+
+    public String toLocalizedString() {
+        return Language.getInstance().getOrDefault(translation(), value());
+    }
+
+    public boolean hasTranslation() {
+        return !translation().isBlank();
     }
 }

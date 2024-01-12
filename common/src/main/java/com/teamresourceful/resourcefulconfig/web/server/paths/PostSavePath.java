@@ -26,7 +26,7 @@ public record PostSavePath(WebVerifier verifier) implements BasePath {
         String query = WebServerUtils.getQueryValue(exchange, "id");
         if (query != null) {
             ResourcefulConfig config = Configurations.INSTANCE.configs().get(query);
-            if (config != null && !config.webConfig().hidden()) {
+            if (config != null && !config.info().isHidden()) {
                 try {
                     String data = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.UTF_8);
                     JsonObject object = WebServerUtils.GSON.fromJson(data, JsonObject.class);

@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.web.annotations;
 
 import org.intellij.lang.annotations.Pattern;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nls;
 
 import java.lang.annotation.ElementType;
@@ -8,6 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.20.5")
+@SuppressWarnings("unused")
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WebInfo {
@@ -27,5 +31,9 @@ public @interface WebInfo {
 
     Link[] links() default {};
 
+    /**
+     * @deprecated @use {@link com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption.Hidden} instead.
+     */
+    @Deprecated
     boolean hidden() default false;
 }

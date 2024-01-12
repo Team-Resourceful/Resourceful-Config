@@ -5,9 +5,9 @@ import com.teamresourceful.resourcefulconfig.api.annotations.Config;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncObject;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
-import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,14 +21,14 @@ import java.util.List;
 public record ParsedConfig(
     @NotNull String id,
     @NotNull String translation,
-    @NotNull ResourcefulWebConfig webConfig,
+    @NotNull ResourcefulConfigInfo info,
     @NotNull LinkedHashMap<String, ResourcefulConfigEntry> entries,
     @NotNull LinkedHashMap<String, ResourcefulConfig> categories,
     @NotNull List<ResourcefulConfigButton> buttons
 ) implements ResourcefulConfig {
 
-    public ParsedConfig(Config config, ResourcefulWebConfig webConfig) {
-        this(config.value(), config.translation(), webConfig, new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>());
+    public ParsedConfig(Config config, ResourcefulConfigInfo info) {
+        this(config.value(), config.translation(), info, new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>());
     }
 
     private File getConfigFile() {
@@ -45,8 +45,7 @@ public record ParsedConfig(
         try {
             FileUtils.write(getConfigFile(), Writer.save(this).toString(), StandardCharsets.UTF_8);
         } catch (Exception e) {
-            System.out.println("Failed to save config file " + id + ".json");
-            e.printStackTrace();
+            ModUtils.log("Failed to save config file " + id + ".json", e);
         }
     }
 
@@ -62,7 +61,7 @@ public record ParsedConfig(
                 // NO-OP
             }
             if (file.getName().endsWith(".json") && !file.delete()) {
-                System.out.println("Failed to delete old config file " + id + ".json");
+                ModUtils.log("Failed to delete old config file " + id + ".json");
             }
         }
     }

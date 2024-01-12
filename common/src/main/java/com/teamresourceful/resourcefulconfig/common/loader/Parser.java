@@ -4,10 +4,10 @@ import com.teamresourceful.resourcefulconfig.api.annotations.Category;
 import com.teamresourceful.resourcefulconfig.api.annotations.Config;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigButton;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
-import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
+import com.teamresourceful.resourcefulconfig.common.info.ParsedInfo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -19,7 +19,7 @@ public class Parser {
 
     public static ResourcefulConfig parse(Class<?> clazz) {
         Config data = assertAnnotation(clazz, Config.class);
-        return populateEntries(clazz, new ParsedConfig(data, ResourcefulWebConfig.of(clazz)), data.categories());
+        return populateEntries(clazz, new ParsedConfig(data, ParsedInfo.of(clazz, data.value())), data.categories());
     }
 
     private static <T extends ResourcefulConfig> T populateEntries(Class<?> clazz, T config, Class<?>[] categories) {
@@ -49,7 +49,7 @@ public class Parser {
                     data.value(),
                     populateEntries(
                             category,
-                            new ParsedCategory(data, ResourcefulWebConfig.of(category), config),
+                            new ParsedCategory(data, ParsedInfo.of(category, data.value()), config),
                             data.categories()
                     )
             );

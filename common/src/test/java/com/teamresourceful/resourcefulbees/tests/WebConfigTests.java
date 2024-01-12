@@ -1,36 +1,40 @@
 package com.teamresourceful.resourcefulbees.tests;
 
-import com.teamresourceful.resourcefulconfig.web.annotations.Link;
-import com.teamresourceful.resourcefulconfig.web.annotations.WebInfo;
-import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
+import com.google.gson.JsonPrimitive;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigInfo;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
+import com.teamresourceful.resourcefulconfig.common.info.ParsedInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class WebConfigTests {
 
-    @WebInfo(
-        hidden = true,
+    private static final JsonPrimitive COLOR = new JsonPrimitive("#ff00ff");
+
+    @ConfigInfo(
         title = "Test",
         description = "Test",
         icon = "test",
-        color = "#ff00ff",
         links = {
-            @Link(title = "Test", icon = "test", value = "https://www.google.com")
+            @ConfigInfo.Link(text = "Test", icon = "test", value = "https://www.google.com")
         }
     )
+    @ConfigInfo.Color("#ff00ff")
+    @ConfigOption.Hidden
     private static final class LoadedClass {}
 
     @Test
     public void testWebInfoLoading() {
-        ResourcefulWebConfig config = ResourcefulWebConfig.of(LoadedClass.class);
-        Assertions.assertTrue(config.hidden());
-        Assertions.assertEquals("Test", config.title());
-        Assertions.assertEquals("Test", config.description());
-        Assertions.assertEquals("test", config.icon());
-        Assertions.assertEquals("#ff00ff", config.color());
-        Assertions.assertEquals(1, config.links().length);
-        Assertions.assertEquals("Test", config.links()[0].title());
-        Assertions.assertEquals("test", config.links()[0].icon());
-        Assertions.assertEquals("https://www.google.com", config.links()[0].value());
+        ResourcefulConfigInfo info = ParsedInfo.of(LoadedClass.class, "id");
+        Assertions.assertTrue(info.isHidden());
+        Assertions.assertEquals("Test", info.title().value());
+        Assertions.assertEquals("Test", info.description().value());
+        Assertions.assertEquals("test", info.icon());
+        Assertions.assertEquals(COLOR, info.color().toJson());
+        Assertions.assertEquals(1, info.links().length);
+        Assertions.assertEquals("Test", info.links()[0].text().value());
+        Assertions.assertEquals("test", info.links()[0].icon());
+        Assertions.assertEquals("https://www.google.com", info.links()[0].url());
     }
 }

@@ -21,8 +21,8 @@ public class ConfigItem extends ContainerWidget implements ListWidget.Item {
 
     public ConfigItem(ResourcefulConfig config) {
         super(0, 0, 0, 0);
-        this.title = config.toComponent().copy().withColor(UIConstants.TEXT_TITLE);
-        this.description = Component.literal(config.webConfig().description()).withColor(UIConstants.TEXT_PARAGRAPH);
+        this.title = config.info().title().toComponent().withColor(UIConstants.TEXT_TITLE);
+        this.description = config.info().description().toComponent().withColor(UIConstants.TEXT_PARAGRAPH);
         this.config = config;
     }
 

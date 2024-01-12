@@ -10,6 +10,7 @@ import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfig
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class Loader {
                 }
             } else if (entry instanceof ResourcefulConfigValueEntry valueEntry) {
                 if (!setValue(element, id, valueEntry)) {
-                    System.out.println("Failed to set value for " + id);
+                    ModUtils.log("Failed to set value for " + id);
                 }
             }
         }
@@ -46,7 +47,7 @@ public class Loader {
             if (element instanceof JsonObject) return;
             if (configEntry instanceof ResourcefulConfigValueEntry valueEntry) {
                 if (!setValue(element, id, valueEntry)) {
-                    System.out.println("Failed to set value for " + id);
+                    ModUtils.log("Failed to set value for " + id);
                 }
             }
         }
@@ -77,7 +78,7 @@ public class Loader {
                     if (value != null) {
                         return value;
                     }
-                    System.out.println("Failed to parse enum value for " + id);
+                    ModUtils.log("Failed to parse enum value for " + id);
                 }
                 return primitive.getAsString();
             }

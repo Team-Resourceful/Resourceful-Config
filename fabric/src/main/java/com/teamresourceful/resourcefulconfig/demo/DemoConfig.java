@@ -1,25 +1,11 @@
 package com.teamresourceful.resourcefulconfig.demo;
 
-import com.teamresourceful.resourcefulconfig.api.annotations.Config;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigButton;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
+import com.teamresourceful.resourcefulconfig.api.annotations.*;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.api.types.options.Position;
-import com.teamresourceful.resourcefulconfig.web.annotations.Link;
-import com.teamresourceful.resourcefulconfig.web.annotations.WebInfo;
 import net.minecraft.ChatFormatting;
 
-@WebInfo(
-        title = "Demo",
-        description = "Description for a demo.",
-        color = "#ff0000",
-        icon = "planet",
-        links = {
-                @Link(title = "Link 1", value = "https://www.google.com", icon = "aperture"),
-                @Link(title = "Link 2", value = "https://www.google.com", icon = "box")
-        }
-)
+@ConfigInfo.Provider(DemoInfoProvider.class)
 @Config(
     value = "demo"
 )

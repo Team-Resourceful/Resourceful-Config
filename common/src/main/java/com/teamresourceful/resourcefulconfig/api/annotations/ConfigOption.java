@@ -47,7 +47,7 @@ public class ConfigOption {
         String description() default "";
     }
 
-    @Target({ElementType.FIELD})
+    @Target({ElementType.FIELD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Hidden {
     }

@@ -4,6 +4,7 @@ package com.teamresourceful.resourcefulconfig.api.loader;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.common.loader.Parser;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
@@ -47,8 +48,7 @@ public final class Configurator {
             config.save();
             return config;
         }catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Failed to create config for " + clazz.getName());
+            ModUtils.log("Failed to create config for " + clazz.getName(), e);
         }
         return null;
     }

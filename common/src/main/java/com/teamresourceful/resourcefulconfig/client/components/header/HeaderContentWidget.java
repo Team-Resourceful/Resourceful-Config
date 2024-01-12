@@ -1,11 +1,11 @@
 package com.teamresourceful.resourcefulconfig.client.components.header;
 
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
-import com.teamresourceful.resourcefulconfig.web.annotations.Link;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +14,6 @@ import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class HeaderContentWidget extends ContainerWidget {
@@ -34,7 +33,12 @@ public class HeaderContentWidget extends ContainerWidget {
                 .spacing(UIConstants.SPACING);
 
         titleDesc.addChild(
-                new StringWidget(twoThirds, 9, config.toComponent().withColor(UIConstants.TEXT_TITLE), font)
+                new StringWidget(twoThirds, 9, config.info().title().toComponent().withColor(UIConstants.TEXT_TITLE), font)
+                        .alignLeft()
+        );
+
+        titleDesc.addChild(
+                new StringWidget(twoThirds, 9, config.info().description().toComponent().withColor(UIConstants.TEXT_PARAGRAPH), font)
                         .alignLeft()
         );
 
@@ -42,16 +46,16 @@ public class HeaderContentWidget extends ContainerWidget {
                 .horizontal()
                 .spacing(UIConstants.SPACING);
 
-        for (Link link : config.webConfig().links()) {
+        for (ResourcefulConfigLink link : config.info().links()) {
             SpriteButton button = SpriteButton.builder(12, 12)
                     .padding(2)
                     .sprite(ModSprites.LINK)
                     .onPress(() -> {
                         Screen screen = Minecraft.getInstance().screen;
                         if (screen == null) return;
-                        ConfirmLinkScreen.confirmLinkNow(screen, link.value());
+                        ConfirmLinkScreen.confirmLinkNow(screen, link.url());
                     })
-                    .tooltip(Component.literal(link.title()))
+                    .tooltip(link.text().toComponent())
                     .build();
             links.addChild(button);
         }

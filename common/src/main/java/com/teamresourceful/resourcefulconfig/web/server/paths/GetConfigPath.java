@@ -5,14 +5,13 @@ import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
-import com.teamresourceful.resourcefulconfig.api.types.options.TranslatableValue;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
-import com.teamresourceful.resourcefulconfig.web.info.ResourcefulWebConfig;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 import com.teamresourceful.resourcefulconfig.web.utils.WebServerUtils;
 import com.teamresourceful.resourcefulconfig.web.utils.WebVerifier;
-import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         String query = WebServerUtils.getQueryValue(exchange, "id");
         if (query != null) {
             ResourcefulConfig config = Configurations.INSTANCE.configs().get(query);
-            if (config != null && !config.webConfig().hidden()) {
+            if (config != null && !config.info().isHidden()) {
                 JsonObject json = createWebConfig(config);
                 WebServerUtils.send(exchange, HttpURLConnection.HTTP_OK, "application/json", json.toString().getBytes());
             } else {
@@ -44,12 +43,16 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
     }
 
     private static JsonObject createWebConfig(ResourcefulConfig config) {
-        final ResourcefulWebConfig resourcefulWebConfig = config.webConfig();
+        final ResourcefulConfigInfo info = config.info();
         JsonObject json = createWebConfigData(config);
-        json.addProperty("icon", resourcefulWebConfig.icon());
-        json.addProperty("title", resourcefulWebConfig.title());
-        json.addProperty("description", resourcefulWebConfig.description());
-        json.add("links", resourcefulWebConfig.toJsonLinks());
+        json.addProperty("icon", info.icon());
+        json.addProperty("title", info.title().toLocalizedString());
+        json.addProperty("description", info.description().toLocalizedString());
+        JsonArray links = new JsonArray();
+        for (ResourcefulConfigLink link : info.links()) {
+            links.add(link.toJson());
+        }
+        json.add("links", links);
         return json;
     }
 
@@ -58,12 +61,12 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         json.add("entries", createEntries(config));
         JsonArray categories = new JsonArray();
         config.categories().forEach((id, category) -> {
-            ResourcefulWebConfig info = ResourcefulWebConfig.showOf(category.webConfig());
-            if (!info.hidden()) {
+            ResourcefulConfigInfo info = category.info();
+            if (!info.isHidden()) {
                 JsonObject categoryJson = createWebConfigData(category);
                 categoryJson.addProperty("id", id);
                 categoryJson.addProperty("icon", info.icon());
-                categoryJson.addProperty("title", getTitle(info.title(), category));
+                categoryJson.addProperty("title", info.title().toLocalizedString());
                 categories.add(categoryJson);
             }
         });
@@ -107,8 +110,8 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
                 }
             }
             json.addProperty("id", id);
-            json.addProperty("title", toLocalString(valueEntry.options().title()));
-            json.addProperty("description", toLocalString(valueEntry.options().comment()));
+            json.addProperty("title", valueEntry.options().title().toLocalizedString());
+            json.addProperty("description", valueEntry.options().comment().toLocalizedString());
             array.add(json);
         });
         return array;
@@ -133,20 +136,6 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
 
     private static Enum<?>[] getEnumConstants(Class<?> clazz) {
         return (Enum<?>[]) clazz.getEnumConstants();
-    }
-
-    private static String getTitle(String input, ResourcefulConfig config) {
-        if (input.isBlank()) {
-            return I18n.get(config.translation());
-        }
-        return input;
-    }
-
-    private static String toLocalString(TranslatableValue value) {
-        if (I18n.exists(value.translation())) {
-            return I18n.get(value.translation());
-        }
-        return value.value();
     }
 
 }

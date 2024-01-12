@@ -20,7 +20,6 @@ import java.util.List;
 
 public record ParsedConfig(
     @NotNull String id,
-    @NotNull String translation,
     @NotNull ResourcefulConfigInfo info,
     @NotNull LinkedHashMap<String, ResourcefulConfigEntry> entries,
     @NotNull LinkedHashMap<String, ResourcefulConfig> categories,
@@ -28,7 +27,7 @@ public record ParsedConfig(
 ) implements ResourcefulConfig {
 
     public ParsedConfig(Config config, ResourcefulConfigInfo info) {
-        this(config.value(), config.translation(), info, new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>());
+        this(config.value(), info, new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>());
     }
 
     private File getConfigFile() {

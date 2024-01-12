@@ -16,7 +16,5 @@ public @interface Category {
 
     String value();
 
-    String translation() default "";
-
     Class<?>[] categories() default {};
 }

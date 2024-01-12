@@ -12,14 +12,13 @@ import java.util.*;
 @ApiStatus.Internal
 public record Configurations(
         Map<String, List<String>> modToConfigs,
-        Map<String, ResourcefulConfig> configs,
-        Map<Class<?>, String> configClasses
+        Map<String, ResourcefulConfig> configs
 ) implements Iterable<ResourcefulConfig> {
 
     public static final Configurations INSTANCE = new Configurations();
 
     private Configurations() {
-        this(new HashMap<>(), new HashMap<>(), new HashMap<>());
+        this(new HashMap<>(), new HashMap<>());
     }
 
     private void addModConfigs(String modid, String configId) {
@@ -29,7 +28,6 @@ public record Configurations(
     public void addConfig(ResourcefulConfig config, String modid) {
         if (modid != null) addModConfigs(modid, config.id());
         configs.put(config.id(), config);
-        configClasses.put(config.getClass(), config.id());
     }
 
     @NotNull

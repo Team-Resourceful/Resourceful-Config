@@ -6,9 +6,7 @@ import com.teamresourceful.resourcefulconfig.api.types.options.Position;
 import net.minecraft.ChatFormatting;
 
 @ConfigInfo.Provider(DemoInfoProvider.class)
-@Config(
-    value = "demo"
-)
+@Config("demo")
 @SuppressWarnings("unused")
 public final class DemoConfig {
 

@@ -13,7 +13,6 @@ import java.util.List;
 
 public record ParsedCategory(
     @NotNull String id,
-    @NotNull String translation,
     @NotNull ResourcefulConfigInfo info,
     @NotNull LinkedHashMap<String, ResourcefulConfigEntry> entries,
     @NotNull LinkedHashMap<String, ResourcefulConfig> categories,
@@ -24,7 +23,7 @@ public record ParsedCategory(
 
     public ParsedCategory(Category category, ResourcefulConfigInfo info, ResourcefulConfig parent) {
         this(
-                category.value(), category.translation(), info,
+                category.value(), info,
                 new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>(),
                 parent::save, parent::load
         );

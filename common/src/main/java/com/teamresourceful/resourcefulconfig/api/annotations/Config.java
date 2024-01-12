@@ -14,7 +14,5 @@ public @interface Config {
     @Pattern("^[a-z0-9_/-]+$")
     String value();
 
-    String translation() default "";
-
     Class<?>[] categories() default {};
 }

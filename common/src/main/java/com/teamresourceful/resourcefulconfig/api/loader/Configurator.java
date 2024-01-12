@@ -21,12 +21,6 @@ public final class Configurator {
         this.modid = modid;
     }
 
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.5")
-    public Configurator() {
-        this(null);
-    }
-
     public void register(Class<?> clazz) {
         var config = registerConfig(clazz);
         if (config != null) {

@@ -28,6 +28,9 @@
         ],
         "client": [
             "com.teamresourceful.resourcefulconfig.demo.Demo"
+        ],
+        "modmenu": [
+            "com.teamresourceful.resourcefulconfig.client.compat.fabric.modmenu.ResourcefulConfigModMenu"
         ]
     }
 }

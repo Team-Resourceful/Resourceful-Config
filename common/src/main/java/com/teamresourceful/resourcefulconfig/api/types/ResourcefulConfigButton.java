@@ -7,6 +7,16 @@ import com.teamresourceful.resourcefulconfig.api.types.options.Position;
  */
 public interface ResourcefulConfigButton {
 
+    /**
+     * @return returns the title translations of the button.
+     */
+    String title();
+
+    /**
+     * @return returns the description translations of the button.
+     */
+    String description();
+
     String target();
 
     Position position();

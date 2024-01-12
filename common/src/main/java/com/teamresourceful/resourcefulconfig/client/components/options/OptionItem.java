@@ -6,14 +6,12 @@ import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWid
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -79,11 +77,6 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
         layout.setPosition(this.getX() + PADDING, this.getY() + PADDING);
         layout.visitWidgets(this::addRenderableWidget);
         this.height = layout.getHeight() + PADDING * 2;
-    }
-
-    @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

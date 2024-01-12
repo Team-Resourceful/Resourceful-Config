@@ -11,6 +11,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ConfigButton {
 
+    /**
+     * @return returns the title translations of the button.
+     */
+    String title() default "";
+
     String target();
 
     String text();

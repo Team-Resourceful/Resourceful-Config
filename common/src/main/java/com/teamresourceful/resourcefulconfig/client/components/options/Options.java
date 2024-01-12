@@ -36,18 +36,17 @@ public final class Options {
             }
         });
 
+        buttonsBefore.get("").forEach(button -> addButton(widget, button));
+
         for (var value : entries.entrySet()) {
             final EntryData options = value.getValue().options();
+            if (options.isHidden()) continue;
 
             if (options.separator() != null) {
                 widget.add(new OptionItem(Component.literal(options.separator()), Component.nullToEmpty(options.separatorDescription()), List.of()));
             }
 
-            for (ResourcefulConfigButton button : buttonsBefore.get(value.getKey())) {
-                widget.add(new OptionItem(value.getValue(), List.of(
-                        new CustomButton(96, 12, Component.translatable(button.text()), button::invoke)
-                )));
-            }
+            buttonsBefore.get(value.getKey()).forEach(button -> addButton(widget, button));
 
             if (value.getValue() instanceof ResourcefulConfigValueEntry entry) {
                 populateValueEntry(widget, entry);
@@ -55,12 +54,19 @@ public final class Options {
                 widget.add(new OptionItem(entry, List.of(new ObjectOptionWidget(entry))));
             }
 
-            for (ResourcefulConfigButton button : buttonsAfter.get(value.getKey())) {
-                widget.add(new OptionItem(value.getValue(), List.of(
-                    new CustomButton(96, 12, Component.translatable(button.text()), button::invoke)
-                )));
-            }
+            buttonsAfter.get(value.getKey()).forEach(button -> addButton(widget, button));
         }
+
+        buttonsAfter.get("").forEach(button -> addButton(widget, button));
+    }
+
+    private static void addButton(OptionsListWidget list, ResourcefulConfigButton button) {
+        list.add(new OptionItem(
+                Component.translatable(button.title()),
+                Component.translatable(button.description()),
+                List.of(
+                new CustomButton(96, 12, Component.translatable(button.text()), button::invoke)
+        )));
     }
 
     private static void populateValueEntry(OptionsListWidget list, ResourcefulConfigValueEntry entry) {
@@ -84,8 +90,6 @@ public final class Options {
                 if (range.hasRange() && options.hasSlider()) {
                     yield new RangeOptionWidget(range);
                 }
-
-
 
                 yield switch (entry.type()) {
                     case BYTE -> new NumberOptionWidget<>(entry::getByte, entry::setByte, parseNumber(options, Byte::parseByte), NumberOptionWidget.INTEGER_FILTER);

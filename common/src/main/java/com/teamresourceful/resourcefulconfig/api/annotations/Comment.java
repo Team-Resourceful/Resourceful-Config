@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * <p>
  * This comment will be displayed in the config gui and the config file.
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Comment {
 

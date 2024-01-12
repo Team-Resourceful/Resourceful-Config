@@ -208,6 +208,11 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (type() != EntryType.STRING) return false;
         if (value == null) return false;
         try {
+            EntryData options = options();
+            if (options.hasRegex() && !options.matchesRegex(value)) {
+                reset();
+                return false;
+            }
             field().set(instance(), value);
             return true;
         } catch (Exception e) {

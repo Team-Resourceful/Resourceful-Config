@@ -4,8 +4,10 @@ import com.teamresourceful.resourcefulconfig.api.annotations.Comment;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import net.minecraft.Optionull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.regex.Pattern;
 
 /**
  * This class is used to store the data for a {@link com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry}.
@@ -17,6 +19,7 @@ public record EntryData(
     TranslatableValue comment,
 
     boolean isMultiline,
+    Pattern regex,
 
     boolean hasSlider,
     boolean hasRange,
@@ -24,7 +27,9 @@ public record EntryData(
     double max,
 
     String separator,
-    String separatorDescription
+    String separatorDescription,
+
+    boolean isHidden
 ) {
 
     public static Builder builder() {
@@ -44,7 +49,9 @@ public record EntryData(
                 Optionull.mapOrDefault(field.getAnnotation(Comment.class), Comment::translation, "")
             )
             .isMultiline(field.isAnnotationPresent(ConfigOption.Multiline.class))
-            .hasSlider(field.isAnnotationPresent(ConfigOption.Slider.class));
+            .regex(Optionull.map(field.getAnnotation(ConfigOption.Regex.class), ConfigOption.Regex::value))
+            .hasSlider(field.isAnnotationPresent(ConfigOption.Slider.class))
+            .isHidden(field.isAnnotationPresent(ConfigOption.Hidden.class));
 
         if (field.isAnnotationPresent(ConfigOption.Range.class)) {
             ConfigOption.Range range = field.getAnnotation(ConfigOption.Range.class);
@@ -63,11 +70,20 @@ public record EntryData(
         return value >= min && value <= max;
     }
 
+    public boolean hasRegex() {
+        return regex != null;
+    }
+
+    public boolean matchesRegex(String value) {
+        return regex.matcher(value).matches();
+    }
+
     public static class Builder {
         private TranslatableValue title = TranslatableValue.EMPTY;
         private TranslatableValue comment = TranslatableValue.EMPTY;
 
         private boolean isMultiline = false;
+        private Pattern regex = null;
 
         private boolean hasSlider = false;
         private boolean hasRange = false;
@@ -76,6 +92,8 @@ public record EntryData(
 
         private String separator = null;
         private String separatorDescription = null;
+
+        private boolean isHidden = false;
 
         public Builder translation(String value, String translation) {
             this.title = new TranslatableValue(value, translation);
@@ -89,6 +107,11 @@ public record EntryData(
 
         public Builder isMultiline(boolean value) {
             this.isMultiline = value;
+            return this;
+        }
+
+        public Builder regex(@Nullable String value) {
+            this.regex = Optionull.map(value, Pattern::compile);
             return this;
         }
 
@@ -110,8 +133,13 @@ public record EntryData(
             return this;
         }
 
+        public Builder isHidden(boolean value) {
+            this.isHidden = value;
+            return this;
+        }
+
         public EntryData build() {
-            return new EntryData(title, comment, isMultiline, hasSlider, hasRange, min, max, separator, separatorDescription);
+            return new EntryData(title, comment, isMultiline, regex, hasSlider, hasRange, min, max, separator, separatorDescription, isHidden);
         }
     }
 }

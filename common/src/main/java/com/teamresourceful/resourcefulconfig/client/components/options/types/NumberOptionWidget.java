@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.CommonComponents;
 
 import java.text.DecimalFormat;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -22,10 +21,10 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
     private static final int FOCUSED_WIDTH = WIDTH + FOCUSED_EXTRA_WIDTH;
 
     private final Supplier<T> getter;
-    private final Consumer<T> setter;
+    private final Function<T, Boolean> setter;
     private final Function<String, T> parser;
 
-    public NumberOptionWidget(Supplier<T> getter, Consumer<T> setter, Function<String, T> parser, Pattern filter) {
+    public NumberOptionWidget(Supplier<T> getter, Function<T, Boolean> setter, Function<String, T> parser, Pattern filter) {
         super(Minecraft.getInstance().font, WIDTH, 16, CommonComponents.EMPTY);
         setMaxLength(Short.MAX_VALUE);
         setBordered(false);
@@ -83,8 +82,11 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
         setResponder(s -> {
             try {
                 T value = this.parser.apply(s);
-                this.setter.accept(value);
-                this.setTextColor(0xE0E0E0);
+                if (this.setter.apply(value)) {
+                    this.setTextColor(0xE0E0E0);
+                } else {
+                    this.setTextColor(0xFF0000);
+                }
             } catch (NumberFormatException ignored) {
                 this.setTextColor(0xFF0000);
             }

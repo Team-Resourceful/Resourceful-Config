@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.CommonComponents;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class StringOptionWidget extends EditBox implements ResetableWidget {
@@ -16,18 +16,19 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     private static final int FOCUSED_WIDTH = WIDTH + FOCUSED_EXTRA_WIDTH;
 
     private final Supplier<String> getter;
-    private final Consumer<String> setter;
+    private final Function<String, Boolean> setter;
 
-    public StringOptionWidget(Supplier<String> getter, Consumer<String> setter) {
+    public StringOptionWidget(Supplier<String> getter, Function<String, Boolean> setter) {
         super(Minecraft.getInstance().font, WIDTH, 16, CommonComponents.EMPTY);
         setMaxLength(Short.MAX_VALUE);
         setBordered(false);
         setCanLoseFocus(true);
-        setValue(getter.get());
-        setResponder(setter);
 
         this.getter = getter;
         this.setter = setter;
+
+        setValue(getter.get());
+        setResponder();
     }
 
     @Override
@@ -61,6 +62,16 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     public void reset() {
         setResponder(s -> {});
         setValue(this.getter.get());
-        setResponder(this.setter);
+        setResponder();
+    }
+
+    public void setResponder() {
+        setResponder(s -> {
+            if (this.setter.apply(s)) {
+                setTextColor(0xE0E0E0);
+            } else {
+                setTextColor(0xFF0000);
+            }
+        });
     }
 }

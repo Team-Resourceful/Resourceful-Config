@@ -1,5 +1,7 @@
 package com.teamresourceful.resourcefulconfig.api.annotations;
 
+import org.intellij.lang.annotations.Language;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,10 +32,23 @@ public class ConfigOption {
 
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
+    public @interface Regex {
+
+        @Language("RegExp")
+        String value();
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
     public @interface Separator {
 
         String value();
 
         String description() default "";
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Hidden {
     }
 }

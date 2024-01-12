@@ -84,6 +84,10 @@ public class Writer {
                 comments.add("Range: " + format.format(options.min()) + " - " + format.format(options.max()));
             }
 
+            if (options.hasRegex()) {
+                comments.add("Regex: " + options.regex().pattern());
+            }
+
             if (options.isMultiline() && entry.type() == EntryType.STRING) {
                 comments.add("[Allows newlines]");
             }

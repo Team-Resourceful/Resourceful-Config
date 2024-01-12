@@ -37,4 +37,12 @@ public record Configurations(
     public Iterator<ResourcefulConfig> iterator() {
         return configs.values().iterator();
     }
+
+    public List<String> getConfigsForMod(String modid) {
+        return modToConfigs.getOrDefault(modid, List.of());
+    }
+
+    public Collection<String> getModIds() {
+        return modToConfigs.keySet();
+    }
 }

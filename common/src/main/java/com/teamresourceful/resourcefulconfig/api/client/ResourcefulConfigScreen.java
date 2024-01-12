@@ -4,10 +4,14 @@ import com.teamresourceful.resourcefulconfig.api.loader.Configurator;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
 import com.teamresourceful.resourcefulconfig.client.ConfigsScreen;
+import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import net.minecraft.Optionull;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Function;
 
 public class ResourcefulConfigScreen {
 
@@ -28,6 +32,15 @@ public class ResourcefulConfigScreen {
 
     public static Screen get(@Nullable Screen parent, String mod) {
         return new ConfigsScreen(parent, mod);
+    }
+
+    public static Function<@Nullable Screen, Screen> getFactory(String mod) {
+        List<String> configs = Configurations.INSTANCE.getConfigsForMod(mod);
+        if (configs.size() == 1) {
+            return screen -> get(screen, configs.get(0));
+        } else {
+            return screen -> get(screen, mod);
+        }
     }
 
     /**

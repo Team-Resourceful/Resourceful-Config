@@ -14,13 +14,29 @@ public final class Configurator {
     private final Map<String, ResourcefulConfig> configs = new HashMap<>();
     private final Map<Class<?>, String> configClasses = new HashMap<>();
 
+    private final String modid;
+
+    public Configurator(String modid) {
+        this.modid = modid;
+    }
+
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.20.5")
+    public Configurator() {
+        this(null);
+    }
+
     public void register(Class<?> clazz) {
         var config = registerConfig(clazz);
         if (config != null) {
-            configs.put(config.id(), config);
             configClasses.put(clazz, config.id());
-            Configurations.INSTANCE.addConfig(config);
+            register(config);
         }
+    }
+
+    public void register(ResourcefulConfig config) {
+        configs.put(config.id(), config);
+        Configurations.INSTANCE.addConfig(config, modid);
     }
 
     @ApiStatus.Internal

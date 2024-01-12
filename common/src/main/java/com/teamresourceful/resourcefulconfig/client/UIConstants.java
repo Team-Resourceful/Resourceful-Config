@@ -18,4 +18,6 @@ public class UIConstants {
     public static final Component EDIT = Component.literal("Edit");
     public static final Component EDIT_STRING = Component.literal("Edit String");
     public static final Component EDIT_OBJECT = Component.literal("Edit Object");
+    public static final Component MOD_CONFIGS = Component.literal("Mod Configs").withColor(UIConstants.TEXT_TITLE);
+    public static final Component MOD_CONFIGS_DESCRIPTION = Component.literal("Select a config to view or edit.").withColor(UIConstants.TEXT_PARAGRAPH);
 }

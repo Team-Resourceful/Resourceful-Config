@@ -3,6 +3,7 @@ package com.teamresourceful.resourcefulconfig.api.client;
 import com.teamresourceful.resourcefulconfig.api.loader.Configurator;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
+import com.teamresourceful.resourcefulconfig.client.ConfigsScreen;
 import net.minecraft.Optionull;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,10 @@ public class ResourcefulConfigScreen {
      */
     public static Screen get(@Nullable Screen parent, ResourcefulConfig config) {
         return new ConfigScreen(parent, config);
+    }
+
+    public static Screen get(@Nullable Screen parent, String mod) {
+        return new ConfigsScreen(parent, mod);
     }
 
     /**

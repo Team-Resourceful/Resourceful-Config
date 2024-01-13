@@ -11,4 +11,10 @@ public interface ResourcefulConfigColorValue extends ResourcefulConfigColor {
     default JsonElement toJson() {
         return new JsonPrimitive(this.color());
     }
+
+    static ResourcefulConfigColorValue create(
+            String color
+    ) {
+        return () -> color;
+    }
 }

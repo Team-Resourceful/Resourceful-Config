@@ -1,1 +1,1 @@
-1.20.4 Release
+Added create methods for config info and fixed link not auto doing json

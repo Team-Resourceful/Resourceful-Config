@@ -19,4 +19,28 @@ public interface ResourcefulConfigColorGradient extends ResourcefulConfigColor {
         json.addProperty("second", this.second());
         return json;
     }
+
+    static ResourcefulConfigColorGradient create(
+            String first,
+            String second,
+            String degree
+    ) {
+        return new ResourcefulConfigColorGradient() {
+
+            @Override
+            public String first() {
+                return first;
+            }
+
+            @Override
+            public String second() {
+                return second;
+            }
+
+            @Override
+            public String degree() {
+                return degree;
+            }
+        };
+    }
 }

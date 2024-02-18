@@ -1,1 +1,1 @@
-Added create methods for config info and fixed link not auto doing json
+Fix crash when screen was opened in non mojmap env.

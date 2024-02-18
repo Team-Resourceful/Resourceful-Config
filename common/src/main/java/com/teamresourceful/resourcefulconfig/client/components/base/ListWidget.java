@@ -59,7 +59,7 @@ public class ListWidget extends ContainerWidget {
         this.lastHeight = 0;
 
         for (Item item : items) {
-            item.setWidth(actualWidth);
+            item.setItemWidth(actualWidth);
             item.setX(getX());
             item.setY(y);
 
@@ -134,7 +134,7 @@ public class ListWidget extends ContainerWidget {
         this.lastHeight = 0;
         int y = this.getY() - (int) scroll + OVERSCROLL / 2;
         for (Item item : items) {
-            item.setWidth(actualWidth);
+            item.setItemWidth(actualWidth);
             item.setX(getX());
             item.setY(y);
             this.lastHeight += item.getHeight();
@@ -149,6 +149,6 @@ public class ListWidget extends ContainerWidget {
             return LayoutElement.super.getRectangle();
         }
 
-        void setWidth(int width);
+        void setItemWidth(int width);
     }
 }

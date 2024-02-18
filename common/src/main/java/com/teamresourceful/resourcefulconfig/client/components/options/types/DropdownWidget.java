@@ -125,5 +125,10 @@ public class DropdownWidget extends BaseWidget {
         public void onClick(double mouseX, double e) {
             this.setter.accept(this.option);
         }
+
+        @Override
+        public void setItemWidth(int width) {
+            this.setWidth(width);
+        }
     }
 }

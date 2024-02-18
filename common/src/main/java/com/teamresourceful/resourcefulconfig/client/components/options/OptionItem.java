@@ -92,4 +92,9 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
+
+    @Override
+    public void setItemWidth(int width) {
+        this.setWidth(width);
+    }
 }

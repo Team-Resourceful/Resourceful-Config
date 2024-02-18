@@ -42,4 +42,9 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
     public void onClick(double d, double e) {
         Minecraft.getInstance().setScreen(new ConfigScreen(this.screen, this.config));
     }
+
+    @Override
+    public void setItemWidth(int width) {
+        this.setWidth(width);
+    }
 }

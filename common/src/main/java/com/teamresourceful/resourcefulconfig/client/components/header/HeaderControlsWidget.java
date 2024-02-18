@@ -5,18 +5,20 @@ import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
+import net.minecraft.Optionull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 public class HeaderControlsWidget extends ContainerWidget {
 
     private final LinearLayout layout;
 
-    public HeaderControlsWidget(String filename, int width) {
+    public HeaderControlsWidget(@Nullable String filename, int width) {
         super(0, 0, width, 0);
 
         this.layout = LinearLayout.horizontal().spacing(UIConstants.PAGE_PADDING);
@@ -34,7 +36,7 @@ public class HeaderControlsWidget extends ContainerWidget {
         this.layout.addChild(
                 new StringWidget(
                         this.width - 16 - UIConstants.PAGE_PADDING * 3, 16,
-                        Component.literal(filename + ".jsonc").withColor(UIConstants.TEXT_PARAGRAPH), Minecraft.getInstance().font
+                        Component.literal(Optionull.mapOrDefault(filename, name -> name + ".jsonc", "")).withColor(UIConstants.TEXT_PARAGRAPH), Minecraft.getInstance().font
                 ).alignRight(),
                 settings -> settings.alignVerticallyMiddle().alignHorizontallyRight()
         );

@@ -51,4 +51,9 @@ public class ConfigHeaderItem extends ContainerWidget implements ListWidget.Item
     protected void positionUpdated() {
         init();
     }
+
+    @Override
+    public void setItemWidth(int width) {
+        this.setWidth(width);
+    }
 }

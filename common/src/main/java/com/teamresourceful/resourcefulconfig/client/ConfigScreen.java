@@ -81,11 +81,12 @@ public class ConfigScreen extends Screen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Nullable
     public String getFilename() {
         if (!this.config.hasFile() && this.parent instanceof ConfigScreen screen) {
             return screen.getFilename();
         } else if (!this.config.hasFile()) {
-            return "..";
+            return null;
         } else {
             return this.config.id();
         }

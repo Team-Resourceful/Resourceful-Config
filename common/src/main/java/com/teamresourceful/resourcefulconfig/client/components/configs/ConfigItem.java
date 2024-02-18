@@ -70,4 +70,9 @@ public class ConfigItem extends ContainerWidget implements ListWidget.Item {
         }
         return false;
     }
+
+    @Override
+    public void setItemWidth(int width) {
+        this.setWidth(width);
+    }
 }

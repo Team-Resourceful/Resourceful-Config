@@ -4,10 +4,11 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
+import org.jetbrains.annotations.Nullable;
 
 public class HeaderWidget extends ContainerWidget {
 
-    public HeaderWidget(int x, int y, int width, String filename, ResourcefulConfig config) {
+    public HeaderWidget(int x, int y, int width, @Nullable String filename, ResourcefulConfig config) {
         super(x, y, width, 0);
 
         LinearLayout layout = LinearLayout

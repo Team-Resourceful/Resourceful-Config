@@ -1,1 +1,1 @@
-Fix crash when screen was opened in non mojmap env.
+- Fix concurrent crash on startup

@@ -5,6 +5,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Contains all the configs that have been registered in any configurator.
@@ -18,7 +19,7 @@ public record Configurations(
     public static final Configurations INSTANCE = new Configurations();
 
     private Configurations() {
-        this(new HashMap<>(), new HashMap<>());
+        this(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
     }
 
     private void addModConfigs(String modid, String configId) {

@@ -7,13 +7,13 @@ import com.teamresourceful.resourcefulconfig.common.loader.Parser;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class Configurator {
 
-    private final Map<String, ResourcefulConfig> configs = new HashMap<>();
-    private final Map<Class<?>, String> configClasses = new HashMap<>();
+    private final Map<String, ResourcefulConfig> configs = new ConcurrentHashMap<>();
+    private final Map<Class<?>, String> configClasses = new ConcurrentHashMap<>();
 
     private final String modid;
 

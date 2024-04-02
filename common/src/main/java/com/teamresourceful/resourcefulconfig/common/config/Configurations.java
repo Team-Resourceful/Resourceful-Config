@@ -38,6 +38,7 @@ public record Configurations(
     }
 
     public List<String> getConfigsForMod(String modid) {
+        if (modid == null) return List.of();
         return modToConfigs.getOrDefault(modid, List.of());
     }
 

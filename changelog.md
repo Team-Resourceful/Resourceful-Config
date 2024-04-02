@@ -1,1 +1,1 @@
-- Fix concurrent crash on startup
+- Fix crash with mod menu

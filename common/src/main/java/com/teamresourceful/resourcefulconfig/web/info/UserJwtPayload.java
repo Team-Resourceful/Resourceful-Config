@@ -25,7 +25,6 @@ public record UserJwtPayload(
     ).apply(instance, UserJwtPayload::new));
 
     public static UserJwtPayload fromJson(JsonElement json) {
-        return UserJwtPayload.CODEC.parse(JsonOps.INSTANCE, json)
-                .getOrThrow(false, s -> { });
+        return UserJwtPayload.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
     }
 }

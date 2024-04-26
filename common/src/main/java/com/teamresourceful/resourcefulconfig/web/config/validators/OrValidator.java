@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.web.config.validators;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 public record OrValidator(List<Validator> validators) implements Validator {
 
-    public static final Codec<OrValidator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<OrValidator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Validators.CODEC.listOf().fieldOf("validators").forGetter(OrValidator::validators)
     ).apply(instance, OrValidator::new));
 

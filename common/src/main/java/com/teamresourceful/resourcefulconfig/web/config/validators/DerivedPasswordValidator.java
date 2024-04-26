@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.web.config.validators;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 
@@ -17,7 +18,7 @@ public record DerivedPasswordValidator(SecretKeySpec spec) implements Validator 
             s -> new String(s.getEncoded())
     );
 
-    public static final Codec<DerivedPasswordValidator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<DerivedPasswordValidator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             SPEC_CODEC.fieldOf("secret").forGetter(DerivedPasswordValidator::spec)
     ).apply(instance, DerivedPasswordValidator::new));
 

@@ -1,12 +1,13 @@
 package com.teamresourceful.resourcefulconfig.web.config.validators;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 
 public record PasswordValidator(String password) implements Validator {
 
-    public static final Codec<PasswordValidator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<PasswordValidator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.fieldOf("password").forGetter(PasswordValidator::password)
     ).apply(instance, PasswordValidator::new));
 

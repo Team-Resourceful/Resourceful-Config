@@ -4,6 +4,7 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 
@@ -12,7 +13,7 @@ import java.util.Locale;
 
 public record HashedPasswordValidator(HashType type, String hash) implements Validator {
 
-    public static final Codec<HashedPasswordValidator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<HashedPasswordValidator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             HashType.CODEC.fieldOf("algorithm").forGetter(HashedPasswordValidator::type),
             Codec.STRING.fieldOf("input").forGetter(HashedPasswordValidator::hash)
     ).apply(instance, HashedPasswordValidator::new));

@@ -49,7 +49,7 @@ public final class WebServer {
                 final String data = Files.readString(file.toPath(), StandardCharsets.UTF_8);
                 final JsonObject object = WebServerUtils.GSON.fromJson(data, JsonObject.class);
 
-                return WebServerConfig.CODEC.parse(JsonOps.INSTANCE, object).get().map(s -> s, error -> {
+                return WebServerConfig.CODEC.parse(JsonOps.INSTANCE, object).mapOrElse(s -> s, error -> {
                     LOGGER.error("Failed to load config file: ${}", error);
                     return WebServerConfig.DEFAULT;
                 });

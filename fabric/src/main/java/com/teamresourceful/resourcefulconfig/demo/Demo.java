@@ -20,7 +20,11 @@ public class Demo implements ClientModInitializer {
         System.out.println("Resourceful Config Demo is enabled!");
 
         Configurator configurator = new Configurator("resourcefulconfig");
-        configurator.register(DemoConfig.class);
+        configurator.register(DemoConfig.class, event -> event.register(1, json -> {
+            json.add("demoString", json.get("oldString"));
+            json.remove("oldString");
+            return json;
+        }));
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> {
             dispatcher.register(ClientCommandManager.literal("rconfigdemo").executes(context -> {

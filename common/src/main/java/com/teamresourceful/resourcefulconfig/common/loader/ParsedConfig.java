@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.common.loader;
 
 import com.google.gson.JsonObject;
 import com.teamresourceful.resourcefulconfig.api.annotations.Config;
+import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
@@ -17,8 +18,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public record ParsedConfig(
+    int version,
     @NotNull String id,
     @NotNull ResourcefulConfigInfo info,
     @NotNull LinkedHashMap<String, ResourcefulConfigEntry> entries,
@@ -27,7 +30,7 @@ public record ParsedConfig(
 ) implements ResourcefulConfig {
 
     public ParsedConfig(Config config, ResourcefulConfigInfo info) {
-        this(config.value(), info, new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>());
+        this(config.version(), config.value(), info, new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>());
     }
 
     private File getConfigFile() {
@@ -49,12 +52,13 @@ public record ParsedConfig(
     }
 
     @Override
-    public void load() {
+    public void load(Consumer<ConfigPatchEvent> handler) {
         File file = getConfigFile();
         if (file.exists()) {
             try {
                 String data = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
                 JsonObject json = JsoncObject.parse(data);
+                json = Patcher.patch(json, this.version(), handler);
                 Loader.loadConfig(this, json);
             }catch (Exception e) {
                 // NO-OP

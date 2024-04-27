@@ -19,8 +19,14 @@ import java.util.List;
 
 public class Writer {
 
+    public static final String VERSION_KEY = "rconfig:version";
+
     public static JsoncObject save(ResourcefulConfig config) {
         JsoncObject object = new JsoncObject();
+        JsoncPrimitive version = new JsoncPrimitive(config.version());
+        version.comment("The version of the config file. Do not change this unless you know what you are doing.");
+        object.add(Writer.VERSION_KEY, version);
+
         writeEntries(config.entries(), object);
         writeCategories(config.categories(), object);
         return object;
@@ -105,7 +111,7 @@ public class Writer {
             comments.add("Type: " + entry.type().name().charAt(0) + entry.type().name().substring(1).toLowerCase());
         }
 
-        options.comment().ifPresent((comment, translation) -> comments.add(0, comment));
+        options.comment().ifPresent((comment, translation) -> comments.addFirst(comment));
 
         return String.join("\n", comments);
     }

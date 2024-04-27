@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.common.loader;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.Category;
+import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public record ParsedCategory(
     @NotNull String id,
@@ -18,7 +20,7 @@ public record ParsedCategory(
     @NotNull LinkedHashMap<String, ResourcefulConfig> categories,
     @NotNull List<ResourcefulConfigButton> buttons,
     Runnable saveCallback,
-    Runnable loadCallback
+    Consumer<Consumer<ConfigPatchEvent>> loadCallback
 ) implements ResourcefulConfig {
 
     public ParsedCategory(Category category, ResourcefulConfigInfo info, ResourcefulConfig parent) {
@@ -35,8 +37,8 @@ public record ParsedCategory(
     }
 
     @Override
-    public void load() {
-        this.loadCallback.run();
+    public void load(Consumer<ConfigPatchEvent> handler) {
+        this.loadCallback.accept(handler);
     }
 
     @Override

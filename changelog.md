@@ -1,1 +1,3 @@
-- Fix crash with mod menu
+- Update to 1.20.5
+- Add config versioning and config patching.
+- Fix file name not showing up correctly in the UI.

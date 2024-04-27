@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.api.loader;
 
 
+import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.common.loader.Parser;
@@ -9,10 +10,12 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public final class Configurator {
 
     private final Map<String, ResourcefulConfig> configs = new ConcurrentHashMap<>();
+    private final Map<String, Consumer<ConfigPatchEvent>> patchHandlers = new ConcurrentHashMap<>();
     private final Map<Class<?>, String> configClasses = new ConcurrentHashMap<>();
 
     private final String modid;
@@ -22,23 +25,24 @@ public final class Configurator {
     }
 
     public void register(Class<?> clazz) {
-        var config = registerConfig(clazz);
+        register(clazz, event -> {});
+    }
+
+    public void register(Class<?> clazz, Consumer<ConfigPatchEvent> handler) {
+        var config = registerConfig(clazz, handler);
         if (config != null) {
+            patchHandlers.put(config.id(), handler);
             configClasses.put(clazz, config.id());
-            register(config);
+            configs.put(config.id(), config);
+            Configurations.INSTANCE.addConfig(config, modid);
         }
     }
 
-    public void register(ResourcefulConfig config) {
-        configs.put(config.id(), config);
-        Configurations.INSTANCE.addConfig(config, modid);
-    }
-
     @ApiStatus.Internal
-    private ResourcefulConfig registerConfig(Class<?> clazz) {
+    private ResourcefulConfig registerConfig(Class<?> clazz, Consumer<ConfigPatchEvent> handler) {
         try {
             ResourcefulConfig config = Parser.parse(clazz);
-            config.load();
+            config.load(handler);
             config.save();
             return config;
         }catch (Exception e) {
@@ -73,7 +77,7 @@ public final class Configurator {
     public boolean loadConfig(String fileName) {
         var config = getConfig(fileName);
         if (config != null) {
-            config.load();
+            config.load(this.patchHandlers.getOrDefault(fileName, event -> {}));
             return true;
         }
         return false;

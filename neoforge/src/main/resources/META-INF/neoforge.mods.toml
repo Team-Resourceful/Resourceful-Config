@@ -16,14 +16,14 @@ issueTrackerURL = "https://github.com/Team-Resourceful/Resourceful-Config/issues
 
 [[dependencies.resourcefulconfig]]
     modId = "neoforge"
-    mandatory = true
-    versionRange = "[20.2,)"
+    type = "required"
+    versionRange = "[20.5,)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.resourcefulconfig]]
     modId = "minecraft"
-    mandatory = true
-    versionRange = "[1.20.2,)"
+    type = "required"
+    versionRange = "[1.20.5,)"
     ordering = "NONE"
     side = "BOTH"

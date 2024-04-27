@@ -5,16 +5,14 @@ import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 public class ResourcefulConfigNeoForgeClient {
 
     public static void onClientInit(ModContainer container) {
         container.registerExtensionPoint(
-            ConfigScreenHandler.ConfigScreenFactory.class,
-            () -> new ConfigScreenHandler.ConfigScreenFactory(
-                (client, parent) -> ResourcefulConfigScreen.getFactory(null).apply(parent)
-            )
+            IConfigScreenFactory.class,
+            (client, parent) -> ResourcefulConfigScreen.getFactory(null).apply(parent)
         );
     }
 
@@ -25,15 +23,13 @@ public class ResourcefulConfigNeoForgeClient {
                 ModUtils.log("Could not find mod container for mod id '" + mod + "'. Skipping config screen registration.");
                 continue;
             }
-            if (container.getCustomExtension(ConfigScreenHandler.ConfigScreenFactory.class).isPresent()) {
+            if (container.getCustomExtension(IConfigScreenFactory.class).isPresent()) {
                 ModUtils.debug("Mod '" + mod + "' already has a config screen factory. Skipping config screen registration.");
                 continue;
             }
             container.registerExtensionPoint(
-                ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory(
-                    (client, parent) -> ResourcefulConfigScreen.getFactory(mod).apply(parent)
-                )
+                IConfigScreenFactory.class,
+                (client, parent) -> ResourcefulConfigScreen.getFactory(mod).apply(parent)
             );
         }
     }

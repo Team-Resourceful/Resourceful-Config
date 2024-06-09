@@ -10,17 +10,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.function.Function;
+
 public class CategoryItem extends BaseWidget implements ListWidget.Item {
 
     private static final int PADDING = 4;
 
     private final ConfigScreen screen;
     private final ResourcefulConfig config;
+    private final Function<String, List<String>> termCollector;
 
-    public CategoryItem(ConfigScreen screen, ResourcefulConfig config) {
+    public CategoryItem(ConfigScreen screen, ResourcefulConfig config, Function<String, List<String>> termCollector) {
         super(0, PADDING * 2 + Minecraft.getInstance().font.lineHeight);
         this.screen = screen;
         this.config = config;
+        this.termCollector = termCollector;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
 
     @Override
     public void onClick(double d, double e) {
-        Minecraft.getInstance().setScreen(new ConfigScreen(this.screen, this.config));
+        Minecraft.getInstance().setScreen(new ConfigScreen(this.screen, this.config, this.termCollector));
     }
 
     @Override

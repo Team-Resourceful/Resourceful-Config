@@ -6,6 +6,7 @@ import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncObject;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;

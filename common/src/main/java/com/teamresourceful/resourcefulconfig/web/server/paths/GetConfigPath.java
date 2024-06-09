@@ -3,10 +3,12 @@ package com.teamresourceful.resourcefulconfig.web.server.paths;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
+import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
@@ -104,7 +106,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
                     json.addProperty("default", valueEntry.defaultOrElse(false));
                 }
                 case STRING -> {
-                    json.addProperty("type", valueEntry.options().isMultiline() ? "large-textbox" : "small-textbox");
+                    json.addProperty("type", valueEntry.options().hasOption(Option.MULTILINE) ? "large-textbox" : "small-textbox");
                     json.addProperty("current", valueEntry.getString());
                     json.addProperty("default", valueEntry.defaultOrElse(""));
                 }
@@ -123,13 +125,14 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         T def = entry.defaultOrElse((T) WebServerUtils.ZERO);
         T current = getter.apply(entry);
 
-        json.addProperty("type", options.hasRange() ? "range" : "number");
+        json.addProperty("type", options.hasOption(Option.RANGE) ? "range" : "number");
         json.addProperty("decimals", def instanceof Float || def instanceof Double);
         json.addProperty("current", current);
         json.addProperty("default", def);
-        if (options.hasRange()) {
-            json.addProperty("min", options.min());
-            json.addProperty("max", options.max());
+        if (options.hasOption(Option.RANGE)) {
+            ConfigOption.Range range = options.getOption(Option.RANGE);
+            json.addProperty("min", range.min());
+            json.addProperty("max", range.max());
             json.addProperty("step", 1);
         }
     }

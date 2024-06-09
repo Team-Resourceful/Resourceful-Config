@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class SpriteButton extends AbstractButton {
 
-    private final int padding;
-    private final ResourceLocation sprite;
-    private final Runnable onPress;
+    protected final int padding;
+    protected final ResourceLocation sprite;
+    protected final Runnable onPress;
 
     protected SpriteButton(int width, int height, int padding, ResourceLocation sprite, Runnable onPress, @Nullable Component tooltip) {
         super(0, 0, width + padding * 2, height + padding * 2, tooltip == null ? CommonComponents.EMPTY : tooltip);

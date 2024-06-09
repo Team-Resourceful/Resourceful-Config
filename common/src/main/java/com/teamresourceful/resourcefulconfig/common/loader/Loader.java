@@ -14,6 +14,7 @@ import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Loader {
 
@@ -57,6 +58,7 @@ public class Loader {
         if (element instanceof JsonArray array) {
             List<Object> list = new ArrayList<>();
             array.forEach(e -> list.add(convert(e, id, entry)));
+            list.removeIf(Objects::isNull);
             return list;
         } else if (element instanceof JsonPrimitive primitive) {
             if (primitive.isBoolean()) {

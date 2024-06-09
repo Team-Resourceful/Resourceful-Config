@@ -4,12 +4,11 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
-import org.jetbrains.annotations.Nullable;
 
 public class HeaderWidget extends ContainerWidget {
 
-    public HeaderWidget(int x, int y, int width, @Nullable String filename, ResourcefulConfig config) {
-        super(x, y, width, 0);
+    public HeaderWidget(int width, ResourcefulConfig config, Runnable onSearchUpdate) {
+        super(0, 0, width, 0);
 
         LinearLayout layout = LinearLayout
                 .horizontal()
@@ -18,7 +17,7 @@ public class HeaderWidget extends ContainerWidget {
         int controlsWidth = width / 4;
         int contentWidth = width - controlsWidth - UIConstants.PAGE_PADDING;
 
-        var controls = layout.addChild(new HeaderControlsWidget(filename, controlsWidth));
+        var controls = layout.addChild(new HeaderControlsWidget(controlsWidth, config, onSearchUpdate));
         var content = layout.addChild(new HeaderContentWidget(contentWidth, config));
 
         layout.arrangeElements();

@@ -15,10 +15,16 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     private static final int WIDTH = 80;
     private static final int FOCUSED_WIDTH = WIDTH + FOCUSED_EXTRA_WIDTH;
 
+
     private final Supplier<String> getter;
     private final Function<String, Boolean> setter;
+    private final boolean canExpand;
 
     public StringOptionWidget(Supplier<String> getter, Function<String, Boolean> setter) {
+        this(getter, setter, true);
+    }
+
+    public StringOptionWidget(Supplier<String> getter, Function<String, Boolean> setter, boolean canExpand) {
         super(Minecraft.getInstance().font, WIDTH, 16, CommonComponents.EMPTY);
         setMaxLength(Short.MAX_VALUE);
         setBordered(false);
@@ -26,6 +32,7 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
 
         this.getter = getter;
         this.setter = setter;
+        this.canExpand = canExpand;
 
         setValue(getter.get());
         setResponder();
@@ -49,6 +56,7 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     }
 
     public void updateIfFocused() {
+        if (!canExpand) return;
         if (this.width != FOCUSED_WIDTH && isFocused()) {
             setWidth(FOCUSED_WIDTH);
             setX(getX() - FOCUSED_EXTRA_WIDTH);

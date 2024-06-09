@@ -13,6 +13,7 @@ import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 public class ConfigsScreen extends Screen {
 
@@ -51,7 +52,7 @@ public class ConfigsScreen extends Screen {
                 this.configs.add(new ConfigItem(value));
             }
         } else {
-            List<String> configs = Configurations.INSTANCE.modToConfigs().getOrDefault(this.modid, List.of());
+            Set<String> configs = Configurations.INSTANCE.modToConfigs().getOrDefault(this.modid, Set.of());
             for (String config : configs) {
                 this.configs.add(new ConfigItem(Configurations.INSTANCE.configs().get(config)));
             }

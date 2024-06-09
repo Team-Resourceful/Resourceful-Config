@@ -1,9 +1,9 @@
-package com.teamresourceful.resourcefulconfig.common.loader;
+package com.teamresourceful.resourcefulconfig.common.loader.entries;
 
-import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
-import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -16,7 +16,7 @@ public record ParsedObjectEntry(
 ) implements ResourcefulConfigObjectEntry {
 
     public ParsedObjectEntry(EntryType type, Field field) {
-        this(type, field, EntryData.of(field), new LinkedHashMap<>());
+        this(type, field, EntryData.of(field, field.getType()), new LinkedHashMap<>());
     }
 
     @Override

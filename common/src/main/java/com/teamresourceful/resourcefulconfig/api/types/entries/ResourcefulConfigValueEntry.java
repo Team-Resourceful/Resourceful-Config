@@ -6,17 +6,17 @@ public interface ResourcefulConfigValueEntry extends ResourcefulConfigEntry {
 
     Class<?> objectType();
 
-    default Object instance() {
-        return null;
-    }
-
     @SuppressWarnings("unchecked")
     default <T> T defaultOrElse(T value) {
         final Object defaultValue = defaultValue();
         return defaultValue == null ? value : (T) defaultValue;
     }
 
+    boolean isArray();
+
     Object get();
+
+    Object[] getArray();
 
     boolean setArray(Object[] array);
 

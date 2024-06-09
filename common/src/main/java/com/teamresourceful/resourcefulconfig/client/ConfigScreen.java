@@ -1,11 +1,14 @@
 package com.teamresourceful.resourcefulconfig.client;
 
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.client.components.categories.CategoriesListWidget;
 import com.teamresourceful.resourcefulconfig.client.components.categories.CategoryItem;
 import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
+import com.teamresourceful.resourcefulconfig.client.utils.ConfigSearching;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -13,16 +16,30 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 public class ConfigScreen extends Screen {
 
     private final Screen parent;
     private final ResourcefulConfig config;
-    private OptionsListWidget optionsList;
+    private final Function<String, List<String>> termCollector;
+
+    private OptionsListWidget optionsList = null;
+    private CategoriesListWidget categoriesList = null;
 
     public ConfigScreen(Screen parent, ResourcefulConfig config) {
+        this(parent, config, s -> List.of());
+    }
+
+    public ConfigScreen(Screen parent, ResourcefulConfig config, Function<String, List<String>> termCollector) {
         super(CommonComponents.EMPTY);
         this.parent = parent;
         this.config = config;
+        this.termCollector = termCollector;
     }
 
     @Override
@@ -44,7 +61,14 @@ public class ConfigScreen extends Screen {
                 .vertical()
                 .spacing(UIConstants.PAGE_PADDING);
 
-        var header = layout.addChild(new HeaderWidget(0, 0, this.width - UIConstants.PAGE_PADDING * 2, getFilename(), this.config));
+        var header = layout.addChild(new HeaderWidget(
+                this.width - UIConstants.PAGE_PADDING * 2,
+                this.config,
+                () -> {
+                    this.updateOptions();
+                    this.updateCategories();
+                }
+        ));
 
         contentHeight -= header.getHeight() + UIConstants.PAGE_PADDING;
 
@@ -52,19 +76,42 @@ public class ConfigScreen extends Screen {
 
         if (!this.config.categories().isEmpty()) {
             int categoryWidth = contentWidth / 4;
-            var categoryList = body.addChild(new CategoriesListWidget(categoryWidth, contentHeight));
-            for (ResourcefulConfig value : this.config.categories().values()) {
-                categoryList.add(new CategoryItem(this, value));
-            }
+            this.categoriesList = body.addChild(new CategoriesListWidget(categoryWidth, contentHeight));
+            updateCategories();
             optionsWidth = contentWidth - categoryWidth - UIConstants.PAGE_PADDING;
         }
 
         this.optionsList = body.addChild(new OptionsListWidget(optionsWidth, contentHeight));
-        Options.populateOptions(this.optionsList, this.config.entries(), this.config.buttons());
+        updateOptions();
 
         layout.arrangeElements();
         layout.setPosition(UIConstants.PAGE_PADDING, UIConstants.PAGE_PADDING);
         layout.visitWidgets(this::addRenderableWidget);
+    }
+
+    public void updateOptions() {
+        this.optionsList.clear();
+        Map<String, ResourcefulConfigEntry> entries = new LinkedHashMap<>();
+        this.config.entries().forEach((key, value) -> {
+            if (!ConfigSearching.fulfillsSearch(value, this.termCollector)) return;
+            entries.put(key, value);
+        });
+        List<ResourcefulConfigButton> buttons = new ArrayList<>();
+        this.config.buttons().forEach(button -> {
+            if (!ConfigSearching.fulfillsSearch(button, this.termCollector)) return;
+            buttons.add(button);
+        });
+
+        Options.populateOptions(this.optionsList, entries, buttons);
+    }
+
+    public void updateCategories() {
+        if (this.categoriesList == null) return;
+        this.categoriesList.clear();
+        for (ResourcefulConfig value : this.config.categories().values()) {
+            if (!ConfigSearching.fulfillsSearch(value, this.termCollector)) continue;
+            this.categoriesList.add(new CategoryItem(this, value, this.termCollector));
+        }
     }
 
     @Override
@@ -81,15 +128,21 @@ public class ConfigScreen extends Screen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Nullable
-    public String getFilename() {
-        if (!this.config.hasFile() && this.parent instanceof ConfigScreen screen) {
-            return screen.getFilename();
-        } else if (!this.config.hasFile()) {
-            return null;
-        } else {
-            return this.config.id();
+    @Override
+    public boolean keyPressed(int i, int j, int k) {
+        if (super.keyPressed(i, j, k)) {
+            return true;
         }
+        if (i == 256) {
+            this.onClose();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
     }
 
     /**
@@ -105,9 +158,5 @@ public class ConfigScreen extends Screen {
     @Override
     public void onClose() {
         Minecraft.getInstance().setScreen(this.parent);
-    }
-
-    public Screen getParent() {
-        return parent;
     }
 }

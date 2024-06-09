@@ -30,6 +30,7 @@ public class RangeOptionWidget extends BaseWidget {
     private final DoubleSupplier getter;
     private final DoubleConsumer setter;
     private final double step;
+    private final boolean canBeFocused;
 
     private int padding = 5;
     private boolean canChangeValue;
@@ -50,6 +51,7 @@ public class RangeOptionWidget extends BaseWidget {
         this.getter = getter;
         this.setter = setter;
         this.step = step;
+        this.canBeFocused = this.minDisplay != null && this.maxDisplay != null;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class RangeOptionWidget extends BaseWidget {
             tooltip = this.display.get();
         }
 
-        if (isHoveredOrFocused()) {
+        if (isHoveredOrFocused() && this.canBeFocused) {
 
             renderScrollingString(
                     graphics, font,
@@ -101,6 +103,7 @@ public class RangeOptionWidget extends BaseWidget {
     }
 
     public void updateIfFocused() {
+        if (!this.canBeFocused) return;
         if (this.width != FOCUSED_WIDTH && isHoveredOrFocused()) {
             setWidth(FOCUSED_WIDTH);
             setX(getX() - FOCUSED_EXTRA_WIDTH);
@@ -127,14 +130,20 @@ public class RangeOptionWidget extends BaseWidget {
 
     @Override
     public boolean mouseClicked(double d, double e, int i) {
-        this.setValueFromMouse(d);
-        return true;
+        if (this.isHovered()) {
+            this.setValueFromMouse(d);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean mouseDragged(double d, double e, int i, double f, double g) {
-        this.setValueFromMouse(d);
-        return super.mouseDragged(d, e, i, f, g);
+        if (this.isHovered() && i == 0) {
+            this.setValueFromMouse(d);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -148,7 +157,7 @@ public class RangeOptionWidget extends BaseWidget {
                 if (leftArrow || i == InputConstants.KEY_RIGHT) {
                     double step = leftArrow ? -this.step : this.step;
                     step *= Screen.hasShiftDown() ? 10 : 1;
-                    double value = this.getter.getAsDouble() + step / (float) (this.width - 8);
+                    double value = (this.getter.getAsDouble() + step) / (float) (this.width - 8);
                     this.setter.accept(Mth.clamp(value, 0.0D, 1.0D));
                     return true;
                 }
@@ -160,8 +169,8 @@ public class RangeOptionWidget extends BaseWidget {
 
     private void setValueFromMouse(double mouseX) {
         if (!this.isFocused()) return;
-        double correctX = mouseX - (this.getX() + PADDING);
-        double value = correctX / (double) (this.getWidth() - PADDING * 2);
+        double correctX = mouseX - (this.getX() + this.padding);
+        double value = correctX / (double) (this.getWidth() - this.padding * 2);
         this.setter.accept(Mth.clamp(value, 0.0D, 1.0D));
     }
 

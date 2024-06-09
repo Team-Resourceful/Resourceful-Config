@@ -1,20 +1,32 @@
 package com.teamresourceful.resourcefulconfig.api.types.entries;
 
+import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
-import org.jetbrains.annotations.ApiStatus;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfigValueEntry {
 
     Field field();
+
+    Object instance();
+
     default Object get() {
         try {
             return field().get(instance());
         } catch (IllegalAccessException e) {
             return defaultOrElse(null);
+        }
+    }
+
+    default Object[] getArray() {
+        if (!isArray()) return new Object[0];
+        try {
+            return (Object[]) field().get(instance());
+        } catch (IllegalAccessException e) {
+            return new Object[0];
         }
     }
 
@@ -25,7 +37,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
                     return false;
                 }
             }
-            field().set(instance(), castArray(array, field().getType().componentType()));
+            field().set(instance(), ModUtils.castArray(array, field().getType().componentType()));
             return true;
         } catch (Exception e) {
             return false;
@@ -45,7 +57,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (type() != EntryType.BYTE) return false;
         try {
             EntryData options = options();
-            if (options.hasRange() && !options.inRange(value)) {
+            if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
                 reset();
                 return false;
             }
@@ -69,7 +81,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (type() != EntryType.SHORT) return false;
         try {
             EntryData options = options();
-            if (options.hasRange() && !options.inRange(value)) {
+            if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
                 reset();
                 return false;
             }
@@ -93,7 +105,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (type() != EntryType.INTEGER) return false;
         try {
             EntryData options = options();
-            if (options.hasRange() && !options.inRange(value)) {
+            if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
                 reset();
                 return false;
             }
@@ -117,7 +129,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (type() != EntryType.LONG) return false;
         try {
             EntryData options = options();
-            if (options.hasRange() && !options.inRange(value)) {
+            if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
                 reset();
                 return false;
             }
@@ -141,7 +153,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (type() != EntryType.FLOAT) return false;
         try {
             EntryData options = options();
-            if (options.hasRange() && !options.inRange(value)) {
+            if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
                 reset();
                 return false;
             }
@@ -165,7 +177,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (type() != EntryType.DOUBLE) return false;
         try {
             EntryData options = options();
-            if (options.hasRange() && !options.inRange(value)) {
+            if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
                 reset();
                 return false;
             }
@@ -209,7 +221,7 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         if (value == null) return false;
         try {
             EntryData options = options();
-            if (options.hasRegex() && !options.matchesRegex(value)) {
+            if (options.hasOption(Option.REGEX) && !options.getOption(Option.REGEX).matcher(value).matches()) {
                 reset();
                 return false;
             }
@@ -238,17 +250,5 @@ public interface ResourcefulConfigFieldBackedValueEntry extends ResourcefulConfi
         } catch (Exception e) {
             return false;
         }
-    }
-
-    // Utility Methods
-
-    @ApiStatus.Internal
-    @SuppressWarnings("unchecked")
-    private static <T> T[] castArray(Object[] array, Class<T> clazz) {
-        T[] newArray = (T[]) Array.newInstance(clazz, array.length);
-        for (int i = 0; i < array.length; i++) {
-            newArray[i] = clazz.cast(array[i]);
-        }
-        return newArray;
     }
 }

@@ -95,6 +95,9 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
 
     @Override
     public void setItemWidth(int width) {
+        boolean changed = this.width != width;
         this.setWidth(width);
+        if (!changed) return;
+        init();
     }
 }

@@ -1,5 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.range;
 
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
+import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import net.minecraft.network.chat.Component;
@@ -22,8 +24,9 @@ public record DecimalOptionRange(DoubleConsumer setter, DoubleSupplier getter, d
         final DoubleConsumer setter = value -> entry.setFloat((float) value);
         final DoubleSupplier getter = entry::getFloat;
         final EntryData options = entry.options();
-        if (options.hasRange()) {
-            return new DecimalOptionRange(setter, getter, options.min(), options.max(), 1);
+        if (options.hasOption(Option.RANGE)) {
+            ConfigOption.Range range = options.getOption(Option.RANGE);
+            return new DecimalOptionRange(setter, getter, range.min(), range.max(), 1);
         }
         return new DecimalOptionRange(setter, getter, Float.MIN_VALUE, Float.MAX_VALUE, 0);
     }
@@ -32,8 +35,9 @@ public record DecimalOptionRange(DoubleConsumer setter, DoubleSupplier getter, d
         final DoubleConsumer setter = entry::setDouble;
         final DoubleSupplier getter = entry::getDouble;
         final EntryData options = entry.options();
-        if (options.hasRange()) {
-            return new DecimalOptionRange(setter, getter, options.min(), options.max(), 1);
+        if (options.hasOption(Option.RANGE)) {
+            ConfigOption.Range range = options.getOption(Option.RANGE);
+            return new DecimalOptionRange(setter, getter, range.min(), range.max(), 1);
         }
         return new DecimalOptionRange(setter, getter, Double.MIN_VALUE, Double.MAX_VALUE, 0);
     }

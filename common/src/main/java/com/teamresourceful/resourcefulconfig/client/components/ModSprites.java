@@ -4,22 +4,25 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ModSprites {
 
-    public static final ResourceLocation LINK = new ResourceLocation("resourcefulconfig", "link");
-    public static final ResourceLocation RESET = new ResourceLocation("resourcefulconfig", "reset");
-    public static final ResourceLocation EDIT = new ResourceLocation("resourcefulconfig", "edit");
-    public static final ResourceLocation CHEVRON_DOWN = new ResourceLocation("resourcefulconfig", "chevron_down");
-    public static final ResourceLocation CHEVRON_LEFT = new ResourceLocation("resourcefulconfig", "chevron_left");
-    public static final ResourceLocation CROSS = new ResourceLocation("resourcefulconfig", "cross");
+    public static final ResourceLocation LINK = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "link");
+    public static final ResourceLocation RESET = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "reset");
+    public static final ResourceLocation EDIT = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "edit");
+    public static final ResourceLocation CHEVRON_DOWN = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "chevron_down");
+    public static final ResourceLocation CHEVRON_LEFT = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "chevron_left");
+    public static final ResourceLocation CROSS = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "cross");
+    public static final ResourceLocation CHECK = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "check");
+    public static final ResourceLocation DRAGGABLE = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "draggable");
+    public static final ResourceLocation DELETE = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "delete");
 
-    public static final ResourceLocation HEADER = new ResourceLocation("resourcefulconfig", "header");
-    public static final ResourceLocation CONTAINER = new ResourceLocation("resourcefulconfig", "container");
-    public static final ResourceLocation ACCENT = new ResourceLocation("resourcefulconfig", "accent");
+    public static final ResourceLocation HEADER = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "header");
+    public static final ResourceLocation CONTAINER = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "container");
+    public static final ResourceLocation ACCENT = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "accent");
 
-    public static final ResourceLocation BUTTON = new ResourceLocation("resourcefulconfig", "button");
-    public static final ResourceLocation BUTTON_HOVER = new ResourceLocation("resourcefulconfig", "button_hover");
+    public static final ResourceLocation BUTTON = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "button");
+    public static final ResourceLocation BUTTON_HOVER = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "button_hover");
 
-    public static final ResourceLocation SWITCH_ON = new ResourceLocation("resourcefulconfig", "switch_on");
-    public static final ResourceLocation SWITCH_OFF = new ResourceLocation("resourcefulconfig", "switch_off");
+    public static final ResourceLocation SWITCH_ON = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "switch_on");
+    public static final ResourceLocation SWITCH_OFF = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "switch_off");
 
     public static ResourceLocation ofButton(boolean hovered) {
         return hovered ? BUTTON_HOVER : BUTTON;

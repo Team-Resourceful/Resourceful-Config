@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @ApiStatus.Internal
 public record Configurations(
-        Map<String, List<String>> modToConfigs,
+        Map<String, Set<String>> modToConfigs,
         Map<String, ResourcefulConfig> configs
 ) implements Iterable<ResourcefulConfig> {
 
@@ -23,7 +23,7 @@ public record Configurations(
     }
 
     private void addModConfigs(String modid, String configId) {
-        modToConfigs.computeIfAbsent(modid, s -> new ArrayList<>()).add(configId);
+        modToConfigs.computeIfAbsent(modid, s -> new HashSet<>()).add(configId);
     }
 
     public void addConfig(ResourcefulConfig config, String modid) {
@@ -37,9 +37,9 @@ public record Configurations(
         return configs.values().iterator();
     }
 
-    public List<String> getConfigsForMod(String modid) {
-        if (modid == null) return List.of();
-        return modToConfigs.getOrDefault(modid, List.of());
+    public Set<String> getConfigsForMod(String modid) {
+        if (modid == null) return Set.of();
+        return modToConfigs.getOrDefault(modid, Set.of());
     }
 
     public Collection<String> getModIds() {

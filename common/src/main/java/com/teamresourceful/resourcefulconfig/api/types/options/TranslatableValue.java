@@ -27,11 +27,17 @@ public record TranslatableValue(
     }
 
     public MutableComponent toComponent() {
-        return Component.translatableWithFallback(translation(), value());
+        if (translation().isBlank()) {
+            return Component.literal(value());
+        }
+        return Component.translatable(translation());
     }
 
     public String toLocalizedString() {
-        return Language.getInstance().getOrDefault(translation(), value());
+        if (translation().isBlank()) {
+            return value();
+        }
+        return Language.getInstance().getOrDefault(translation());
     }
 
     public boolean hasTranslation() {

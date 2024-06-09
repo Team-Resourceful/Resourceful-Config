@@ -57,6 +57,9 @@ public abstract class ContainerWidget extends AbstractWidget implements Containe
     @Override
     public void setFocused(boolean focused) {
         super.setFocused(focused);
+        if (this.focused != null) {
+            this.focused.setFocused(focused);
+        }
     }
 
     @Override
@@ -77,7 +80,7 @@ public abstract class ContainerWidget extends AbstractWidget implements Containe
 
     @Override
     public void setFocused(@Nullable GuiEventListener guiEventListener) {
-        if (this.focused != null) {
+        if (this.focused != null && this.focused != guiEventListener) {
             this.focused.setFocused(false);
         }
 

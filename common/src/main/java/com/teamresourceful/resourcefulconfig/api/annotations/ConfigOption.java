@@ -32,6 +32,18 @@ public class ConfigOption {
 
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
+    public @interface Color {
+
+        /**
+         * The presets to display in the color picker.
+         */
+        int[] presets() default {};
+
+        boolean alpha() default false;
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
     public @interface Regex {
 
         @Language("RegExp")
@@ -50,5 +62,32 @@ public class ConfigOption {
     @Target({ElementType.FIELD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Hidden {
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Select {
+        String value() default "Select";
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Draggable {
+
+        String[] value() default {};
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Keybind {
+
+
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface SearchTerm {
+
+        String[] value();
     }
 }

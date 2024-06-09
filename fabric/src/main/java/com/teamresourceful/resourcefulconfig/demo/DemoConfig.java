@@ -1,8 +1,8 @@
 package com.teamresourceful.resourcefulconfig.demo;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
+import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
-import com.teamresourceful.resourcefulconfig.api.types.options.Position;
 import net.minecraft.ChatFormatting;
 
 @ConfigInfo.Provider(DemoInfoProvider.class)
@@ -15,7 +15,13 @@ public final class DemoConfig {
             id = "demoBoolean",
             translation = "true"
     )
-    public static boolean demoBoolean = true;
+    public static Observable<Boolean> demoBoolean = Observable.of(true);
+
+    static {
+        demoBoolean.addListener((oldValue, newValue) -> {
+            System.out.println("Old Value: " + oldValue + " New Value: " + newValue);
+        });
+    }
 
     @ConfigEntry(
             type = EntryType.INTEGER,
@@ -30,6 +36,16 @@ public final class DemoConfig {
             translation = "1.0"
     )
     public static double demoDouble = 1.0;
+
+    @ConfigEntry(
+            type = EntryType.INTEGER,
+            id = "demoSlider",
+            translation = "1"
+    )
+    @ConfigOption.Slider
+    @ConfigOption.Range(min = 0, max = 10)
+    public static int demoSlider = 1;
+
 
     @ConfigEntry(
             type = EntryType.STRING,
@@ -52,7 +68,7 @@ public final class DemoConfig {
 
     @ConfigEntry(
             type = EntryType.INTEGER,
-            id = "demoInteger",
+            id = "demoRange",
             translation = "range"
     )
     @ConfigOption.Range(min = 0, max = 10)
@@ -65,34 +81,64 @@ public final class DemoConfig {
     )
     public static ChatFormatting demoEnum = ChatFormatting.RED;
 
+    @ConfigOption.Separator(
+        value = "Separator",
+        description = "This is a separator."
+    )
     @ConfigEntry(
-        type = EntryType.STRING,
-        id = "demoRegex",
-        translation = "regex"
+            type = EntryType.STRING,
+            id = "demoRegex",
+            translation = "regex"
     )
     @ConfigOption.Regex("#[a-fA-F0-9]{6}")
     public static String demoRegex = "#ff0000";
 
-    @ConfigButton(
-        target = "demoEnum",
-        text = "Click ME!",
-        position = Position.AFTER
+    @ConfigEntry(
+            type = EntryType.INTEGER,
+            id = "demoColor",
+            translation = "demo color"
     )
-    public static void clickMe() {
-        System.out.println("Clicked!");
-    }
+    @ConfigOption.SearchTerm(":3")
+    @ConfigOption.Color(presets = {
+            16733525, 16733695, 16777045, 16777215, 16711680,
+            11141290, 5635925, 11184810, 16755200, 16776960
+    })
+    public static int demoColor = 0xff0000;
 
-    @ConfigButton(
-            target = "demoEnum",
-            text = "Click ME!",
-            position = Position.BEFORE
+    @ConfigEntry(
+            type = EntryType.ENUM,
+            id = "demoSelect",
+            translation = "select"
     )
-    public static void clickMe2() {
-        System.out.println("Clicked! 2");
-    }
+    @ConfigOption.Select
+    public static ChatFormatting[] demoSelect = new ChatFormatting[]{
+            ChatFormatting.RED,
+            ChatFormatting.GREEN
+    };
 
-    @ConfigButton(target = "test", text = "Click Me!", position = Position.BEFORE)
-    public static void button() {
-        System.out.println("clicked me!");
-    }
+    @ConfigButton(title = "Test Button", text = "Click Me!")
+    @Comment("This is a test button.")
+    public static final Runnable test = () -> System.out.println("Clicked!");
+
+    @ConfigEntry(
+            type = EntryType.ENUM,
+            id = "demoDraggable",
+            translation = "draggable"
+    )
+    @ConfigOption.Draggable(
+            value = "RED"
+    )
+    @ConfigOption.Range(min = 1, max = 10)
+    public static ChatFormatting[] demoDraggable = new ChatFormatting[]{
+            ChatFormatting.RED,
+            ChatFormatting.GREEN
+    };
+
+    @ConfigEntry(
+            type = EntryType.INTEGER,
+            id = "demoKeybind",
+            translation = "keybind"
+    )
+    @ConfigOption.Keybind
+    public static int demoKeybind = 48;
 }

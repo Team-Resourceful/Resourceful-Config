@@ -7,6 +7,7 @@ import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class ListWidget extends ContainerWidget {
     private static final int SCROLLBAR_PADDING = 4;
     private static final int OVERSCROLL = 2;
 
-    private final List<Item> items = new ArrayList<>();
+    protected final List<Item> items = new ArrayList<>();
 
     private double scroll = 0;
     private int lastHeight = 0;
@@ -40,7 +41,13 @@ public class ListWidget extends ContainerWidget {
 
     public void add(Item item) {
         items.add(item);
-        updateLastHeight();
+        updateScrollBar();
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        this.items.clear();
     }
 
     @Override
@@ -53,7 +60,7 @@ public class ListWidget extends ContainerWidget {
         boolean showsScrollBar = this.lastHeight > this.height;
         int actualWidth = getWidth() - (showsScrollBar ? SCROLLBAR_WIDTH + 4 : 0);
 
-        graphics.enableScissor(getX() + 1, getY(), getX() + actualWidth, getY() + height);
+        graphics.enableScissor(getX(), getY(), getX() + actualWidth, getY() + height);
 
         int y = this.getY() - (int) scroll + OVERSCROLL / 2;
         this.lastHeight = 0;
@@ -127,7 +134,7 @@ public class ListWidget extends ContainerWidget {
         return false;
     }
 
-    private void updateLastHeight() {
+    protected void updateLastHeight() {
         boolean showsScrollBar = this.lastHeight > this.height;
         int actualWidth = getWidth() - (showsScrollBar ? SCROLLBAR_WIDTH + 4 : 0);
 
@@ -140,6 +147,11 @@ public class ListWidget extends ContainerWidget {
             this.lastHeight += item.getHeight();
             y += item.getHeight();
         }
+    }
+
+    protected void updateScrollBar() {
+        updateLastHeight();
+        this.scroll = Mth.clamp(this.scroll, 0, Math.max(0, this.lastHeight - this.height + OVERSCROLL));
     }
 
     public interface Item extends GuiEventListener, Renderable, NarratableEntry, LayoutElement {

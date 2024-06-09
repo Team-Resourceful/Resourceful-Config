@@ -9,6 +9,7 @@ import net.minecraft.network.chat.CommonComponents;
 public abstract class OverlayScreen extends Screen {
 
     private final Screen background;
+    private boolean isInitialized = false;
 
     protected OverlayScreen(Screen background) {
         super(CommonComponents.EMPTY);
@@ -22,8 +23,22 @@ public abstract class OverlayScreen extends Screen {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        if (!this.isInitialized) {
+            this.isInitialized = true;
+        }
+    }
+
+    @Override
     protected void repositionElements() {
         this.background.resize(Minecraft.getInstance(), this.width, this.height);
+        if (this.background instanceof OverlayScreen overlay) overlay.isInitialized = false;
+        if (this.isInitialized) {
+            Minecraft.getInstance().setScreen(this.background);
+        } else {
+            rebuildWidgets();
+        }
     }
 
     @Override

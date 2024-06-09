@@ -9,41 +9,37 @@ import com.teamresourceful.resourcefulconfig.client.screens.base.OverlayScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class DropdownWidget extends BaseWidget {
+public class SelectWidget extends BaseWidget {
 
     private static final int WIDTH = 80;
+    private static final int FOCUSED_LIST = 80;
 
+    private final Component heading;
     private final Enum<?>[] options;
-    private final Supplier<Enum<?>> getter;
-    private final Consumer<Enum<?>> setter;
+    private final Supplier<Enum<?>[]> getter;
+    private final Consumer<Enum<?>[]> setter;
 
-    private Component title = Component.empty();
-
-    public DropdownWidget(int width, Enum<?>[] options, Supplier<Enum<?>> getter, Consumer<Enum<?>> setter) {
-        super(width, 16);
+    public SelectWidget(Component heading, Enum<?>[] options, Supplier<Enum<?>[]> getter, Consumer<Enum<?>[]> setter) {
+        super(WIDTH, 16);
+        this.heading = heading;
         this.options = options;
         this.getter = getter;
         this.setter = setter;
-    }
-
-    public DropdownWidget(Enum<?>[] options, Supplier<Enum<?>> getter, Consumer<Enum<?>> setter) {
-        this(WIDTH, options, getter, setter);
-    }
-
-    public DropdownWidget setTitle(Component title) {
-        this.title = title;
-        return this;
     }
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
         renderScrollingString(
-                graphics, this.font, Translatable.toComponent(this.getter.get(), this.title),
+                graphics, this.font, this.heading,
                 getX() + 4, getY() + 4,
                 getX() + getWidth() - 16, getY() + getHeight() - 4,
                 UIConstants.TEXT_PARAGRAPH
@@ -53,26 +49,38 @@ public class DropdownWidget extends BaseWidget {
 
     @Override
     public void onClick(double d, double e) {
-        Minecraft.getInstance().setScreen(new DropdownOverlay(this));
+        Minecraft.getInstance().setScreen(new SelectOverlay(this));
     }
 
-    private static class DropdownOverlay extends OverlayScreen {
+    private static class SelectOverlay extends OverlayScreen {
 
-        private final DropdownWidget widget;
+        private final SelectWidget widget;
 
-        protected DropdownOverlay(DropdownWidget widget) {
+        protected SelectOverlay(SelectWidget widget) {
             super(Minecraft.getInstance().screen);
             this.widget = widget;
         }
 
         @Override
         protected void init() {
-            var list = addRenderableWidget(DropdownList.of(widget));
+            var list = addRenderableWidget(SelectList.of(widget));
             for (Enum<?> option : widget.options) {
-                list.add(new DropdownItem(option, (value) -> {
-                    widget.setter.accept(value);
-                    this.onClose();
-                }));
+                list.add(new SelectItem(
+                    option,
+                    () -> {
+                        Set<Enum<?>> set = Set.of(widget.getter.get());
+                        return set.contains(option);
+                    },
+                    (value) -> {
+                        Set<Enum<?>> set = new HashSet<>(Set.of(widget.getter.get()));
+                        if (set.contains(value)) {
+                            set.remove(value);
+                        } else {
+                            set.add(value);
+                        }
+                        widget.setter.accept(set.toArray(new Enum<?>[0]));
+                    }
+                ));
             }
         }
 
@@ -86,20 +94,20 @@ public class DropdownWidget extends BaseWidget {
         }
     }
 
-    private static class DropdownList extends ListWidget {
+    private static class SelectList extends ListWidget {
 
-        public DropdownList(int x, int y, int height) {
+        public SelectList(int x, int y, int height) {
             super(x + 1, y, WIDTH - 2, height);
         }
 
-        public static DropdownList of(DropdownWidget widget) {
+        public static SelectList of(SelectWidget widget) {
             int windowHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             int widgetY = widget.getY() + widget.getHeight();
             int listHeight = Math.min(widget.options.length * 12, 12 * 8) + 1;
             if (widgetY + listHeight > windowHeight) {
                 widgetY = widget.getY() - listHeight - 1;
             }
-            return new DropdownList(widget.getX(), widgetY, listHeight);
+            return new SelectList(widget.getX(), widgetY, listHeight);
         }
 
         @Override
@@ -110,24 +118,30 @@ public class DropdownWidget extends BaseWidget {
         }
     }
 
-    private static class DropdownItem extends BaseWidget implements ListWidget.Item {
+    private static class SelectItem extends BaseWidget implements ListWidget.Item {
 
         private final Enum<?> option;
+        private final BooleanSupplier selected;
         private final Consumer<Enum<?>> setter;
 
-        public DropdownItem(Enum<?> option, Consumer<Enum<?>> setter) {
+        public SelectItem(Enum<?> option, BooleanSupplier selected, Consumer<Enum<?>> setter) {
             super(WIDTH, 12);
             this.option = option;
+            this.selected = selected;
             this.setter = setter;
         }
 
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             graphics.blitSprite(ModSprites.ofButton(this.isHovered()), getX() + 1, getY(), getWidth() - 1, getHeight());
+            if (this.selected.getAsBoolean()) {
+                graphics.blitSprite(ModSprites.CHECK, getX() + 4, getY() + 2, 8, 8);
+            }
             int color = this.isHovered() ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;
+
             renderScrollingString(
                     graphics, this.font, Translatable.toComponent(this.option),
-                    getX() + 4, getY() + 1,
+                    getX() + 16, getY() + 1,
                     getX() + getWidth() - 4, getY() + getHeight() - 1,
                     color
             );

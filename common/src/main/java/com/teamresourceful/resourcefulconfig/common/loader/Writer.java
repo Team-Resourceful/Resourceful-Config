@@ -1,9 +1,11 @@
 package com.teamresourceful.resourcefulconfig.common.loader;
 
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
@@ -82,20 +84,30 @@ public class Writer {
 
         if (entry instanceof ResourcefulConfigValueEntry valueEntry) {
 
-            if (options.hasRange()) {
+            if (options.hasOption(Option.RANGE)) {
                 DecimalFormat format = new DecimalFormat();
                 format.setGroupingUsed(false);
                 format.setMaximumFractionDigits(340);
 
-                comments.add("Range: " + format.format(options.min()) + " - " + format.format(options.max()));
+                ConfigOption.Range range = options.getOption(Option.RANGE);
+                comments.add("Range: " + format.format(range.min()) + " - " + format.format(range.max()));
             }
 
-            if (options.hasRegex()) {
-                comments.add("Regex: " + options.regex().pattern());
+            if (options.hasOption(Option.REGEX)) {
+                comments.add("Regex: " + options.getOption(Option.REGEX).pattern());
             }
 
-            if (options.isMultiline() && entry.type() == EntryType.STRING) {
+            if (options.hasOption(Option.MULTILINE) && entry.type() == EntryType.STRING) {
                 comments.add("[Allows newlines]");
+            }
+
+            if (options.hasOption(Option.COLOR) && entry.type() == EntryType.INTEGER) {
+                ConfigOption.Color color = options.getOption(Option.COLOR);
+                if (color.alpha()) {
+                    comments.add("[Color Format: RGBA]");
+                } else {
+                    comments.add("[Color Format: RGB]");
+                }
             }
 
             if (entry.type() == EntryType.ENUM) {

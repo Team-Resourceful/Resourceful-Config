@@ -10,10 +10,12 @@ import net.minecraft.network.chat.CommonComponents;
 public abstract class BaseWidget extends AbstractWidget {
 
     protected final Font font;
+    protected final Minecraft minecraft;
 
     public BaseWidget(int width, int height) {
         super(0, 0, width, height, CommonComponents.EMPTY);
-        this.font = Minecraft.getInstance().font;
+        this.minecraft = Minecraft.getInstance();
+        this.font = this.minecraft.font;
     }
 
     @Override

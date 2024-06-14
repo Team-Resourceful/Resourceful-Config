@@ -32,22 +32,23 @@ processResources {
 
 shadowJar {
     exclude "fabric.mod.json"
+    exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
     archiveAppendix.set "$project.name-$mc_version"
-    archiveClassifier.set  "dev-shadow"
+    archiveClassifier.set "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveAppendix.set "$project.name-$mc_version"
-    archiveClassifier.set  null
+    archiveClassifier.set null
 }
 
 jar {
     archiveAppendix.set "$project.name-$mc_version"
-    archiveClassifier.set  "dev"
+    archiveClassifier.set "dev"
 }
 
 sourcesJar {

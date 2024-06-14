@@ -4,7 +4,6 @@ package com.teamresourceful.resourcefulconfig.api.loader;
 import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
-import com.teamresourceful.resourcefulconfig.common.loader.Parser;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -41,7 +40,7 @@ public final class Configurator {
     @ApiStatus.Internal
     private ResourcefulConfig registerConfig(Class<?> clazz, Consumer<ConfigPatchEvent> handler) {
         try {
-            ResourcefulConfig config = Parser.parse(clazz);
+            ResourcefulConfig config = ConfigParser.tryParse(clazz);
             config.load(handler);
             config.save();
             return config;

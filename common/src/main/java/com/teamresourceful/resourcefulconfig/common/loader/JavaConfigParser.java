@@ -4,6 +4,7 @@ import com.teamresourceful.resourcefulconfig.api.annotations.Category;
 import com.teamresourceful.resourcefulconfig.api.annotations.Config;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigButton;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.loader.ConfigParser;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
@@ -20,9 +21,15 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public class Parser {
+public class JavaConfigParser implements ConfigParser {
 
-    public static ResourcefulConfig parse(Class<?> clazz) {
+    @Override
+    public int priority() {
+        return Integer.MIN_VALUE;
+    }
+
+    @Override
+    public ResourcefulConfig parse(Class<?> clazz) {
         Config data = assertAnnotation(clazz, Config.class);
         return populateEntries(clazz, new ParsedConfig(data, ParsedInfo.of(clazz, data.value())), data.categories());
     }

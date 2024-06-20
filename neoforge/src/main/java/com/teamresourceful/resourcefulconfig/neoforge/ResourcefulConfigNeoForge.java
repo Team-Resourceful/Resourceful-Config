@@ -12,7 +12,9 @@ public class ResourcefulConfigNeoForge {
 
     public ResourcefulConfigNeoForge(IEventBus bus, FMLModContainer container) {
         WebServer.start();
-        ResourcefulConfigNeoForgeClient.onClientInit(container);
+        if (FMLLoader.getDist().isClient()) {
+            ResourcefulConfigNeoForgeClient.onClientInit(container);
+        }
         bus.addListener(ResourcefulConfigNeoForge::onCommonSetup);
     }
 

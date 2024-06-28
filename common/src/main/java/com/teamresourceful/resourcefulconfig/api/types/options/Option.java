@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.api.types.options;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -83,17 +84,23 @@ public class Option<T extends Annotation, D> {
         this.mapper = mapper;
     }
 
-    private Object getData(Field field, Class<?> clazz) {
-        T annotation = field.getAnnotation(this.annotation);
-        Objects.requireNonNull(annotation, "Annotation not present on field.");
-        return this.mapper.apply(clazz, annotation);
+    @SuppressWarnings("unchecked")
+    private Object getData(Annotation annotation, Class<?> clazz) {
+        return this.mapper.apply(clazz, (T) annotation);
     }
 
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "22.0")
     public static Map<Option<?, ?>, Object> fromField(Field field, Class<?> type) {
+        return gatherOptions(field::getAnnotation, type);
+    }
+
+    public static Map<Option<?, ?>, Object> gatherOptions(AnnotationGetter getter, Class<?> type) {
         Map<Option<?, ?>, Object> values = new IdentityHashMap<>();
         for (Option<?, ?> value : VALUES) {
-            if (field.isAnnotationPresent(value.annotation) && value.isAllowed.test(type)) {
-                values.put(value, value.getData(field, type));
+            Annotation annotation = getter.get(value.annotation);
+            if (annotation != null && value.isAllowed.test(type)) {
+                values.put(value, value.getData(annotation, type));
             }
         }
         return values;

@@ -27,7 +27,11 @@ public record EntryData(
     }
 
     public static EntryData of(Field field, Class<?> type) {
-        ConfigEntry entry = field.getAnnotation(ConfigEntry.class);
+        return of(field::getAnnotation, type);
+    }
+
+    public static EntryData of(AnnotationGetter getter, Class<?> type) {
+        ConfigEntry entry = getter.get(ConfigEntry.class);
 
         Builder builder = builder()
             .translation(
@@ -35,10 +39,10 @@ public record EntryData(
                 entry.translation()
             )
             .comment(
-                Optionull.mapOrDefault(field.getAnnotation(Comment.class), Comment::value, ""),
-                Optionull.mapOrDefault(field.getAnnotation(Comment.class), Comment::translation, "")
+                Optionull.mapOrDefault(getter.get(Comment.class), Comment::value, ""),
+                Optionull.mapOrDefault(getter.get(Comment.class), Comment::translation, "")
             )
-            .options(Option.fromField(field, type));
+            .options(Option.gatherOptions(getter, type));
 
         return builder.build();
     }

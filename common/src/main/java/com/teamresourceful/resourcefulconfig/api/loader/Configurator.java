@@ -5,6 +5,7 @@ import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
+import net.minecraft.Optionull;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ public final class Configurator {
 
     private final Map<String, ResourcefulConfig> configs = new ConcurrentHashMap<>();
     private final Map<String, Consumer<ConfigPatchEvent>> patchHandlers = new ConcurrentHashMap<>();
-    private final Map<Class<?>, String> configClasses = new ConcurrentHashMap<>();
+    private final Map<Object, String> configClasses = new ConcurrentHashMap<>();
 
     private final String modid;
 
@@ -28,7 +29,7 @@ public final class Configurator {
     }
 
     public void register(Class<?> clazz, Consumer<ConfigPatchEvent> handler) {
-        var config = registerConfig(clazz, handler);
+        var config = loadConfigClass(clazz, handler);
         if (config != null) {
             patchHandlers.put(config.id(), handler);
             configClasses.put(clazz, config.id());
@@ -37,8 +38,21 @@ public final class Configurator {
         }
     }
 
+    public void register(ResourcefulConfig config) {
+        register(config, event -> {});
+    }
+
+    public void register(ResourcefulConfig config, Consumer<ConfigPatchEvent> handler) {
+        config.load(handler);
+        config.save();
+        patchHandlers.put(config.id(), handler);
+        configs.put(config.id(), config);
+        configClasses.put(config, config.id());
+        Configurations.INSTANCE.addConfig(config, modid);
+    }
+
     @ApiStatus.Internal
-    private ResourcefulConfig registerConfig(Class<?> clazz, Consumer<ConfigPatchEvent> handler) {
+    private ResourcefulConfig loadConfigClass(Class<?> clazz, Consumer<ConfigPatchEvent> handler) {
         try {
             ResourcefulConfig config = ConfigParser.tryParse(clazz);
             config.load(handler);
@@ -50,11 +64,13 @@ public final class Configurator {
         return null;
     }
 
+    public boolean saveConfig(ResourcefulConfig config) {
+        config.save();
+        return true;
+    }
+
     public boolean saveConfig(Class<?> config) {
-        if (configClasses.containsKey(config)) {
-            return saveConfig(configClasses.get(config));
-        }
-        return false;
+        return configClasses.containsKey(config) && saveConfig(configClasses.get(config));
     }
 
     public boolean saveConfig(String fileName) {
@@ -66,11 +82,12 @@ public final class Configurator {
         return false;
     }
 
+    public boolean loadConfig(ResourcefulConfig config) {
+        return configClasses.containsKey(config) && loadConfig(configClasses.get(config));
+    }
+
     public boolean loadConfig(Class<?> config) {
-        if (configClasses.containsKey(config)) {
-            return loadConfig(configClasses.get(config));
-        }
-        return false;
+        return configClasses.containsKey(config) && loadConfig(configClasses.get(config));
     }
 
     public boolean loadConfig(String fileName) {
@@ -86,10 +103,11 @@ public final class Configurator {
         return configs.get(fileName);
     }
 
+    public ResourcefulConfig getConfig(ResourcefulConfig config) {
+        return Optionull.map(configClasses.get(config), this::getConfig);
+    }
+
     public ResourcefulConfig getConfig(Class<?> config) {
-        if (configClasses.containsKey(config)) {
-            return getConfig(configClasses.get(config));
-        }
-        return null;
+        return Optionull.map(configClasses.get(config), this::getConfig);
     }
 }

@@ -45,17 +45,21 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
     }
 
     private static JsonObject createWebConfig(ResourcefulConfig config) {
-        final ResourcefulConfigInfo info = config.info();
-        JsonObject json = createWebConfigData(config);
-        json.addProperty("icon", info.icon());
-        json.addProperty("title", info.title().toLocalizedString());
-        json.addProperty("description", info.description().toLocalizedString());
-        JsonArray links = new JsonArray();
-        for (ResourcefulConfigLink link : info.links()) {
-            links.add(link.toJson());
+        try {
+            final ResourcefulConfigInfo info = config.info();
+            JsonObject json = createWebConfigData(config);
+            json.addProperty("icon", info.icon());
+            json.addProperty("title", info.title().toLocalizedString());
+            json.addProperty("description", info.description().toLocalizedString());
+            JsonArray links = new JsonArray();
+            for (ResourcefulConfigLink link : info.links()) {
+                links.add(link.toJson());
+            }
+            json.add("links", links);
+            return json;
+        }catch (Exception e) {
+            throw new RuntimeException("Failed to create config json for config: " + config.id(), e);
         }
-        json.add("links", links);
-        return json;
     }
 
     private static JsonObject createWebConfigData(ResourcefulConfig config) {
@@ -81,7 +85,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
         config.entries().forEach((id, entry) -> {
             JsonObject json = new JsonObject();
             if (!(entry instanceof ResourcefulConfigValueEntry valueEntry)) return;
-            if (valueEntry.objectType().isArray()) return;
+            if (valueEntry.isArray()) return;
             switch (entry.type()) {
                 case BYTE -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getByte);
                 case SHORT -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getShort);

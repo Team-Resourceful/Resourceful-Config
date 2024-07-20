@@ -29,7 +29,7 @@ public class ResourcefulConfigNeoForgeClient {
             }
             container.registerExtensionPoint(
                 IConfigScreenFactory.class,
-                (client, parent) -> ResourcefulConfigScreen.getFactory(mod).apply(parent)
+                (ignored, parent) -> ResourcefulConfigScreen.getFactory(mod).apply(parent)
             );
         }
     }

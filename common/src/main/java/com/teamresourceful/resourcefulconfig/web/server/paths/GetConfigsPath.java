@@ -36,18 +36,22 @@ public record GetConfigsPath(WebVerifier verifier) implements BasePath {
     }
 
     private static JsonObject createConfigJson(ResourcefulConfig config) {
-        final ResourcefulConfigInfo info = config.info();
-        JsonObject json = new JsonObject();
-        json.addProperty("id", config.id());
-        json.addProperty("title", info.title().toLocalizedString());
-        json.addProperty("description", info.description().toLocalizedString());
-        json.addProperty("icon", info.icon());
-        json.add("color", info.color().toJson());
-        JsonArray links = new JsonArray();
-        for (ResourcefulConfigLink link : info.links()) {
-            links.add(link.toJson());
+        try {
+            final ResourcefulConfigInfo info = config.info();
+            JsonObject json = new JsonObject();
+            json.addProperty("id", config.id());
+            json.addProperty("title", info.title().toLocalizedString());
+            json.addProperty("description", info.description().toLocalizedString());
+            json.addProperty("icon", info.icon());
+            json.add("color", info.color().toJson());
+            JsonArray links = new JsonArray();
+            for (ResourcefulConfigLink link : info.links()) {
+                links.add(link.toJson());
+            }
+            json.add("links", links);
+            return json;
+        }catch (Exception e) {
+            throw new RuntimeException("Failed to create config json for config: " + config.id(), e);
         }
-        json.add("links", links);
-        return json;
     }
 }

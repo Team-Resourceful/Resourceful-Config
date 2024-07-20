@@ -1,1 +1,2 @@
-- Fix crash on dedicated servers
+- Fix crash on newer neoforge versions
+- Fix error in web server

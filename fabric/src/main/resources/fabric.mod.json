@@ -24,10 +24,11 @@
     ],
     "entrypoints": {
         "main": [
-            "com.teamresourceful.resourcefulconfig.web.server.WebServer::start"
+            "com.teamresourceful.resourcefulconfig.web.server.WebServer::start",
+            "com.teamresourceful.resourcefulconfig.demo.Demo"
         ],
         "client": [
-            "com.teamresourceful.resourcefulconfig.demo.Demo"
+            "com.teamresourceful.resourcefulconfig.demo.DemoClient"
         ],
         "modmenu": [
             "com.teamresourceful.resourcefulconfig.client.compat.fabric.modmenu.ResourcefulConfigModMenu"

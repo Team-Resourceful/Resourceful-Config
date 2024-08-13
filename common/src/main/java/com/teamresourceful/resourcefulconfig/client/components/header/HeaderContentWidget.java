@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.header;
 
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfoButton;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
@@ -49,13 +50,23 @@ public class HeaderContentWidget extends ContainerWidget {
         for (ResourcefulConfigLink link : config.info().links()) {
             SpriteButton button = SpriteButton.builder(12, 12)
                     .padding(2)
-                    .sprite(ModSprites.LINK)
+                    .sprite(ModSprites.ofIcon(link.icon()))
                     .onPress(() -> {
                         Screen screen = Minecraft.getInstance().screen;
                         if (screen == null) return;
                         ConfirmLinkScreen.confirmLinkNow(screen, link.url());
                     })
                     .tooltip(link.text().toComponent())
+                    .build();
+            links.addChild(button);
+        }
+
+        for (ResourcefulConfigInfoButton infoButton : config.info().buttons()) {
+            SpriteButton button = SpriteButton.builder(12, 12)
+                    .padding(2)
+                    .sprite(ModSprites.ofIcon(infoButton.icon()))
+                    .onPress(infoButton::onClick)
+                    .tooltip(infoButton.text().toComponent())
                     .build();
             links.addChild(button);
         }

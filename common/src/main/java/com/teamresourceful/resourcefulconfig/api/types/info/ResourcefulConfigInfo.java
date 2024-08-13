@@ -18,5 +18,9 @@ public interface ResourcefulConfigInfo {
 
     ResourcefulConfigLink[] links();
 
+    default ResourcefulConfigInfoButton[] buttons() {
+        return new ResourcefulConfigInfoButton[0];
+    }
+
     boolean isHidden();
 }

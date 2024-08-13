@@ -1,0 +1,23 @@
+{
+    "rconfig.server.title": "Dedicated Server",
+    "rconfig.server.desc": "Properties that can be can update real-time.",
+    "rconfig.server.wiki": "Wiki",
+
+    "rconfig.server.properties.white-list": "White List",
+    "rconfig.server.properties.white-list.desc": "If this is enabled, only the users in the white list can access the server.",
+
+    "rconfig.server.properties.max-players": "Max Players",
+    "rconfig.server.properties.max-players.desc": "The maximum number of players that can play on the server at the same time.",
+
+    "rconfig.server.properties.motd": "Message of the Day",
+    "rconfig.server.properties.motd.desc": "The message that is displayed in the server list.",
+
+    "rconfig.server.properties.allow-flight": "Allow Flight",
+    "rconfig.server.properties.allow-flight.desc": "If this is enabled, players are allowed to fly in the server, usually needed in a modded server.",
+
+    "rconfig.server.properties.pvp": "Player vs Player",
+    "rconfig.server.properties.pvp.desc": "If this is enabled, players can attack each other.",
+
+    "rconfig.server.properties.enforce-whitelist": "Enforce White List",
+    "rconfig.server.properties.enforce-whitelist.desc": "If this is enabled, only the users in the white list can access the server, if users are on the server that are not in the whitelist they will be kicked."
+}

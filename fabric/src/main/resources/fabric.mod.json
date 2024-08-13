@@ -25,6 +25,8 @@
     "entrypoints": {
         "main": [
             "com.teamresourceful.resourcefulconfig.web.server.WebServer::start",
+            "com.teamresourceful.resourcefulconfig.common.compat.CompatabilityLayers::init",
+            "com.teamresourceful.resourcefulconfig.common.fabric.ResourcefulConfigFabric",
             "com.teamresourceful.resourcefulconfig.demo.Demo"
         ],
         "client": [

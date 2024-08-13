@@ -37,6 +37,10 @@ public record Configurations(
         return configs.values().iterator();
     }
 
+    public ResourcefulConfig getConfig(String id) {
+        return configs.get(id);
+    }
+
     public Set<String> getConfigsForMod(String modid) {
         if (modid == null) return Set.of();
         return modToConfigs.getOrDefault(modid, Set.of());

@@ -47,7 +47,8 @@ public class ResourcefulConfigScreen {
     public static Function<@Nullable Screen, Screen> getFactory(String mod) {
         Set<String> configs = Configurations.INSTANCE.getConfigsForMod(mod);
         if (configs.size() == 1) {
-            return screen -> get(screen, configs.iterator().next());
+            ResourcefulConfig config = Configurations.INSTANCE.getConfig(configs.iterator().next());
+            return config == null ? Function.identity() : screen -> get(screen, config);
         } else {
             return screen -> get(screen, mod);
         }

@@ -5,8 +5,7 @@ import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 
 public class CompatabilityLayers {
 
-    public static void init() {
+    public static void initServer() {
         Configurations.INSTANCE.addConfig(DedicatedServerConfig.INSTANCE, "minecraft");
-
     }
 }

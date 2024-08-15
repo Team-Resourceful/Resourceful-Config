@@ -25,12 +25,14 @@
     "entrypoints": {
         "main": [
             "com.teamresourceful.resourcefulconfig.web.server.WebServer::start",
-            "com.teamresourceful.resourcefulconfig.common.compat.CompatabilityLayers::init",
             "com.teamresourceful.resourcefulconfig.common.fabric.ResourcefulConfigFabric",
             "com.teamresourceful.resourcefulconfig.demo.Demo"
         ],
         "client": [
             "com.teamresourceful.resourcefulconfig.demo.DemoClient"
+        ],
+        "server": [
+            "com.teamresourceful.resourcefulconfig.common.compat.CompatabilityLayers::initServer"
         ],
         "modmenu": [
             "com.teamresourceful.resourcefulconfig.client.compat.fabric.modmenu.ResourcefulConfigModMenu"

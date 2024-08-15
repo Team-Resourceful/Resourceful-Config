@@ -16,7 +16,9 @@ public class ResourcefulConfigNeoForge {
 
     public ResourcefulConfigNeoForge(IEventBus bus, FMLModContainer container) {
         WebServer.start();
-        CompatabilityLayers.init();
+        if (FMLLoader.getDist().isDedicatedServer()) {
+            CompatabilityLayers.initServer();
+        }
         if (FMLLoader.getDist().isClient()) {
             ResourcefulConfigNeoForgeClient.onClientInit(container);
         }

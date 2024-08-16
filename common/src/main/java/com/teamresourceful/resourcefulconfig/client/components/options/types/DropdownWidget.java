@@ -34,6 +34,11 @@ public class DropdownWidget extends BaseWidget {
         this(WIDTH, options, getter, setter);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<?>> DropdownWidget of(T[] options, Supplier<T> getter, Consumer<T> setter) {
+        return new DropdownWidget(options, getter::get, t -> setter.accept((T) t));
+    }
+
     public DropdownWidget setTitle(Component title) {
         this.title = title;
         return this;

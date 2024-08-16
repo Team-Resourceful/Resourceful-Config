@@ -1,0 +1,67 @@
+package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
+
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
+
+public record HsbColor(float hue, float saturation, float brightness, int alpha) {
+
+    public static HsbColor of(float hue, float saturation, float brightness, int alpha) {
+        return new HsbColor(hue, saturation, brightness, alpha);
+    }
+
+    public static HsbColor fromRgb(int rgba) {
+        int r = FastColor.ARGB32.red(rgba);
+        int g = FastColor.ARGB32.green(rgba);
+        int b = FastColor.ARGB32.blue(rgba);
+        int a = FastColor.ARGB32.alpha(rgba);
+
+        int cmax = Math.max(Math.max(r, g), b);
+        int cmin = Math.min(Math.min(r, g), b);
+
+        float brightness = ((float) cmax) / 255.0f;
+        float saturation = cmax != 0 ? ((float) (cmax - cmin)) / ((float) cmax) : 0;
+        float hue;
+
+        if (saturation == 0) {
+            hue = 0;
+        } else {
+            float redc = ((float) (cmax - r)) / ((float) (cmax - cmin));
+            float greenc = ((float) (cmax - g)) / ((float) (cmax - cmin));
+            float bluec = ((float) (cmax - b)) / ((float) (cmax - cmin));
+            if (r == cmax) {
+                hue = bluec - greenc;
+            } else if (g == cmax) {
+                hue = 2.0f + redc - bluec;
+            } else {
+                hue = 4.0f + greenc - redc;
+            }
+            hue = hue / 6.0f;
+            if (hue < 0) {
+                hue = hue + 1.0f;
+            }
+        }
+        return new HsbColor(hue, saturation, brightness, a);
+    }
+
+    public int toRgba() {
+        return Mth.hsvToArgb(hue, saturation, brightness, alpha);
+    }
+
+    public HsbColor withAlpha(int alpha) {
+        return new HsbColor(hue, saturation, brightness, alpha);
+    }
+
+    public HsbColor withBrightness(float brightness) {
+        return new HsbColor(hue, saturation, brightness, alpha);
+    }
+
+    public HsbColor withSaturation(float saturation) {
+        return new HsbColor(hue, saturation, brightness, alpha);
+    }
+
+    public HsbColor withHue(float hue) {
+        return new HsbColor(hue, saturation, brightness, alpha);
+    }
+
+
+}

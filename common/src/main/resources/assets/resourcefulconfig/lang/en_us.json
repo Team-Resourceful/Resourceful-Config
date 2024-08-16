@@ -19,5 +19,10 @@
     "rconfig.server.properties.pvp.desc": "If this is enabled, players can attack each other.",
 
     "rconfig.server.properties.enforce-whitelist": "Enforce White List",
-    "rconfig.server.properties.enforce-whitelist.desc": "If this is enabled, only the users in the white list can access the server, if users are on the server that are not in the whitelist they will be kicked."
+    "rconfig.server.properties.enforce-whitelist.desc": "If this is enabled, only the users in the white list can access the server, if users are on the server that are not in the whitelist they will be kicked.",
+
+
+    "rconfig.color.preset.defaults": "Defaults",
+    "rconfig.color.preset.recents": "Recents",
+    "rconfig.color.preset.mc_colors": "Text Colors"
 }

@@ -22,6 +22,7 @@ public class ModSprites {
     public static final ResourceLocation CHECK = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "check");
     public static final ResourceLocation DRAGGABLE = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "draggable");
     public static final ResourceLocation DELETE = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "delete");
+    public static final ResourceLocation EYE_DROPPER = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "eye_dropper");
 
     public static final ResourceLocation HEADER = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "header");
     public static final ResourceLocation CONTAINER = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "container");

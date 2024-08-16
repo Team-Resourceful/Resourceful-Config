@@ -56,6 +56,7 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     }
 
     public void updateIfFocused() {
+        if (!isFocused()) setValue(getter.get());
         if (!canExpand) return;
         if (this.width != FOCUSED_WIDTH && isFocused()) {
             setWidth(FOCUSED_WIDTH);

@@ -121,6 +121,7 @@ public final class Options {
                     ConfigOption.Color color = data.getOption(Option.COLOR);
                     widgets.add(new ColorOptionWidget(
                             color.presets(),
+                            color.alpha(),
                             () -> color.alpha() ? entry.getInt() : entry.getInt() | 0xFF000000,
                             value -> {
                                 value = color.alpha() ? value : value & 0x00FFFFFF;
@@ -128,15 +129,14 @@ public final class Options {
                             }
                     ));
                     widgets.add(new StringOptionWidget(
-                            () -> "#" + Integer.toHexString(entry.getInt()),
+                            () -> "#" + String.format("%06X", entry.getInt()),
                             s -> {
                                 try {
-                                    if (s.startsWith("#")) s = s.substring(1);
                                     if (s.length() == 8 && !color.alpha()) s = s.substring(2);
                                     if (s.length() == 3) {
                                         s = "" + s.charAt(0) + s.charAt(0) + s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(2);
                                     }
-                                    entry.setInt(Integer.parseInt(s, 16));
+                                    entry.setInt(Long.decode(s).intValue());
                                     return true;
                                 } catch (NumberFormatException e) {
                                     return false;

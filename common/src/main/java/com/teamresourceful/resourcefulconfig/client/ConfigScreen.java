@@ -8,6 +8,7 @@ import com.teamresourceful.resourcefulconfig.client.components.categories.Catego
 import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
+import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
 import com.teamresourceful.resourcefulconfig.client.utils.ConfigSearching;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class ConfigScreen extends Screen {
+public class ConfigScreen extends Screen implements CloseableScreen {
 
     private final Screen parent;
     private final ResourcefulConfig config;
@@ -145,10 +146,8 @@ public class ConfigScreen extends Screen {
         return false;
     }
 
-    /**
-     * @param screen The screen that is replacing this one.
-     */
-    public void removed(@Nullable Screen screen) {
+    @Override
+    public void onClosed(@Nullable Screen screen) {
         boolean shouldSave = screen == null || (screen == this.parent && !(this.parent instanceof ConfigScreen));
         if (shouldSave) {
             this.config.save();

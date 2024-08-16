@@ -106,6 +106,14 @@ public final class DemoConfig {
     public static int demoColor = 0xff0000;
 
     @ConfigEntry(
+            type = EntryType.INTEGER,
+            id = "demoAlphaColor",
+            translation = "demo alpha color"
+    )
+    @ConfigOption.Color(alpha = true)
+    public static int demoAlphaColor = 0xffff0000;
+
+    @ConfigEntry(
             type = EntryType.ENUM,
             id = "demoSelect",
             translation = "select"

@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.mixins.client;
 
-import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
+import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
@@ -24,8 +24,8 @@ public class MinecraftMixin {
             )
     )
     private void rconfig$onRemoved(Screen screen, CallbackInfo ci) {
-        if (this.screen instanceof ConfigScreen configScreen) {
-            configScreen.removed(screen);
+        if (this.screen instanceof CloseableScreen configScreen) {
+            configScreen.onClosed(screen);
         }
     }
 }

@@ -13,7 +13,6 @@
         "homepage": "https://resourcefulbees.com"
     },
     "license": "MIT",
-    "icon": "icon.png",
     "environment": "*",
     "depends": {
         "fabricloader": ">=0.14.21",

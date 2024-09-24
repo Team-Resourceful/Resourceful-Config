@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 public class ResourcefulConfigScreen {
 
@@ -55,13 +54,10 @@ public class ResourcefulConfigScreen {
     }
 
     /**
-     * Opens a modal screen with the given title and constructor.
-     * @param title The title of the modal screen.
-     * @param constructor The constructor for the modal screen. This should be a lambda that returns a widget that contains the modal screen's content.
-     *
-     * @apiNote The widget for this modal should contain all other widgets and should be used for rendering of inside the modal.
+     * @deprecated Use {@link ResourcefulConfigUI}
      */
+    @Deprecated
     public static void openModal(Component title, ModalWidgetConstructor constructor) {
-        new GenericModalOverlay(title, constructor).open();
+        ResourcefulConfigUI.openModal(title, constructor);
     }
 }

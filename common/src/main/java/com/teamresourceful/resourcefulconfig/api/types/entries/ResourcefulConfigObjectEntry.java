@@ -9,4 +9,8 @@ public interface ResourcefulConfigObjectEntry extends ResourcefulConfigEntry {
     @NotNull
     LinkedHashMap<String, ResourcefulConfigEntry> entries();
 
+    default Object instance() {
+        return null;
+    }
+
 }

@@ -19,6 +19,12 @@ public final class ModUtils {
         throw new NotImplementedException("Not implemented yet");
     }
 
+    @Contract(pure = true)
+    @ExpectPlatform
+    public static boolean isDev() {
+        throw new NotImplementedException("Not implemented yet");
+    }
+
     public static void log(String message) {
         LOGGER.info("[ResourcefulConfig] {}", message);
     }

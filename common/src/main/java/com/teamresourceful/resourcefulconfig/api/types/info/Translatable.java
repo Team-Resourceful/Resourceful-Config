@@ -25,4 +25,14 @@ public interface Translatable {
         }
         return Component.literal(Objects.toString(value));
     }
+
+    static Component toSpeifiedComponent(Object value, Component specified) {
+        if (value instanceof Translatable translatable) {
+            return Component.translatable(translatable.getTranslationKey());
+        }
+        if (value instanceof StringRepresentable string) {
+            return Component.literal(string.getSerializedName());
+        }
+        return specified;
+    }
 }

@@ -14,7 +14,9 @@ public enum EntryType {
     BOOLEAN(type -> type == boolean.class || type == Boolean.class),
     STRING(type -> type == String.class),
     ENUM(Class::isEnum),
-    OBJECT(type -> type.isAnnotationPresent(ConfigObject.class))
+    OBJECT(type -> type.isAnnotationPresent(ConfigObject.class)),
+
+    CANNOT_BE_PARSED(type -> false)
     ;
 
     private final Predicate<Class<?>> predicate;

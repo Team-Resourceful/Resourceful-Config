@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.api.annotations;
 
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,7 +14,12 @@ public @interface ConfigEntry {
 
     String id();
 
-    EntryType type();
+    /**
+     * @deprecated Type is no longer required and it will be inferred instead of parsing.
+     */
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.21.2")
+    EntryType type() default EntryType.CANNOT_BE_PARSED;
 
     String translation() default "";
 }

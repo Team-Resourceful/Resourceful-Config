@@ -2,7 +2,6 @@ package com.teamresourceful.resourcefulconfig.demo;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
 import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
-import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import net.minecraft.ChatFormatting;
 
 @ConfigInfo.Provider(DemoInfoProvider.class)
@@ -11,7 +10,6 @@ import net.minecraft.ChatFormatting;
 public final class DemoConfig {
 
     @ConfigEntry(
-            type = EntryType.BOOLEAN,
             id = "demoBoolean",
             translation = "true"
     )
@@ -24,21 +22,18 @@ public final class DemoConfig {
     }
 
     @ConfigEntry(
-            type = EntryType.INTEGER,
             id = "demoInteger",
             translation = "1"
     )
     public static int demoInteger = 1;
 
     @ConfigEntry(
-            type = EntryType.DOUBLE,
             id = "demoDouble",
             translation = "1.0"
     )
     public static double demoDouble = 1.0;
 
     @ConfigEntry(
-            type = EntryType.INTEGER,
             id = "demoSlider",
             translation = "1"
     )
@@ -48,14 +43,12 @@ public final class DemoConfig {
 
 
     @ConfigEntry(
-            type = EntryType.STRING,
             id = "demoString",
             translation = "Hello World!"
     )
     public static String demoString = "Hello World!";
 
     @ConfigEntry(
-            type = EntryType.STRING,
             id = "multiline",
             translation = "multiline"
     )
@@ -67,7 +60,6 @@ public final class DemoConfig {
             """;
 
     @ConfigEntry(
-            type = EntryType.INTEGER,
             id = "demoRange",
             translation = "range"
     )
@@ -75,7 +67,6 @@ public final class DemoConfig {
     public static int demoIntegerRange = 5;
 
     @ConfigEntry(
-            type = EntryType.ENUM,
             id = "demoEnum",
             translation = "enum"
     )
@@ -86,7 +77,6 @@ public final class DemoConfig {
         description = "This is a separator."
     )
     @ConfigEntry(
-            type = EntryType.STRING,
             id = "demoRegex",
             translation = "regex"
     )
@@ -94,7 +84,6 @@ public final class DemoConfig {
     public static String demoRegex = "#ff0000";
 
     @ConfigEntry(
-            type = EntryType.INTEGER,
             id = "demoColor",
             translation = "demo color"
     )
@@ -106,7 +95,6 @@ public final class DemoConfig {
     public static int demoColor = 0xff0000;
 
     @ConfigEntry(
-            type = EntryType.INTEGER,
             id = "demoAlphaColor",
             translation = "demo alpha color"
     )
@@ -114,7 +102,6 @@ public final class DemoConfig {
     public static int demoAlphaColor = 0xffff0000;
 
     @ConfigEntry(
-            type = EntryType.ENUM,
             id = "demoSelect",
             translation = "select"
     )
@@ -129,7 +116,6 @@ public final class DemoConfig {
     public static final Runnable test = () -> System.out.println("Clicked!");
 
     @ConfigEntry(
-            type = EntryType.ENUM,
             id = "demoDraggable",
             translation = "draggable"
     )
@@ -143,10 +129,12 @@ public final class DemoConfig {
     };
 
     @ConfigEntry(
-            type = EntryType.INTEGER,
             id = "demoKeybind",
             translation = "keybind"
     )
     @ConfigOption.Keybind
     public static int demoKeybind = 48;
+
+    @ConfigEntry(id = "object")
+    public static final DemoObject object = new DemoObject();
 }

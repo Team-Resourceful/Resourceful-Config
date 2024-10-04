@@ -58,8 +58,12 @@ public final class Configurator {
             config.load(handler);
             config.save();
             return config;
-        }catch (Exception e) {
-            ModUtils.log("Failed to create config for " + clazz.getName(), e);
+        } catch (Exception e) {
+            if (ModUtils.isDev()) {
+                throw new RuntimeException("Failed to create config for " + clazz.getName(), e);
+            } else {
+                ModUtils.log("Failed to create config for " + clazz.getName(), e);
+            }
         }
         return null;
     }

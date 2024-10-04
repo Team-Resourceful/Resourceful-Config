@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
+import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
@@ -30,7 +31,7 @@ public class ObjectOptionWidget extends BaseWidget {
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
 
-        int contentWidth = font.width(UIConstants.EDIT_OBJECT) + SPACING + SIZE;
+        int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
 
         graphics.blitSprite(
                 ModSprites.EDIT,
@@ -38,7 +39,7 @@ public class ObjectOptionWidget extends BaseWidget {
                 SIZE, SIZE
         );
         graphics.drawString(
-                font, UIConstants.EDIT_OBJECT,
+                font, UIConstants.EDIT,
                 getX() + (getWidth() - contentWidth) / 2 + SIZE + SPACING,
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,
                 UIConstants.TEXT_TITLE
@@ -59,7 +60,7 @@ public class ObjectOptionWidget extends BaseWidget {
             super();
             this.entry = entry;
 
-            this.title = UIConstants.EDIT_OBJECT;
+            this.title = Translatable.toSpeifiedComponent(entry.instance(), UIConstants.EDIT_OBJECT);
         }
 
         @Override

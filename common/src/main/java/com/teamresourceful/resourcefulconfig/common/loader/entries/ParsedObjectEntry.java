@@ -15,12 +15,21 @@ public record ParsedObjectEntry(
         LinkedHashMap<String, ResourcefulConfigEntry> entries
 ) implements ResourcefulConfigObjectEntry {
 
-    public ParsedObjectEntry(EntryType type, Field field) {
-        this(type, field, EntryData.of(field, field.getType()), new LinkedHashMap<>());
+    public ParsedObjectEntry(Field field) {
+        this(EntryType.OBJECT, field, EntryData.of(field, field.getType()), new LinkedHashMap<>());
     }
 
     @Override
     public void reset() {
         entries.values().forEach(ResourcefulConfigEntry::reset);
+    }
+
+    @Override
+    public Object instance() {
+        try {
+            return field.get(null);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

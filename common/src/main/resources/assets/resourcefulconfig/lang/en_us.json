@@ -21,6 +21,17 @@
     "rconfig.server.properties.enforce-whitelist": "Enforce White List",
     "rconfig.server.properties.enforce-whitelist.desc": "If this is enabled, only the users in the white list can access the server, if users are on the server that are not in the whitelist they will be kicked.",
 
+    "rconfig.ui.constant.close": "Close",
+    "rconfig.ui.constant.reset": "Reset",
+    "rconfig.ui.constant.edit": "Edit",
+    "rconfig.ui.constant.edit.string": "Edit String",
+    "rconfig.ui.constant.edit.list": "Edit List",
+    "rconfig.ui.constant.edit.object": "Edit Object",
+    "rconfig.ui.constant.choose_item": "Choose Item: ",
+    "rconfig.ui.constant.add_item": "Add Item: ",
+    "rconfig.ui.constant.mod_configs": "Mod Configs",
+    "rconfig.ui.constant.mod_configs.description": "Select a config to view or edit.",
+
 
     "rconfig.color.preset.defaults": "Defaults",
     "rconfig.color.preset.recents": "Recents",

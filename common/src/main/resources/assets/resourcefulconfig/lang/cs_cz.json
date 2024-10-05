@@ -1,0 +1,39 @@
+{
+    "rconfig.server.title": "Dedikovaný Server",
+    "rconfig.server.desc": "Vlastnosti které jdou upravovat v reálném čase.",
+    "rconfig.server.wiki": "Wiki",
+
+    "rconfig.server.properties.white-list": "Bíla listina",
+    "rconfig.server.properties.white-list.desc": "Pokud je toto povoleno, pouze uživatelé na bílé listině mohou přistupovat na server.",
+
+    "rconfig.server.properties.max-players": "Maximální počet hráčů",
+    "rconfig.server.properties.max-players.desc": "Maximální počet hráčů, kteří mohou hrát na serveru ve stejnou dobu.",
+
+    "rconfig.server.properties.motd": "Zpráva dne",
+    "rconfig.server.properties.motd.desc": "Zpráva, která je zobrazena v seznamu serverů.",
+
+    "rconfig.server.properties.allow-flight": "Povolit let",
+    "rconfig.server.properties.allow-flight.desc": "Pokud je toto povoleno, hráči mohou létat na serveru, obvykle potřebné v modovaném serveru.",
+
+    "rconfig.server.properties.pvp": "Hráč vs Hráč",
+    "rconfig.server.properties.pvp.desc": "Pokud je toto povoleno, hráči mohou mezi sebou bojovat.",
+
+    "rconfig.server.properties.enforce-whitelist": "Vynutit bílou listinu",
+    "rconfig.server.properties.enforce-whitelist.desc": "Pokud je toto povoleno, pouze uživatelé na bílé listině mohou přistupovat na server, pokud jsou na serveru uživatelé, kteří nejsou na bílé listině, budou vyhozeni.",
+
+    "rconfig.ui.constant.close": "Zavřít",
+    "rconfig.ui.constant.reset": "Resetovat",
+    "rconfig.ui.constant.edit": "Upravit",
+    "rconfig.ui.constant.edit.string": "Upravit String",
+    "rconfig.ui.constant.edit.list": "Upravit List",
+    "rconfig.ui.constant.edit.object": "Upravit Objekt",
+    "rconfig.ui.constant.choose_item": "Vybrat Item: ",
+    "rconfig.ui.constant.add_item": "Přidat Item: ",
+    "rconfig.ui.constant.mod_configs": "Konfigurace Modů",
+    "rconfig.ui.constant.mod_configs.description": "Vyberte konfiguraci k zobrazení nebo úpravě.",
+
+
+    "rconfig.color.preset.defaults": "Výchozí",
+    "rconfig.color.preset.recents": "Nedávné",
+    "rconfig.color.preset.mc_colors": "Barvy Textu"
+}

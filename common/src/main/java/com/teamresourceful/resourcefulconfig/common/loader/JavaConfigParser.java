@@ -126,17 +126,19 @@ public class JavaConfigParser implements ConfigParser {
 
     private static Class<?> getFieldType(Object instance, Field field, EntryType entry) {
         Class<?> type = field.getType();
+        if (type == Observable.class) {
+            try {
+                type = ((Observable<?>) field.get(instance)).type();
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException("Entry " + field.getName() + " is not accessible!");
+            }
+        }
+
         if (type.isArray()) {
             if (!entry.isAllowedInArrays()) {
                 throw new IllegalArgumentException("Entry " + field.getName() + " is an array but its type is not allowed in arrays!");
             }
             type = type.getComponentType();
-        } else if (type == Observable.class) {
-            try {
-                return ((Observable<?>) field.get(instance)).type();
-            } catch (IllegalAccessException e) {
-                throw new IllegalArgumentException("Entry " + field.getName() + " is not accessible!");
-            }
         }
         return type;
     }
@@ -193,12 +195,12 @@ public class JavaConfigParser implements ConfigParser {
 
     private static EntryType getEntryType(Class<?> type, EntryType defaultValue) {
         if (type.getAnnotation(ConfigObject.class) != null) return EntryType.OBJECT;
-        if (type == Long.TYPE || type == Long.class) return EntryType.INTEGER;
+        if (type == Long.TYPE || type == Long.class) return EntryType.LONG;
         if (type == Integer.TYPE || type == Integer.class) return EntryType.INTEGER;
-        if (type == Short.TYPE || type == Short.class) return EntryType.INTEGER;
-        if (type == Byte.TYPE || type == Byte.class) return EntryType.INTEGER;
+        if (type == Short.TYPE || type == Short.class) return EntryType.SHORT;
+        if (type == Byte.TYPE || type == Byte.class) return EntryType.BYTE;
         if (type == Double.TYPE || type == Double.class) return EntryType.DOUBLE;
-        if (type == Float.TYPE || type == Float.class) return EntryType.DOUBLE;
+        if (type == Float.TYPE || type == Float.class) return EntryType.FLOAT;
         if (type == Boolean.TYPE || type == Boolean.class) return EntryType.BOOLEAN;
         if (type == String.class) return EntryType.STRING;
         if (type.isEnum()) return EntryType.ENUM;

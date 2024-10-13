@@ -1,1 +1,1 @@
-- Czech translations by Mayaqq
+- Add ability for draggables to have optional tooltips

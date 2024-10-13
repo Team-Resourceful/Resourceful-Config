@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.misc.draggable;
 
+import com.teamresourceful.resourcefulconfig.api.types.info.TooltipProvider;
 import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
@@ -31,10 +32,16 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
         if (!dragging && hovered) {
             graphics.blitSprite(ModSprites.DRAGGABLE, x + 4, y + 4, 8, 8);
         }
-        if (!dragging && hovered && canDelete) {
-            graphics.blitSprite(ModSprites.DELETE, x + getWidth() - 12, y + 4, 8, 8);
-            if (this.minecraft.screen != null && x + getWidth() - 16 <= mouseX) {
-                this.minecraft.screen.setTooltipForNextRenderPass(Component.literal("Remove"));
+        if (!dragging && hovered) {
+            boolean hoveringDelete = x + getWidth() - 16 <= mouseX;
+            if (canDelete) {
+                graphics.blitSprite(ModSprites.DELETE, x + getWidth() - 12, y + 4, 8, 8);
+                if (this.minecraft.screen != null && hoveringDelete) {
+                    this.minecraft.screen.setTooltipForNextRenderPass(Component.literal("Remove"));
+                }
+            }
+            if (!hoveringDelete && this.minecraft.screen != null && value instanceof TooltipProvider provider) {
+                this.minecraft.screen.setTooltipForNextRenderPass(provider.getTooltip());
             }
         }
         int color = hovered ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;

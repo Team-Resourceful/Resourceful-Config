@@ -6,6 +6,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -34,8 +35,8 @@ public class BooleanOptionWidget extends BaseWidget {
         int onX = getX() + 1 + HALF_WIDTH;
         int color = value ? UIConstants.TEXT_PARAGRAPH : UIConstants.TEXT_TITLE;
 
-        graphics.blitSprite(ModSprites.BUTTON, getX(), getY(), this.width, this.height);
-        graphics.blitSprite(ModSprites.ofSwitch(value), value ? onX : offX, getY() + 1, SWITCH_WIDTH, this.height - 2);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.ofSwitch(value), value ? onX : offX, getY() + 1, SWITCH_WIDTH, this.height - 2);
         drawCenteredString(graphics, this.font, CommonComponents.OPTION_OFF, offX + HALF_SWITCH_WIDTH, getY() + 4, color, value && isHovered());
         drawCenteredString(graphics, this.font, CommonComponents.OPTION_ON, onX + HALF_SWITCH_WIDTH, getY() + 4, color, !value && isHovered());
     }

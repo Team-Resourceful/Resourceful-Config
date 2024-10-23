@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -31,8 +32,9 @@ public class SpriteButton extends AbstractButton {
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         ResourceLocation button = isHovered() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
-        graphics.blitSprite(button, getX(), getY(), getWidth(), getHeight());
+        graphics.blitSprite(RenderType::guiTextured, button, getX(), getY(), getWidth(), getHeight());
         graphics.blitSprite(
+            RenderType::guiTextured,
             this.sprite,
             getX() + this.padding, getY() + this.padding,
             getWidth() - this.padding * 2, getHeight() - this.padding * 2

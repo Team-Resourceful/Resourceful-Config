@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +45,7 @@ public class EyedropperButton extends SpriteButton {
             double guiScale = Minecraft.getInstance().getWindow().getGuiScale();
 
             RenderSystem.setShaderTexture(0, SCREEN_TEXTURE);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(CoreShaders.POSITION_TEX);
             Matrix4f matrix4f = graphics.pose().last().pose();
             BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder.addVertex(matrix4f, 0f, this.height, 0f).setUv(0f, 1f);
@@ -79,8 +79,7 @@ public class EyedropperButton extends SpriteButton {
 
             if (pixelX < 0 || pixelY < 0 || pixelX >= this.image.getWidth() || pixelY >= this.image.getHeight()) return;
 
-            int abgr = this.image.getPixelRGBA(pixelX, pixelY);
-            int pixel = (abgr & 0xFF00FF00) | ((abgr & 0xFF) << 16) | ((abgr & 0xFF0000) >> 16);
+            int pixel = this.image.getPixel(pixelX, pixelY);
 
             setTooltipForNextRenderPass(Component.literal(String.format("#%08X", pixel)).withColor(pixel));
         }
@@ -92,9 +91,7 @@ public class EyedropperButton extends SpriteButton {
             int pixelX = (int) (mouseX * guiScale);
             int pixelY = (int) (mouseY * guiScale);
             if (pixelX < 0 || pixelY < 0 || pixelX >= this.image.getWidth() || pixelY >= this.image.getHeight()) return false;
-            int abgr = this.image.getPixelRGBA(pixelX, pixelY);
-            int pixel = (abgr & 0xFF00FF00) | ((abgr & 0xFF) << 16) | ((abgr & 0xFF0000) >> 16);
-            this.state.set(HsbColor.fromRgb(pixel));
+            this.state.set(HsbColor.fromRgb(this.image.getPixel(pixelX, pixelY)));
             this.onClose();
             return true;
         }

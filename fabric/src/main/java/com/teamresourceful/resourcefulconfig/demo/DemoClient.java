@@ -14,14 +14,14 @@ public class DemoClient implements ClientModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> {
             dispatcher.register(ClientCommandManager.literal("rconfigdemo").executes(context -> {
-                Minecraft.getInstance().tell(() -> Minecraft.getInstance().setScreen(
+                Minecraft.getInstance().schedule(() -> Minecraft.getInstance().setScreen(
                         ResourcefulConfigScreen.get(null, Demo.configurator, DemoConfig.class)
                 ));
                 return 1;
             }));
 
             dispatcher.register(ClientCommandManager.literal("rconfigdemos").executes(context -> {
-                Minecraft.getInstance().tell(() -> Minecraft.getInstance().setScreen(
+                Minecraft.getInstance().schedule(() -> Minecraft.getInstance().setScreen(
                         new ConfigsScreen(null, null)
                 ));
                 return 1;

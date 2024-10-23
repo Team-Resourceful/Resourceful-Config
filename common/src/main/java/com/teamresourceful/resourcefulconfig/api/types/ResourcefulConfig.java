@@ -33,9 +33,4 @@ public interface ResourcefulConfig {
 
     void load(Consumer<ConfigPatchEvent> handler);
 
-    @Deprecated
-    default boolean hasFile() {
-        return false;
-    }
-
 }

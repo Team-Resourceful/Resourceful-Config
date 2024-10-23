@@ -39,7 +39,7 @@ public class JavaConfigParser implements ConfigParser {
         for (Field field : clazz.getDeclaredFields()) {
             ConfigEntry data = assertEntry(field);
             if (data != null) {
-                var type = getEntryType(field, data.type());
+                var type = getEntryType(field);
 
                 if (type == EntryType.OBJECT) {
                     Object instance = ParsingUtils.getField(field, null);
@@ -87,7 +87,7 @@ public class JavaConfigParser implements ConfigParser {
         for (Field field : instance.getClass().getDeclaredFields()) {
             ConfigEntry data = assertAccessibleEntry(instance, field);
             if (data == null) continue;
-            EntryType type = getEntryType(field, data.type());
+            EntryType type = getEntryType(field);
             if (type == EntryType.OBJECT) {
                 throw new IllegalArgumentException("Entry " + field.getName() + " cannot be an object!");
             }
@@ -147,7 +147,7 @@ public class JavaConfigParser implements ConfigParser {
         ConfigEntry data = field.getAnnotation(ConfigEntry.class);
         String name = field.getName();
         if (data == null) return null;
-        EntryType type = getEntryType(field, data.type());
+        EntryType type = getEntryType(field);
         List<String> errors = new ArrayList<>();
         if (!Modifier.isPublic(field.getModifiers())) errors.add("Entry is not public!");
         if (type.mustBeFinal() && !Modifier.isFinal(field.getModifiers())) errors.add("Entry must be final!");
@@ -186,14 +186,14 @@ public class JavaConfigParser implements ConfigParser {
         }
     }
 
-    private static EntryType getEntryType(Field field, EntryType defaultValue) {
+    private static EntryType getEntryType(Field field) {
         Class<?> fieldType = field.getType();
         if (fieldType == Observable.class) fieldType = ((Observable<?>) ParsingUtils.getField(field, null)).type();
         if (fieldType.isArray()) fieldType = fieldType.getComponentType();
-        return getEntryType(fieldType, defaultValue);
+        return getEntryType(fieldType);
     }
 
-    private static EntryType getEntryType(Class<?> type, EntryType defaultValue) {
+    private static EntryType getEntryType(Class<?> type) {
         if (type.getAnnotation(ConfigObject.class) != null) return EntryType.OBJECT;
         if (type == Long.TYPE || type == Long.class) return EntryType.LONG;
         if (type == Integer.TYPE || type == Integer.class) return EntryType.INTEGER;
@@ -204,6 +204,6 @@ public class JavaConfigParser implements ConfigParser {
         if (type == Boolean.TYPE || type == Boolean.class) return EntryType.BOOLEAN;
         if (type == String.class) return EntryType.STRING;
         if (type.isEnum()) return EntryType.ENUM;
-        return defaultValue;
+        throw new IllegalArgumentException("Entry " + type + " is not a valid type!");
     }
 }

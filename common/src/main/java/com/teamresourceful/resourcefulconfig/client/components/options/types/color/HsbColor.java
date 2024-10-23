@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
 public record HsbColor(float hue, float saturation, float brightness, int alpha) {
@@ -10,10 +10,10 @@ public record HsbColor(float hue, float saturation, float brightness, int alpha)
     }
 
     public static HsbColor fromRgb(int rgba) {
-        int r = FastColor.ARGB32.red(rgba);
-        int g = FastColor.ARGB32.green(rgba);
-        int b = FastColor.ARGB32.blue(rgba);
-        int a = FastColor.ARGB32.alpha(rgba);
+        int r = ARGB.red(rgba);
+        int g = ARGB.green(rgba);
+        int b = ARGB.blue(rgba);
+        int a = ARGB.alpha(rgba);
 
         int cmax = Math.max(Math.max(r, g), b);
         int cmin = Math.min(Math.min(r, g), b);

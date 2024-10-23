@@ -15,8 +15,6 @@ public enum EntryType {
     STRING(type -> type == String.class),
     ENUM(Class::isEnum),
     OBJECT(type -> type.isAnnotationPresent(ConfigObject.class)),
-
-    CANNOT_BE_PARSED(type -> false)
     ;
 
     private final Predicate<Class<?>> predicate;

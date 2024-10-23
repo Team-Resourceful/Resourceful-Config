@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.CommonInputs;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -58,11 +59,11 @@ public class RangeOptionWidget extends BaseWidget {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
-        graphics.blitSprite(ModSprites.BUTTON, getX(), getY(), this.width, this.height);
-        graphics.blitSprite(ModSprites.BUTTON_HOVER, getX() + this.padding, getY() + 5, this.width - this.padding * 2, this.height - 10);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON_HOVER, getX() + this.padding, getY() + 5, this.width - this.padding * 2, this.height - 10);
 
         int sliderX = getX() + this.padding + (int) ((this.width - this.padding * 2) * this.getter.getAsDouble()) - (this.height - 6) / 2;
-        graphics.blitSprite(ModSprites.CONTAINER, sliderX, getY() + 4, this.height - 8, this.height - 8);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.CONTAINER, sliderX, getY() + 4, this.height - 8, this.height - 8);
 
         Component tooltip = null;
 

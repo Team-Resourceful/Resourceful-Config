@@ -7,7 +7,6 @@ import com.teamresourceful.resourcefulconfig.client.ConfigsScreen;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import net.minecraft.Optionull;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -51,13 +50,5 @@ public class ResourcefulConfigScreen {
         } else {
             return screen -> get(screen, mod);
         }
-    }
-
-    /**
-     * @deprecated Use {@link ResourcefulConfigUI}
-     */
-    @Deprecated
-    public static void openModal(Component title, ModalWidgetConstructor constructor) {
-        ResourcefulConfigUI.openModal(title, constructor);
     }
 }

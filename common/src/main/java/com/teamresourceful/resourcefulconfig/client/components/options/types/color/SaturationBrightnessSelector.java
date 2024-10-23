@@ -75,11 +75,12 @@ public class SaturationBrightnessSelector extends BaseWidget {
             int topLeft, int topRight, int bottomLeft, int bottomRight
     ) {
         Matrix4f matrix4f = graphics.pose().last().pose();
-        VertexConsumer buffer = graphics.bufferSource().getBuffer(RenderType.gui());
-        buffer.addVertex(matrix4f, x, y + height, 0).setColor(bottomLeft);
-        buffer.addVertex(matrix4f, x + width, y + height, 0).setColor(bottomRight);
-        buffer.addVertex(matrix4f, x + width, y, 0).setColor(topRight);
-        buffer.addVertex(matrix4f, x, y, 0).setColor(topLeft);
-        graphics.flush();
+        graphics.drawSpecial(source -> {
+            VertexConsumer buffer = source.getBuffer(RenderType.gui());
+            buffer.addVertex(matrix4f, x, y + height, 0).setColor(bottomLeft);
+            buffer.addVertex(matrix4f, x + width, y + height, 0).setColor(bottomRight);
+            buffer.addVertex(matrix4f, x + width, y, 0).setColor(topRight);
+            buffer.addVertex(matrix4f, x, y, 0).setColor(topLeft);
+        });
     }
 }

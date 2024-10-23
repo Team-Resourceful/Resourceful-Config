@@ -73,9 +73,4 @@ public class DedicatedServerConfig implements ResourcefulConfig {
     public void load(Consumer<ConfigPatchEvent> handler) {
 
     }
-
-    @Override
-    public boolean hasFile() {
-        return false;
-    }
 }

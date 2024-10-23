@@ -4,6 +4,7 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 
 import java.util.function.Function;
@@ -42,7 +43,7 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
-        graphics.blitSprite(ModSprites.BUTTON, getX(), getY(), this.width, this.height);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
 
         graphics.enableScissor(getX() + 4, getY() + 4, getX() + this.width - 4, getY() + this.height - 4);
 

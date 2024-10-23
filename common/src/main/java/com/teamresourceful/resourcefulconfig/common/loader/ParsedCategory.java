@@ -41,9 +41,4 @@ public record ParsedCategory(
     public void load(Consumer<ConfigPatchEvent> handler) {
         this.parent.load(handler);
     }
-
-    @Override
-    public boolean hasFile() {
-        return false;
-    }
 }

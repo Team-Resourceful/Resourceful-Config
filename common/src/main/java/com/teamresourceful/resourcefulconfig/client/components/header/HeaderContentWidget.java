@@ -15,6 +15,7 @@ import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.NotNull;
 
 public class HeaderContentWidget extends ContainerWidget {
@@ -81,7 +82,7 @@ public class HeaderContentWidget extends ContainerWidget {
 
     @Override
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(ModSprites.CONTAINER, getX(), getY(), width, height);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.CONTAINER, getX(), getY(), width, height);
         super.renderWidget(graphics, mouseX, mouseY, partialTicks);
     }
 

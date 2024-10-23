@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -69,8 +70,8 @@ public class ModalOverlay extends OverlayScreen {
         super.renderBackground(graphics, mouseX, mouseY, partialTicks);
         renderTransparentBackground(graphics);
 
-        graphics.blitSprite(ModSprites.CONTAINER, this.modalLeft, this.modalTop, this.modalWidth, this.modalHeight);
-        graphics.blitSprite(ModSprites.HEADER, this.modalLeft, this.modalTop, this.modalWidth, 20 + PADDING * 2);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.CONTAINER, this.modalLeft, this.modalTop, this.modalWidth, this.modalHeight);
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.HEADER, this.modalLeft, this.modalTop, this.modalWidth, 20 + PADDING * 2);
     }
 
     @Override

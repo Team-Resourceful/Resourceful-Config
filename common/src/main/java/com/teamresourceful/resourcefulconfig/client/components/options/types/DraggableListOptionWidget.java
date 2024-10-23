@@ -12,6 +12,7 @@ import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 
 import java.lang.reflect.Array;
@@ -68,11 +69,12 @@ public class DraggableListOptionWidget extends BaseWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
+        graphics.blitSprite(RenderType::guiTextured, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
 
         graphics.blitSprite(
+                RenderType::guiTextured,
                 ModSprites.EDIT,
                 getX() + (getWidth() - contentWidth) / 2, getY() + PADDING,
                 SIZE, SIZE
@@ -161,7 +163,7 @@ public class DraggableListOptionWidget extends BaseWidget {
         public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             super.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
-            graphics.blitSprite(ModSprites.BUTTON, left, top + 20, contentWidth, contentHeight - 20);
+            graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, left, top + 20, contentWidth, contentHeight - 20);
         }
     }
 }

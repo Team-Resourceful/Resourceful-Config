@@ -45,7 +45,7 @@ public abstract class OverlayScreen extends Screen {
     public void renderBackground(GuiGraphics guiGraphics, int i, int j, float f) {
         this.background.render(guiGraphics, -1, -1, f);
         guiGraphics.flush();
-        RenderSystem.clear(256, Minecraft.ON_OSX);
+        RenderSystem.clear(256);
     }
 
     @Override

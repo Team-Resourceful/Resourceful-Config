@@ -1,0 +1,39 @@
+{
+    "rconfig.server.title": "Dedizierter Server",
+    "rconfig.server.desc": "Eigenschaften, die sich in Echtzeit aktualisieren.",
+    "rconfig.server.wiki": "Wiki",
+
+    "rconfig.server.properties.white-list": "Gästeliste",
+    "rconfig.server.properties.white-list.desc": "Wenn diese Option aktiviert ist, können nur die in der Gästeliste stehende Spieler auf den Server beitreten.",
+
+    "rconfig.server.properties.max-players": "Maximale Spieler",
+    "rconfig.server.properties.max-players.desc": "Die maximale Anzahl an Spielern, die gleichzeitig auf dem Server spielen können.",
+
+    "rconfig.server.properties.motd": "Nachricht des Tages",
+    "rconfig.server.properties.motd.desc": "Die Nachricht, die in der Server Liste steht.",
+
+    "rconfig.server.properties.allow-flight": "Fliegen Erlauben",
+    "rconfig.server.properties.allow-flight.desc": "Wenn diese Option aktiviert ist, dürfen Spieler auf dem Server fliegen, was normalerweise auf einem modifizierten Server gebraucht ist.",
+
+    "rconfig.server.properties.pvp": "Spieler gegen Spieler",
+    "rconfig.server.properties.pvp.desc": "Wenn diese Option aktiviert ist, können Spieler sich gegenseitig angreifen.",
+
+    "rconfig.server.properties.enforce-whitelist": "Erzwingte Gästeliste",
+    "rconfig.server.properties.enforce-whitelist.desc": "Wenn dies aktiviert ist, können nur die Spieler in der Gästeliste auf den Server zugreifen. Wenn Benutzer auf dem Server sind, die nicht in der Gästeliste sind, werden sie gekickt.",
+
+    "rconfig.ui.constant.close": "Schließen",
+    "rconfig.ui.constant.reset": "Zurücksetzten",
+    "rconfig.ui.constant.edit": "Editieren",
+    "rconfig.ui.constant.edit.string": "Text Editieren",
+    "rconfig.ui.constant.edit.list": "Liste Editieren",
+    "rconfig.ui.constant.edit.object": "Objekt Editieren",
+    "rconfig.ui.constant.choose_item": "Element auswählen: ",
+    "rconfig.ui.constant.add_item": "Element hinzufügen: ",
+    "rconfig.ui.constant.mod_configs": "Mod Konfiguration",
+    "rconfig.ui.constant.mod_configs.description": "Wähle eine Konfiguration zum Anzeigen oder Bearbeiten.",
+
+
+    "rconfig.color.preset.defaults": "Standardeinstellungen",
+    "rconfig.color.preset.recents": "Zuletzt",
+    "rconfig.color.preset.mc_colors": "Text Farben"
+}

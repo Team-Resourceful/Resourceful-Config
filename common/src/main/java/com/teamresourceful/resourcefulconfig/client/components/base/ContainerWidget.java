@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class ContainerWidget extends AbstractWidget implements ContainerEventHandler {
 
@@ -126,7 +127,19 @@ public abstract class ContainerWidget extends AbstractWidget implements Containe
 
     @Override
     public boolean mouseClicked(double d, double e, int i) {
-        return ContainerEventHandler.super.mouseClicked(d, e, i);
+        Optional<GuiEventListener> optional = this.getChildAt(d, e);
+        if (optional.isPresent()) {
+            GuiEventListener guiEventListener = optional.get();
+            if (guiEventListener.mouseClicked(d, e, i)) {
+                this.setFocused(guiEventListener);
+                if (i == 0) {
+                    this.setDragging(true);
+                }
+
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -1,1 +1,1 @@
-- Add ability for draggables to have optional tooltips
+- Update to 1.21.4

@@ -83,7 +83,12 @@ public record EntryData(
         }
 
         public Builder options(Map<Option<?, ?>, Object> options) {
-            this.options = options;
+            this.options.putAll(options);
+            return this;
+        }
+
+        public <T extends Annotation, D> Builder option(Option<T, D> option, D value) {
+            this.options.put(option, value);
             return this;
         }
 

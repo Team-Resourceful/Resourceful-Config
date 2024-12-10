@@ -4,7 +4,6 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.components.configs.ConfigHeaderItem;
 import com.teamresourceful.resourcefulconfig.client.components.configs.ConfigItem;
 import com.teamresourceful.resourcefulconfig.client.components.configs.ConfigsListWidget;
-import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,7 +11,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Set;
 
 public class ConfigsScreen extends Screen {
@@ -49,12 +47,15 @@ public class ConfigsScreen extends Screen {
 
         if (this.modid == null) {
             for (ResourcefulConfig value : Configurations.INSTANCE.configs().values()) {
+                if (value.info().isHidden()) continue;
                 this.configs.add(new ConfigItem(value));
             }
         } else {
             Set<String> configs = Configurations.INSTANCE.modToConfigs().getOrDefault(this.modid, Set.of());
             for (String config : configs) {
-                this.configs.add(new ConfigItem(Configurations.INSTANCE.configs().get(config)));
+                ResourcefulConfig value = Configurations.INSTANCE.configs().get(config);
+                if (value.info().isHidden()) continue;
+                this.configs.add(new ConfigItem(value));
             }
         }
     }

@@ -1,1 +1,3 @@
-- Update to 1.21.4
+- Added a line under separators
+- Made categories actually hide when @Hidden was added to them
+- Made configs with @Hidden not show up in global list

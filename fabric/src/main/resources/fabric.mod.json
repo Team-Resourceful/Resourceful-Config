@@ -36,5 +36,10 @@
         "modmenu": [
             "com.teamresourceful.resourcefulconfig.client.compat.fabric.modmenu.ResourcefulConfigModMenu"
         ]
+    },
+    "custom": {
+        "modmenu": {
+            "badges": [ "library" ]
+        }
     }
 }

@@ -5,7 +5,13 @@ import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
 import net.minecraft.ChatFormatting;
 
 @ConfigInfo.Provider(DemoInfoProvider.class)
-@Config(value = "demo", version = 2)
+@Config(
+        value = "demo",
+        version = 2,
+        categories = {
+            DemoCategory.class
+        }
+)
 @SuppressWarnings("unused")
 public final class DemoConfig {
 

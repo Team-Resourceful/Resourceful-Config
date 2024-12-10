@@ -17,7 +17,7 @@ import java.util.List;
 
 public class OptionItem extends ContainerWidget implements ListWidget.Item {
 
-    private static final int PADDING = 10;
+    protected static final int PADDING = 10;
 
     private final Component title;
     private final Component description;

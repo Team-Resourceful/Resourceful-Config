@@ -1,1 +1,3 @@
-- Add ability for draggables to have optional tooltips
+- Added a line under separators
+- Made categories actually hide when @Hidden was added to them
+- Made configs with @Hidden not show up in global list

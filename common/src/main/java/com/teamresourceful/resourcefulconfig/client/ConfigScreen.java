@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
@@ -75,7 +76,10 @@ public class ConfigScreen extends Screen implements CloseableScreen {
 
         LinearLayout body = layout.addChild(LinearLayout.horizontal().spacing(UIConstants.PAGE_PADDING));
 
-        if (!this.config.categories().isEmpty()) {
+        var categoriesEmpty = this.config.categories().isEmpty() || this.config.categories().values().stream()
+                .allMatch(it -> it.info().isHidden());
+
+        if (!categoriesEmpty) {
             int categoryWidth = contentWidth / 4;
             this.categoriesList = body.addChild(new CategoriesListWidget(categoryWidth, contentHeight));
             updateCategories();
@@ -111,6 +115,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
         this.categoriesList.clear();
         for (ResourcefulConfig value : this.config.categories().values()) {
             if (!ConfigSearching.fulfillsSearch(value, this.termCollector)) continue;
+            if (value.info().isHidden()) continue;
             this.categoriesList.add(new CategoryItem(this, value, this.termCollector));
         }
     }
@@ -134,7 +139,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
         if (super.keyPressed(i, j, k)) {
             return true;
         }
-        if (i == 256) {
+        if (i == InputConstants.KEY_ESCAPE) {
             this.onClose();
             return true;
         }

@@ -44,11 +44,17 @@ public class ResourcefulConfigScreen {
 
     public static Function<@Nullable Screen, Screen> getFactory(String mod) {
         Set<String> configs = Configurations.INSTANCE.getConfigsForMod(mod);
-        if (configs.size() == 1) {
-            ResourcefulConfig config = Configurations.INSTANCE.getConfig(configs.iterator().next());
-            return config == null ? Function.identity() : screen -> get(screen, config);
-        } else {
-            return screen -> get(screen, mod);
+        if (configs.size() != 1) {
+            var nonHiddenCount = configs.stream()
+                    .map(Configurations.INSTANCE::getConfig)
+                    .filter(it -> !it.info().isHidden())
+                    .count();
+
+            if (nonHiddenCount != 1) return screen -> get(screen, mod);
         }
+
+        if (configs.isEmpty()) return screen -> get(screen, mod);
+        ResourcefulConfig config = Configurations.INSTANCE.getConfig(configs.iterator().next());
+        return config == null ? Function.identity() : screen -> get(screen, config);
     }
 }

@@ -1,1 +1,1 @@
-- Add ability for draggables to have optional tooltips
+- Fixed incorrect java version in mixin config

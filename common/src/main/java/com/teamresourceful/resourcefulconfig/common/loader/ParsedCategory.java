@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public record ParsedCategory(
@@ -40,5 +41,27 @@ public record ParsedCategory(
     @Override
     public void load(Consumer<ConfigPatchEvent> handler) {
         this.parent.load(handler);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ParsedCategory parsedCategory)) return false;
+        return Objects.equals(this.id, parsedCategory.id) &&
+                Objects.equals(this.info, parsedCategory.info) &&
+                Objects.equals(this.entries, parsedCategory.entries) &&
+                Objects.equals(this.categories, parsedCategory.categories) &&
+                Objects.equals(this.buttons, parsedCategory.buttons);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                this.id,
+                this.info,
+                this.entries,
+                this.categories,
+                this.buttons
+        );
     }
 }

@@ -1,7 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
-import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
@@ -62,7 +61,7 @@ public class ObjectOptionWidget extends BaseWidget {
             super();
             this.entry = entry;
 
-            this.title = Translatable.toSpeifiedComponent(entry.instance(), UIConstants.EDIT_OBJECT);
+            this.title = entry.getTitle(UIConstants.EDIT_OBJECT);
         }
 
         @Override

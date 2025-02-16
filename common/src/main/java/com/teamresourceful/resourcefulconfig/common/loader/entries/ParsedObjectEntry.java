@@ -2,8 +2,11 @@ package com.teamresourceful.resourcefulconfig.common.loader.entries;
 
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
+import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -31,5 +34,10 @@ public record ParsedObjectEntry(
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public Component getTitle(@NotNull Component fallback) {
+        return Translatable.toSpeifiedComponent(instance(), fallback);
     }
 }

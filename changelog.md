@@ -1,3 +1,1 @@
-- stack overflow in addons
-- deprecate instance value in object entries (this was just used for the title and should have not been exposed)
-- add new title method for objects
+use different comment parsing system

@@ -1,1 +1,1 @@
-- Fix crash with mod menu
+use different comment parsing system

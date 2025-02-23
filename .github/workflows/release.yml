@@ -77,8 +77,8 @@ jobs:
 
       ### Need to duplicate this block for fabric
       - name: Upload Forge Releases (Curse/Modrinth/Github)
-        if: contains(steps.props.outputs.enabled_platforms, 'forge')
-        uses: Kir-Antipov/mc-publish@v3.2
+        if: contains(steps.props.outputs.enabled_platforms, 'neoforge')
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: ${{ vars.CURSE_ID }}
           curseforge-token: ${{ secrets.CURSE_API_KEY }}
@@ -99,7 +99,7 @@ jobs:
 
       - name: Upload Fabric Releases (Curse/Modrinth/Github)
         if: contains(steps.props.outputs.enabled_platforms, 'fabric')
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: ${{ vars.CURSE_ID }}
           curseforge-token: ${{ secrets.CURSE_API_KEY }}
@@ -114,7 +114,9 @@ jobs:
           name: "[Fabric] Resourceful Config ${{ steps.version.outputs.version }}"
           version: ${{ steps.version.outputs.version }}
           changelog-file: changelog.md
-          loaders: fabric
+          loaders: |
+            fabric
+            quilt
           game-versions: ${{ steps.props.outputs.mc_version }}
           version-resolver: exact
 

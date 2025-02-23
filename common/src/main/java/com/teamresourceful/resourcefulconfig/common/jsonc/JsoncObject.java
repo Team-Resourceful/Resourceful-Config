@@ -4,14 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class JsoncObject implements JsoncElement {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("(^\s*//.*$)|(/\\*(\\*(?!/)|[^*])*\\*/)", Pattern.MULTILINE);
 
     private String comment = "";
     private final Map<String, JsoncElement> elements = new LinkedHashMap<>();
@@ -58,7 +58,33 @@ public class JsoncObject implements JsoncElement {
     }
 
     public static JsonObject parse(String json) {
-        json = COMMENT_PATTERN.matcher(json).replaceAll("");
-        return GSON.fromJson(json, JsonObject.class);
+        List<String> parsed = new ArrayList<>();
+
+        boolean inMultiLineComment = false;
+
+        for (String line : json.split("\n")) {
+            int singleLineCommentIndex = line.indexOf("//");
+            if (singleLineCommentIndex != -1 && line.substring(0, singleLineCommentIndex).isBlank()) {
+                continue;
+            }
+
+            int multiLineCommentStartIndex = line.indexOf("/*");
+            if (multiLineCommentStartIndex != -1 && line.substring(0, multiLineCommentStartIndex).isBlank()) {
+                inMultiLineComment = true;
+            }
+
+            if (line.lastIndexOf("*/") != -1 && inMultiLineComment) {
+                inMultiLineComment = false;
+                continue;
+            }
+
+            if (inMultiLineComment) {
+                continue;
+            }
+
+            parsed.add(line);
+        }
+
+        return GSON.fromJson(String.join("\n", parsed), JsonObject.class);
     }
 }

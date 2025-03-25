@@ -7,7 +7,6 @@ import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

@@ -56,12 +56,12 @@ jobs:
           path: "./version.properties"
           properties: "version"
 
-      - name: Get MC Version and Platforms
-        id: props
-        uses: christian-draeger/read-properties@1.1.1
-        with:
-          path: "./gradle.properties"
-          properties: "mc_version enabled_platforms"
+      - name: Get Properties
+        id: properties
+        run: |
+          echo "version=$(grep -m1 "^version=" version.properties | cut -c 9-)" >> $GITHUB_OUTPUT
+          echo "enabledPlatforms=$(grep -m1 "^enabledPlatforms=" gradle.properties | cut -c 18-)" >> $GITHUB_OUTPUT
+          echo "mcVersion=$(grep -m1 "^minecraft = " gradle/libs.versions.toml | cut -c 14- | rev | cut -c 2- | rev)" >> $GITHUB_OUTPUT
 
       - name: Publish package
         run: ./gradlew publish --info
@@ -120,12 +120,6 @@ jobs:
           ./gradlew injectReadme
           mv -f ./build/README.md .
 
-      - name: Commit Version Updates
-        run: |
-          git config --global user.name "TeamResourcefulBot"
-          git config --global user.email "teamresourcefulbot@users.noreply.github.com"
-          git diff-index --quiet HEAD || { git commit -am "Released v${{ steps.version.outputs.version }}"; git push; }
-
       - name: Create Discord Embed
         run: ./gradlew injectDiscordEmbed
         env:
@@ -136,4 +130,10 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-          raw-data: ./build/release_embed.json
+          raw-data: ./build/embed.json
+
+      - name: Commit Version Updates
+        run: |
+          git config --global user.name "TeamResourcefulBot"
+          git config --global user.email "teamresourcefulbot@users.noreply.github.com"
+          git diff-index --quiet HEAD || { git commit -am "Released v${{ steps.version.outputs.version }}"; git push; }

@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.screens.base;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -42,10 +43,15 @@ public abstract class OverlayScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int i, int j, float f) {
-        this.background.render(guiGraphics, -1, -1, f);
-        guiGraphics.flush();
-        RenderSystem.clear(256);
+    public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
+        this.background.render(graphics, -1, -1, f);
+        graphics.flush();
+
+        var depth = Minecraft.getInstance().getMainRenderTarget().getDepthTexture();
+
+        if (depth == null) return;
+
+        RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(depth, 1f);
     }
 
     @Override

@@ -95,14 +95,13 @@ public class DraggableList<T> extends ListWidget {
         if (!(item instanceof DraggableItem<?> draggableItem)) return;
         PoseStack stack = graphics.pose();
         stack.pushPose();
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.75F);
         stack.translate(0, 0, 300);
         int x = (int) (mouseX - this.draggingOffset.x);
         int y = (int) (mouseY - this.draggingOffset.y);
         draggableItem.render(graphics, x, y, mouseX, mouseY, true, false, false);
-        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         stack.popPose();
     }
 

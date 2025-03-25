@@ -8,7 +8,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Locale;
 
-@SuppressWarnings("NoTranslation")
 public class KeyCodeHelper {
 
     private static final Int2ObjectMap<Component> HARD_CODED_KEYCODES = new Int2ObjectOpenHashMap<>();

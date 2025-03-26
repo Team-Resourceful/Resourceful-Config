@@ -47,10 +47,10 @@ public class EyedropperButton extends SpriteButton {
             graphics.drawSpecial(source -> {
                 Matrix4f matrix4f = graphics.pose().last().pose();
                 var consumer = source.getBuffer(RenderType.guiTextured(SCREEN_TEXTURE));
-                consumer.addVertex(matrix4f, 0f, this.height, 0f).setUv(0f, 1f);
-                consumer.addVertex(matrix4f, this.width, this.height, 0f).setUv(1f, 1f);
-                consumer.addVertex(matrix4f, this.width, 0f, 0f).setUv(1f, 0f);
-                consumer.addVertex(matrix4f, 0f, 0f, 0f).setUv(0f, 0f);
+                consumer.addVertex(matrix4f, 0f, this.height, 0f).setUv(0f, 1f).setColor(-1);
+                consumer.addVertex(matrix4f, this.width, this.height, 0f).setUv(1f, 1f).setColor(-1);
+                consumer.addVertex(matrix4f, this.width, 0f, 0f).setUv(1f, 0f).setColor(-1);
+                consumer.addVertex(matrix4f, 0f, 0f, 0f).setUv(0f, 0f).setColor(-1);
             });
 
 
@@ -65,10 +65,10 @@ public class EyedropperButton extends SpriteButton {
             graphics.drawSpecial(source -> {
                 Matrix4f matrix4f = graphics.pose().last().pose();
                 var consumer = source.getBuffer(RenderType.guiTextured(SCREEN_TEXTURE));
-                consumer.addVertex(matrix4f, x - 5, y + 15, 0f).setUv(u0, v1);
-                consumer.addVertex(matrix4f, x + 15, y + 15, 0f).setUv(u1, v1);
-                consumer.addVertex(matrix4f, x + 15, y - 5, 0f).setUv(u1, v0);
-                consumer.addVertex(matrix4f, x - 5, y - 5, 0f).setUv(u0, v0);
+                consumer.addVertex(matrix4f, x - 5, y + 15, 0f).setUv(u0, v1).setColor(-1);
+                consumer.addVertex(matrix4f, x + 15, y + 15, 0f).setUv(u1, v1).setColor(-1);
+                consumer.addVertex(matrix4f, x + 15, y - 5, 0f).setUv(u1, v0).setColor(-1);
+                consumer.addVertex(matrix4f, x - 5, y - 5, 0f).setUv(u0, v0).setColor(-1);
             });
 
             graphics.renderOutline(x - 5, y - 5, 20, 20, 0xFFFFFFFF);

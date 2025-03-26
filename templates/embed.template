@@ -14,9 +14,9 @@
               },
               {
                   "type": 2,
-                  "label": "Forge",
+                  "label": "NeoForge",
                   "style": 5,
-                  "url": "https://modrinth.com/mod/resourceful-config/version/${forge_link}"
+                  "url": "https://modrinth.com/mod/resourceful-config/version/${neoforge_link}"
               }
           ]
 
@@ -48,15 +48,15 @@
         },
         {
           "name": "Minecraft Version",
-          "value": "${mc_version}"
+          "value": "${minecraft}"
         },
         {
-          "name": "Forge Version",
-          "value": "${forge_version}"
+          "name": "NeoForge Version",
+          "value": "${neoforge}"
         },
         {
           "name": "Fabric Version",
-          "value": "${fabric_version}"
+          "value": "${fabric}"
         }
       ]
     }

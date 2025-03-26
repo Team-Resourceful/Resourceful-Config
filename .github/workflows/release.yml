@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload NeoForge Releases (Curse/Modrinth/Github)
         id: forge_release
-        if: contains(steps.props.outputs.enabled_platforms, 'neoforge')
+        if: contains(steps.properties.outputs.enabledPlatforms, 'neoforge')
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: ${{ vars.CURSE_ID }}
@@ -88,12 +88,12 @@ jobs:
           version: ${{ steps.version.outputs.version }}
           changelog-file: changelog.md
           loaders: neoforge
-          game-versions: ${{ steps.props.outputs.mc_version }}
+          game-versions: ${{ steps.properties.outputs.mcVersion }}
           version-resolver: exact
 
       - name: Upload Fabric Releases (Curse/Modrinth/Github)
         id: fabric_release
-        if: contains(steps.props.outputs.enabled_platforms, 'fabric')
+        if: contains(steps.properties.outputs.enabledPlatforms, 'fabric')
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: ${{ vars.CURSE_ID }}
@@ -112,7 +112,7 @@ jobs:
           loaders: |
             fabric
             quilt
-          game-versions: ${{ steps.props.outputs.mc_version }}
+          game-versions: ${{ steps.properties.outputs.mcVersion }}
           version-resolver: exact
 
       - name: Update Readme

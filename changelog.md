@@ -1,1 +1,1 @@
-update 1.21.5
+- Make separators translatable

@@ -21,6 +21,10 @@ subprojects {
         if (platform == Platform.FABRIC) {
             "modApi"(rootProject.libs.modmenu)
         }
+
+        implementation("net.fabricmc:sponge-mixin:0.15.5+mixin.0.8.7") {
+            version { strictly("0.15.5+mixin.0.8.7") }
+        }
     }
 
     javaPublishing {

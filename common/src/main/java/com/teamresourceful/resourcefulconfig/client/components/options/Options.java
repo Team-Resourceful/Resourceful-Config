@@ -46,7 +46,7 @@ public final class Options {
 
             if (options.hasOption(Option.SEPARATOR)) {
                 ConfigOption.Separator separator = options.getOption(Option.SEPARATOR);
-                widget.add(new SeparatorItem(Component.literal(separator.value()), Component.literal(separator.description())));
+                widget.add(new SeparatorItem(Component.translatable(separator.value()), Component.translatable(separator.description())));
             }
 
             buttonsBefore.get(value.getKey()).forEach(button -> addButton(widget, button));

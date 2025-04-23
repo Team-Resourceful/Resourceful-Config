@@ -143,4 +143,11 @@ public final class DemoConfig {
 
     @ConfigEntry(id = "object")
     public static final DemoObject object = new DemoObject();
+
+    @ConfigEntry(
+            id = "demoRenderer",
+            translation = "renderer"
+    )
+    @ConfigOption.Renderer("demo:demo")
+    public static int demoRenderer = 48;
 }

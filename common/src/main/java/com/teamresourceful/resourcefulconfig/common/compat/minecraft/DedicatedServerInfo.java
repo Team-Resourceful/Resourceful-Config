@@ -8,17 +8,19 @@ import com.teamresourceful.resourcefulconfig.api.types.options.TranslatableValue
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 
+import java.lang.ref.WeakReference;
+
 public class DedicatedServerInfo implements ResourcefulConfigInfo {
 
     public static final DedicatedServerInfo INSTANCE = new DedicatedServerInfo();
-    private static MinecraftServer server = null;
+    private static WeakReference<MinecraftServer> server = null;
 
     public static void setServer(MinecraftServer server) {
-        DedicatedServerInfo.server = server;
+        DedicatedServerInfo.server = new WeakReference<>(server);
     }
 
     public static DedicatedServer getServer() {
-        return server instanceof DedicatedServer dedicated ? dedicated : null;
+        return server.get() instanceof DedicatedServer dedicated ? dedicated : null;
     }
 
     @Override
@@ -63,6 +65,6 @@ public class DedicatedServerInfo implements ResourcefulConfigInfo {
 
     @Override
     public boolean isHidden() {
-        return !(server instanceof DedicatedServer);
+        return DedicatedServerInfo.getServer() == null;
     }
 }

@@ -5,10 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
-import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.types.options.Option;
-import net.minecraft.network.chat.Component;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,11 +67,8 @@ public class ConfigSearching {
 
     public static boolean fulfillsSearch(ResourcefulConfig config, Function<String, List<String>> termCollector) {
         if (search.isBlank()) return true;
-        for (ResourcefulConfigButton button : config.buttons()) {
-            if (fulfillsSearch(button, termCollector)) return true;
-        }
-        for (ResourcefulConfigEntry entry : config.entries().values()) {
-            if (fulfillsSearch(entry, termCollector)) return true;
+        for (ResourcefulConfigElement element : config.elements()) {
+            if (fulfillsSearch(element, termCollector)) return true;
         }
         for (ResourcefulConfig category : config.categories().values()) {
             if (fulfillsSearch(category, termCollector)) return true;
@@ -84,23 +78,8 @@ public class ConfigSearching {
         return fulfillsSearch(title, termCollector) || fulfillsSearch(description, termCollector);
     }
 
-    public static boolean fulfillsSearch(ResourcefulConfigButton button, Function<String, List<String>> termCollector) {
+    public static boolean fulfillsSearch(ResourcefulConfigElement entry, Function<String, List<String>> termCollector) {
         if (search.isBlank()) return true;
-        String title = Component.translatable(button.title()).getString();
-        String description = Component.translatable(button.description()).getString();
-        String text = Component.translatable(button.text()).getString();
-        return fulfillsSearch(title, termCollector) ||
-                fulfillsSearch(description, termCollector) ||
-                fulfillsSearch(text, termCollector);
-    }
-
-    public static boolean fulfillsSearch(ResourcefulConfigEntry entry, Function<String, List<String>> termCollector) {
-        if (search.isBlank()) return true;
-        String title = entry.options().title().toLocalizedString();
-        String description = entry.options().comment().toLocalizedString();
-        for (String term : entry.options().getOrDefaultOption(Option.SEARCH_TERM, List.of())) {
-            if (fulfillsSearch(term, termCollector)) return true;
-        }
-        return fulfillsSearch(title, termCollector) || fulfillsSearch(description, termCollector);
+        return entry.search(text -> fulfillsSearch(text, termCollector));
     }
 }

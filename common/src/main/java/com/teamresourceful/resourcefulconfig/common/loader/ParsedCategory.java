@@ -3,9 +3,8 @@ package com.teamresourceful.resourcefulconfig.common.loader;
 import com.teamresourceful.resourcefulconfig.api.annotations.Category;
 import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigCategory;
-import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,9 +18,8 @@ public record ParsedCategory(
     @NotNull String id,
     @NotNull ResourcefulConfig parent,
     @NotNull ResourcefulConfigInfo info,
-    @NotNull LinkedHashMap<String, ResourcefulConfigEntry> entries,
-    @NotNull LinkedHashMap<String, ResourcefulConfig> categories,
-    @NotNull List<ResourcefulConfigButton> buttons
+    @NotNull List<ResourcefulConfigElement> elements,
+    @NotNull LinkedHashMap<String, ResourcefulConfig> categories
 ) implements ResourcefulConfigCategory {
 
     public ParsedCategory(Category category, ResourcefulConfigInfo info, ResourcefulConfig parent) {
@@ -29,7 +27,8 @@ public record ParsedCategory(
                 category.value(),
                 parent,
                 info,
-                new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>()
+                new ArrayList<>(),
+                new LinkedHashMap<>()
         );
     }
 
@@ -49,9 +48,8 @@ public record ParsedCategory(
         if (!(obj instanceof ParsedCategory parsedCategory)) return false;
         return Objects.equals(this.id, parsedCategory.id) &&
                 Objects.equals(this.info, parsedCategory.info) &&
-                Objects.equals(this.entries, parsedCategory.entries) &&
-                Objects.equals(this.categories, parsedCategory.categories) &&
-                Objects.equals(this.buttons, parsedCategory.buttons);
+                Objects.equals(this.elements, parsedCategory.elements) &&
+                Objects.equals(this.categories, parsedCategory.categories);
     }
 
     @Override
@@ -59,9 +57,8 @@ public record ParsedCategory(
         return Objects.hash(
                 this.id,
                 this.info,
-                this.entries,
-                this.categories,
-                this.buttons
+                this.elements,
+                this.categories
         );
     }
 }

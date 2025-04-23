@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.api.types.options;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.Annotation;
@@ -71,6 +72,15 @@ public class Option<T extends Annotation, D> {
             ConfigOption.SearchTerm.class,
             type -> true,
             (type, data) -> List.of(data.value())
+    );
+    public static final Option<ConfigOption.Renderer, ResourceLocation> RENDERER = Option.of(
+            ConfigOption.Renderer.class,
+            type -> true,
+            (type, data) -> {
+                String value = data.value();
+                if (value.isEmpty()) return null;
+                return ResourceLocation.tryParse(value);
+            }
     );
 
 

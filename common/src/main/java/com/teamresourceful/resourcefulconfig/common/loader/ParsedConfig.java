@@ -4,8 +4,7 @@ import com.google.gson.JsonObject;
 import com.teamresourceful.resourcefulconfig.api.annotations.Config;
 import com.teamresourceful.resourcefulconfig.api.patching.ConfigPatchEvent;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
-import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncObject;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
@@ -24,13 +23,12 @@ public record ParsedConfig(
     int version,
     @NotNull String id,
     @NotNull ResourcefulConfigInfo info,
-    @NotNull LinkedHashMap<String, ResourcefulConfigEntry> entries,
-    @NotNull LinkedHashMap<String, ResourcefulConfig> categories,
-    @NotNull List<ResourcefulConfigButton> buttons
+    @NotNull List<ResourcefulConfigElement> elements,
+    @NotNull LinkedHashMap<String, ResourcefulConfig> categories
 ) implements ResourcefulConfig {
 
     public ParsedConfig(Config config, ResourcefulConfigInfo info) {
-        this(config.version(), config.value(), info, new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>());
+        this(config.version(), config.value(), info, new ArrayList<>(), new LinkedHashMap<>());
     }
 
     private File getConfigFile() {

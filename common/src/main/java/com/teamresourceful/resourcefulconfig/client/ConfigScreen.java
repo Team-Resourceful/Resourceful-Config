@@ -2,8 +2,7 @@ package com.teamresourceful.resourcefulconfig.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
-import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.client.components.categories.CategoriesListWidget;
 import com.teamresourceful.resourcefulconfig.client.components.categories.CategoryItem;
 import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidget;
@@ -19,9 +18,7 @@ import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 public class ConfigScreen extends Screen implements CloseableScreen {
@@ -96,18 +93,12 @@ public class ConfigScreen extends Screen implements CloseableScreen {
 
     public void updateOptions() {
         this.optionsList.clear();
-        Map<String, ResourcefulConfigEntry> entries = new LinkedHashMap<>();
-        this.config.entries().forEach((key, value) -> {
-            if (!ConfigSearching.fulfillsSearch(value, this.termCollector)) return;
-            entries.put(key, value);
-        });
-        List<ResourcefulConfigButton> buttons = new ArrayList<>();
-        this.config.buttons().forEach(button -> {
-            if (!ConfigSearching.fulfillsSearch(button, this.termCollector)) return;
-            buttons.add(button);
-        });
-
-        Options.populateOptions(this.optionsList, entries, buttons);
+        List<ResourcefulConfigElement> elements = new ArrayList<>();
+        for (ResourcefulConfigElement element : this.config.elements()) {
+            if (!ConfigSearching.fulfillsSearch(element, this.termCollector)) continue;
+            elements.add(element);
+        }
+        Options.populateOptions(this.optionsList, elements);
     }
 
     public void updateCategories() {

@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.api.client;
 
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.CustomButton;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
@@ -9,7 +10,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ResourcefulConfigUI {
+
+    private static final Map<ResourceLocation, ResourcefulConfigElementRenderer.Factory> RENDERERS = new HashMap<>();
 
     /**
      * Opens a modal screen with the given title and constructor.
@@ -86,6 +92,31 @@ public class ResourcefulConfigUI {
                 .build();
         button.setPosition(x, y);
         return button;
+    }
+
+    /**
+     * Register a renderer for a specific type of element.
+     *
+     * @param type    The type of element to register the renderer for.
+     * @param factory The factory that creates the renderer.
+     */
+    public static void registerElementRenderer(ResourceLocation type, ResourcefulConfigElementRenderer.Factory factory) {
+        if (RENDERERS.containsKey(type)) {
+            throw new IllegalArgumentException("Renderer for type " + type + " already registered");
+        }
+        RENDERERS.put(type, factory);
+    }
+
+    /**
+     * Get the renderer for a specific type of element.
+     *
+     * @param element The element to get the renderer for.
+     * @return The factory that creates the renderer.
+     */
+    @Nullable
+    public static ResourcefulConfigElementRenderer getElementRenderer(ResourcefulConfigElement element) {
+        var factory = RENDERERS.get(element.renderer());
+        return factory == null ? null : factory.create(element);
     }
 
 }

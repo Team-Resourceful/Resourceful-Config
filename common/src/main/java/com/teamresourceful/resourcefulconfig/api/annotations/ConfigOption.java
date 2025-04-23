@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.api.annotations;
 
 import org.intellij.lang.annotations.Language;
+import org.intellij.lang.annotations.Pattern;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -89,5 +90,13 @@ public class ConfigOption {
     public @interface SearchTerm {
 
         String[] value();
+    }
+
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Renderer {
+
+        @Pattern("^([a-z0-9._-]+:)?[a-z0-9/._-]+$")
+        String value();
     }
 }

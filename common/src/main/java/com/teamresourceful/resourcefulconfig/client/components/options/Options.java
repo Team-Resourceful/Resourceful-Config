@@ -1,14 +1,16 @@
 package com.teamresourceful.resourcefulconfig.client.components.options;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
+import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigUI;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
+import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
+import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigSeparatorElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
-import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.CustomButton;
@@ -21,56 +23,34 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 public final class Options {
 
-    public static void populateOptions(OptionsListWidget widget, Map<String, ResourcefulConfigEntry> entries, List<ResourcefulConfigButton> buttons) {
-        Multimap<String, ResourcefulConfigButton> buttonsBefore = Multimaps.newListMultimap(new HashMap<>(), ArrayList::new);
-        Multimap<String, ResourcefulConfigButton> buttonsAfter = Multimaps.newListMultimap(new HashMap<>(), ArrayList::new);
-        buttons.forEach(button -> {
-            switch (button.position()) {
-                case BEFORE -> buttonsBefore.put(button.target(), button);
-                case AFTER -> buttonsAfter.put(button.target(), button);
+    public static void populateOptions(OptionsListWidget widget, List<ResourcefulConfigElement> elements) {
+        for (ResourcefulConfigElement element : elements) {
+            var renderer = ResourcefulConfigUI.getElementRenderer(element);
+            if (renderer != null) {
+                widget.add(new OptionItem(renderer.title(), renderer.description(), renderer.widgets()));
+            } else {
+                switch (element) {
+                    case ResourcefulConfigButton button -> widget.add(new OptionItem(
+                            Component.translatable(button.title()),
+                            Component.translatable(button.description()),
+                            List.of(new CustomButton(96, 12, Component.translatable(button.text()), button::invoke))
+                    ));
+                    case ResourcefulConfigEntryElement entry when entry.entry() instanceof ResourcefulConfigValueEntry value ->
+                            populateValueEntry(widget, value);
+                    case ResourcefulConfigEntryElement entry when entry.entry() instanceof ResourcefulConfigObjectEntry object ->
+                            widget.add(new OptionItem(object, List.of(new ObjectOptionWidget(object))));
+                    case ResourcefulConfigSeparatorElement separator -> widget.add(
+                            new SeparatorItem(separator.title().toComponent(), separator.description().toComponent())
+                    );
+                    default -> {}
+                }
             }
-        });
-
-        buttonsBefore.get("").forEach(button -> addButton(widget, button));
-
-        for (var value : entries.entrySet()) {
-            final EntryData options = value.getValue().options();
-            if (options.hasOption(Option.HIDDEN)) continue;
-
-            if (options.hasOption(Option.SEPARATOR)) {
-                ConfigOption.Separator separator = options.getOption(Option.SEPARATOR);
-                widget.add(new SeparatorItem(Component.translatable(separator.value()), Component.translatable(separator.description())));
-            }
-
-            buttonsBefore.get(value.getKey()).forEach(button -> addButton(widget, button));
-
-            if (value.getValue() instanceof ResourcefulConfigValueEntry entry) {
-                populateValueEntry(widget, entry);
-            } else if (value.getValue() instanceof ResourcefulConfigObjectEntry entry) {
-                widget.add(new OptionItem(entry, List.of(new ObjectOptionWidget(entry))));
-            }
-
-            buttonsAfter.get(value.getKey()).forEach(button -> addButton(widget, button));
         }
-
-        buttonsAfter.get("").forEach(button -> addButton(widget, button));
-    }
-
-    private static void addButton(OptionsListWidget list, ResourcefulConfigButton button) {
-        list.add(new OptionItem(
-                Component.translatable(button.title()),
-                Component.translatable(button.description()),
-                List.of(
-                        new CustomButton(96, 12, Component.translatable(button.text()), button::invoke)
-                )
-        ));
     }
 
     private static void populateValueEntry(OptionsListWidget list, ResourcefulConfigValueEntry entry) {

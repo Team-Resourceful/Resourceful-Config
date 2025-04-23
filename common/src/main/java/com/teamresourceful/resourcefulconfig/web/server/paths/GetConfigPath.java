@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
+import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
@@ -82,11 +84,14 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
 
     private static JsonArray createEntries(ResourcefulConfig config) {
         JsonArray array = new JsonArray();
-        config.entries().forEach((id, entry) -> {
+
+        for (ResourcefulConfigElement element : config.elements()) {
+            if (!(element instanceof ResourcefulConfigEntryElement entry)) continue;
+            if (!(entry.entry() instanceof ResourcefulConfigValueEntry valueEntry)) continue;
+
             JsonObject json = new JsonObject();
-            if (!(entry instanceof ResourcefulConfigValueEntry valueEntry)) return;
-            if (valueEntry.isArray()) return;
-            switch (entry.type()) {
+            if (valueEntry.isArray()) continue;
+            switch (valueEntry.type()) {
                 case BYTE -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getByte);
                 case SHORT -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getShort);
                 case INTEGER -> createNumber(json, valueEntry, ResourcefulConfigValueEntry::getInt);
@@ -115,11 +120,11 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
                     json.addProperty("default", valueEntry.defaultOrElse(""));
                 }
             }
-            json.addProperty("id", id);
+            json.addProperty("id", entry.id());
             json.addProperty("title", valueEntry.options().title().toLocalizedString());
             json.addProperty("description", valueEntry.options().comment().toLocalizedString());
             array.add(json);
-        });
+        }
         return array;
     }
 

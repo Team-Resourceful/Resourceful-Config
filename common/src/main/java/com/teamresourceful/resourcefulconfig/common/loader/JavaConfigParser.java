@@ -8,7 +8,9 @@ import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfig
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.info.ParsedInfo;
-import com.teamresourceful.resourcefulconfig.common.loader.buttons.ParsedButton;
+import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedButtonElement;
+import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedEntryElement;
+import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedSeparator;
 import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedInstanceEntry;
 import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedObjectEntry;
 import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedObservableEntry;
@@ -40,21 +42,26 @@ public class JavaConfigParser implements ConfigParser {
             ConfigEntry data = assertEntry(field);
             if (data != null) {
                 var type = getEntryType(field);
+                var separator = field.getAnnotation(ConfigOption.Separator.class);
+
+                if (separator != null) {
+                    config.elements().add(ParsedSeparator.of(field));
+                }
 
                 if (type == EntryType.OBJECT) {
                     Object instance = ParsingUtils.getField(field, null);
                     ParsedObjectEntry objectEntry = new ParsedObjectEntry(field);
                     populateEntries(instance, objectEntry);
-                    config.entries().put(data.id(), objectEntry);
+                    config.elements().add(new ParsedEntryElement(data.id(), objectEntry));
                 } else if (field.getType() == Observable.class) {
                     ParsedObservableEntry observableEntry = ParsedObservableEntry.of(type, field, null);
-                    config.entries().put(data.id(), observableEntry);
+                    config.elements().add(new ParsedEntryElement(data.id(), observableEntry));
                     if (observableEntry.defaultValue() == null) {
                         throw new IllegalArgumentException("Entry " + field.getName() + " must not have a null default value!");
                     }
                 } else {
                     ParsedInstanceEntry instanceEntry = new ParsedInstanceEntry(type, field, null);
-                    config.entries().put(data.id(), instanceEntry);
+                    config.elements().add(new ParsedEntryElement(data.id(), instanceEntry));
                     if (instanceEntry.defaultValue() == null) {
                         throw new IllegalArgumentException("Entry " + field.getName() + " must not have a null default value!");
                     }
@@ -62,8 +69,7 @@ public class JavaConfigParser implements ConfigParser {
             }
             ConfigButton button = assertButton(field);
             if (button != null) {
-                String lastEntry = config.entries().isEmpty() ? "" : config.entries().lastEntry().getKey();
-                config.buttons().add(ParsedButton.of(field, lastEntry));
+                config.elements().add(ParsedButtonElement.of(field));
             }
         }
 
@@ -91,6 +97,13 @@ public class JavaConfigParser implements ConfigParser {
             if (type == EntryType.OBJECT) {
                 throw new IllegalArgumentException("Entry " + field.getName() + " cannot be an object!");
             }
+
+            var separator = field.getAnnotation(ConfigOption.Separator.class);
+
+            if (separator != null) {
+                entry.elements().add(ParsedSeparator.of(field));
+            }
+
             ResourcefulConfigValueEntry valueEntry;
             if (field.getType() == Observable.class) {
                 valueEntry = ParsedObservableEntry.of(type, field, null);
@@ -101,7 +114,7 @@ public class JavaConfigParser implements ConfigParser {
             if (valueEntry.defaultValue() == null) {
                 throw new IllegalArgumentException("Entry " + field.getName() + " must not have a null default value!");
             }
-            entry.entries().put(data.id(), valueEntry);
+            entry.elements().add(new ParsedEntryElement(data.id(), valueEntry));
         }
     }
 

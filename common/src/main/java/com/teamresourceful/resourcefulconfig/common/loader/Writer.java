@@ -2,12 +2,14 @@ package com.teamresourceful.resourcefulconfig.common.loader;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
+import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
-import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
+import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncArray;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncElement;
@@ -29,7 +31,7 @@ public class Writer {
         version.comment("The version of the config file. Do not change this unless you know what you are doing.");
         object.add(Writer.VERSION_KEY, version);
 
-        writeEntries(config.entries(), object);
+        writeEntries(config.elements(), object);
         writeCategories(config.categories(), object);
         return object;
     }
@@ -37,25 +39,27 @@ public class Writer {
     private static void writeCategories(LinkedHashMap<String, ResourcefulConfig> entries, JsoncObject object) {
         entries.forEach((key, value) -> {
             JsoncObject category = new JsoncObject();
-            writeEntries(value.entries(), category);
+            writeEntries(value.elements(), category);
             writeCategories(value.categories(), category);
             object.add(key, category);
         });
     }
 
-    private static JsoncObject writeEntries(LinkedHashMap<String, ResourcefulConfigEntry> entries, JsoncObject object) {
-        entries.forEach((key, value) -> {
-            JsoncElement element = toElement(value);
-            if (element == null) return;
-            element.comment(getComments(value));
-            object.add(key, element);
-        });
+    private static JsoncObject writeEntries(List<ResourcefulConfigElement> elements, JsoncObject object) {
+        for (ResourcefulConfigElement element : elements) {
+            if (!(element instanceof ResourcefulConfigEntryElement entry)) continue;
+            JsoncElement json = toElement(entry.entry());
+            if (json == null) continue;
+            json.comment(getComments(entry.entry()));
+            object.add(entry.id(), json);
+        }
+
         return object;
     }
 
     private static JsoncElement toElement(ResourcefulConfigEntry entry) {
         if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
-            return writeEntries(objectEntry.entries(), new JsoncObject());
+            return writeEntries(objectEntry.elements(), new JsoncObject());
         }
         if (entry instanceof ResourcefulConfigValueEntry valueEntry) {
             return valueOf(valueEntry.get());

@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
+import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
@@ -15,15 +17,15 @@ import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public class Loader {
 
     public static void loadConfig(ResourcefulConfig config, JsonObject json) {
-        for (var item : json.entrySet()) {
-            String id = item.getKey();
-            JsonElement element = item.getValue();
-            ResourcefulConfigEntry entry = config.entries().get(id);
-            if (element instanceof JsonObject object) {
+        forEach(config.elements(), (id, entry) -> {
+            JsonElement data = json.get(id);
+            if (data == null) return;
+            if (data instanceof JsonObject object) {
                 if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
                     loadObject(objectEntry, object);
                 } else {
@@ -32,26 +34,24 @@ public class Loader {
                         loadConfig(category, object);
                     }
                 }
-            } else if (entry instanceof ResourcefulConfigValueEntry valueEntry) {
-                if (!setValue(element, id, valueEntry)) {
+            } else if (entry instanceof ResourcefulConfigValueEntry value) {
+                if (!setValue(data, id, value)) {
                     ModUtils.log("Failed to set value for " + id);
                 }
             }
-        }
+        });
     }
 
-    private static void loadObject(ResourcefulConfigObjectEntry entry, JsonObject object) {
-        for (var item : object.entrySet()) {
-            String id = item.getKey();
-            JsonElement element = item.getValue();
-            ResourcefulConfigEntry configEntry = entry.entries().get(id);
-            if (element instanceof JsonObject) return;
-            if (configEntry instanceof ResourcefulConfigValueEntry valueEntry) {
-                if (!setValue(element, id, valueEntry)) {
+    private static void loadObject(ResourcefulConfigObjectEntry object, JsonObject json) {
+        forEach(object.elements(), (id, entry) -> {
+            if (entry instanceof ResourcefulConfigValueEntry value) {
+                JsonElement data = json.get(id);
+                if (data == null || data instanceof JsonObject) return;
+                if (!setValue(data, id, value)) {
                     ModUtils.log("Failed to set value for " + id);
                 }
             }
-        }
+        });
     }
 
     private static Object convert(JsonElement element, String id, ResourcefulConfigValueEntry entry) {
@@ -102,5 +102,13 @@ public class Loader {
         else if (o instanceof Double doubleValue) return data.setDouble(doubleValue);
         else if (o instanceof Enum<?> enumValue) return data.setEnum(enumValue);
         return true;
+    }
+
+    private static void forEach(List<ResourcefulConfigElement> elements, BiConsumer<String, ResourcefulConfigEntry> consumer) {
+        for (ResourcefulConfigElement element : elements) {
+            if (element instanceof ResourcefulConfigEntryElement entry) {
+                consumer.accept(entry.id(), entry.entry());
+            }
+        }
     }
 }

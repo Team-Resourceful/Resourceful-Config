@@ -10,8 +10,6 @@ import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 
-import java.util.List;
-
 public class ObjectOptionWidget extends BaseWidget {
 
     private static final int WIDTH = 100;
@@ -70,7 +68,7 @@ public class ObjectOptionWidget extends BaseWidget {
 
             OptionsListWidget list = addRenderableWidget(new OptionsListWidget(this.contentWidth, this.contentHeight));
             list.setPosition(this.left, this.top);
-            Options.populateOptions(list, this.entry.entries(), List.of());
+            Options.populateOptions(list, this.entry.elements());
         }
 
         @Override

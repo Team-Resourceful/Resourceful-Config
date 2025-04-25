@@ -1,1 +1,1 @@
-- Make separators translatable
+- Fix hidden options not hiding correctly

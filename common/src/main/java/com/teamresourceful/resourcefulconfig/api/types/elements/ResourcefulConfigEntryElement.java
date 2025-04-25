@@ -29,4 +29,8 @@ public interface ResourcefulConfigEntryElement extends ResourcefulConfigElement 
         return predicate.test(title) || predicate.test(description);
     }
 
+    @Override
+    default boolean isHidden() {
+        return entry().options().hasOption(Option.HIDDEN);
+    }
 }

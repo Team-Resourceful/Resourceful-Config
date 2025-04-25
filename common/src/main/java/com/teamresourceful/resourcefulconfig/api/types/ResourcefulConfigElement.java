@@ -13,4 +13,8 @@ public interface ResourcefulConfigElement {
     }
 
     boolean search(Predicate<String> predicate);
+
+    default boolean isHidden() {
+        return false;
+    }
 }

@@ -30,6 +30,8 @@ public final class Options {
 
     public static void populateOptions(OptionsListWidget widget, List<ResourcefulConfigElement> elements) {
         for (ResourcefulConfigElement element : elements) {
+            if (element.isHidden()) continue;
+
             var renderer = ResourcefulConfigUI.getElementRenderer(element);
             if (renderer != null) {
                 widget.add(new OptionItem(renderer.title(), renderer.description(), renderer.widgets()));

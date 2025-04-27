@@ -1,1 +1,1 @@
-- Fix hidden options not hiding correctly
+- Fix categories failing to load under certain conditions

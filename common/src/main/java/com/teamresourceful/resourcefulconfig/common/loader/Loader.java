@@ -28,17 +28,18 @@ public class Loader {
             if (data instanceof JsonObject object) {
                 if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
                     loadObject(objectEntry, object);
-                } else {
-                    ResourcefulConfig category = config.categories().get(id);
-                    if (category != null) {
-                        loadConfig(category, object);
-                    }
                 }
             } else if (entry instanceof ResourcefulConfigValueEntry value) {
                 if (!setValue(data, id, value)) {
                     ModUtils.log("Failed to set value for " + id);
                 }
             }
+        });
+
+        config.categories().forEach((id, category) -> {
+            JsonElement data = json.get(id);
+            if (!(data instanceof JsonObject object)) return;
+            loadConfig(category, object);
         });
     }
 

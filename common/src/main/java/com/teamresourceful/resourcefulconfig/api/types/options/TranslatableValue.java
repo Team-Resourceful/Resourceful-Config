@@ -20,6 +20,14 @@ public record TranslatableValue(
         this(value, "");
     }
 
+    public static TranslatableValue literal(String value) {
+        return new TranslatableValue(value);
+    }
+
+    public static TranslatableValue translation(String value) {
+        return new TranslatableValue("", value);
+    }
+
     public void ifPresent(BiConsumer<String, String> value) {
         if (!this.value.isBlank()) {
             value.accept(this.value, this.translation);

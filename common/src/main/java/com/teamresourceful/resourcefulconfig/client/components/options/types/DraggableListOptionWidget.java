@@ -102,6 +102,16 @@ public class DraggableListOptionWidget extends BaseWidget {
             this.title = UIConstants.EDIT_LIST;
         }
 
+        protected Enum<?>[] getOptions() {
+            Set<Enum<?>> options = new LinkedHashSet<>(Arrays.asList(this.widget.options));
+            this.widget.getter.get().forEach(item -> {
+                if (this.widget.duplicatables.contains(item)) return;
+                options.remove(item);
+            });
+
+            return options.toArray(new Enum<?>[0]);
+        }
+
         @Override
         protected void init() {
             super.init();
@@ -125,14 +135,8 @@ public class DraggableListOptionWidget extends BaseWidget {
 
             updateTitle.run();
 
-            Set<Enum<?>> options = new LinkedHashSet<>(Arrays.asList(this.widget.options));
-            this.widget.getter.get().forEach(item -> {
-                if (this.widget.duplicatables.contains(item)) return;
-                options.remove(item);
-            });
-
             var dropdown = layout.addChild(new DropdownWidget(
-                    options.toArray(new Enum<?>[0]),
+                    this.getOptions(),
                     () -> null,
                     (value) -> {
                         List<Enum<?>> list = new ArrayList<>(this.widget.getter.get());
@@ -154,6 +158,7 @@ public class DraggableListOptionWidget extends BaseWidget {
                 this.widget.setter.accept(value);
                 list.setCanDelete(this.widget.range == null || this.widget.getter.get().size() > this.widget.range.min());
                 dropdown.active = this.widget.range == null || this.widget.getter.get().size() < this.widget.range.max();
+                dropdown.setOptions(this.getOptions());
                 updateTitle.run();
             });
             list.setCanDelete(this.widget.range == null || this.widget.getter.get().size() > this.widget.range.min());

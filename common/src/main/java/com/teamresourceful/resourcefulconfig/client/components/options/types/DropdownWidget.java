@@ -18,9 +18,9 @@ public class DropdownWidget extends BaseWidget {
 
     private static final int WIDTH = 80;
 
-    private final Enum<?>[] options;
     private final Supplier<Enum<?>> getter;
     private final Consumer<Enum<?>> setter;
+    private Enum<?>[] options;
 
     private Component title = Component.empty();
 
@@ -38,6 +38,11 @@ public class DropdownWidget extends BaseWidget {
     @SuppressWarnings("unchecked")
     public static <T extends Enum<?>> DropdownWidget of(T[] options, Supplier<T> getter, Consumer<T> setter) {
         return new DropdownWidget(options, getter::get, t -> setter.accept((T) t));
+    }
+
+    public DropdownWidget setOptions(Enum<?>[] options) {
+        this.options = options;
+        return this;
     }
 
     public DropdownWidget setTitle(Component title) {

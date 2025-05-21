@@ -1,3 +1,1 @@
-- Fix draggable dropdown not updating when element was removed.
-- Added helpers for creating TranslatableValues.
-- Added default impls for calling parent save and load for categories.
+- Fix objects not having search applied

@@ -10,6 +10,7 @@ import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.info.ParsedInfo;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedButtonElement;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedEntryElement;
+import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedObjectEntryElement;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedSeparator;
 import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedInstanceEntry;
 import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedObjectEntry;
@@ -52,7 +53,7 @@ public class JavaConfigParser implements ConfigParser {
                     Object instance = ParsingUtils.getField(field, null);
                     ParsedObjectEntry objectEntry = new ParsedObjectEntry(field);
                     populateEntries(instance, objectEntry);
-                    config.elements().add(new ParsedEntryElement(data.id(), objectEntry));
+                    config.elements().add(new ParsedObjectEntryElement(data.id(), objectEntry));
                 } else if (field.getType() == Observable.class) {
                     ParsedObservableEntry observableEntry = ParsedObservableEntry.of(type, field, null);
                     config.elements().add(new ParsedEntryElement(data.id(), observableEntry));

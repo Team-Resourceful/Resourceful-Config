@@ -34,16 +34,11 @@ public record ParsedObjectEntry(
     }
 
     @Override
-    public Object instance() {
-        try {
-            return field.get(null);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Override
     public Component getTitle(@NotNull Component fallback) {
-        return Translatable.toSpeifiedComponent(instance(), fallback);
+        try {
+           return Translatable.toSpeifiedComponent(field.get(null), fallback);
+        } catch (Exception e) {
+            return fallback;
+        }
     }
 }

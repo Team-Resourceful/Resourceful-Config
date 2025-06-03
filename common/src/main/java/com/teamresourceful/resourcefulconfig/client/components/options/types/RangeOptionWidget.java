@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.CommonInputs;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -59,11 +59,11 @@ public class RangeOptionWidget extends BaseWidget {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON_HOVER, getX() + this.padding, getY() + 5, this.width - this.padding * 2, this.height - 10);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON_HOVER, getX() + this.padding, getY() + 5, this.width - this.padding * 2, this.height - 10);
 
         int sliderX = getX() + this.padding + (int) ((this.width - this.padding * 2) * this.getter.getAsDouble()) - (this.height - 6) / 2;
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.CONTAINER, sliderX, getY() + 4, this.height - 8, this.height - 8);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CONTAINER, sliderX, getY() + 4, this.height - 8, this.height - 8);
 
         Component tooltip = null;
 
@@ -78,7 +78,7 @@ public class RangeOptionWidget extends BaseWidget {
                     this.minDisplay,
                     getX() + 2, getY() + 2,
                     getX() + this.padding - 2, getY() + this.height - 2,
-                    0xFFFFFF
+                    -1
             );
 
             renderScrollingString(
@@ -86,7 +86,7 @@ public class RangeOptionWidget extends BaseWidget {
                     this.maxDisplay,
                     getX() + this.width - this.padding + 2, getY() + 2,
                     getX() + this.width - 2, getY() + this.height - 2,
-                    0xFFFFFF
+                    -1
             );
 
             if (mouseX >= getX() + 2 && mouseX <= getX() + this.padding - 2) {
@@ -97,8 +97,9 @@ public class RangeOptionWidget extends BaseWidget {
         }
 
         if (tooltip != null && Minecraft.getInstance().screen != null && this.isHovered()) {
-            Minecraft.getInstance().screen.setTooltipForNextRenderPass(
-                    List.of(tooltip.getVisualOrderText())
+            graphics.setTooltipForNextFrame(
+                    List.of(tooltip.getVisualOrderText()),
+                    mouseX, mouseY
             );
         }
     }

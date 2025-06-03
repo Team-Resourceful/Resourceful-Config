@@ -1,8 +1,5 @@
 package com.teamresourceful.resourcefulconfig.api.types;
 
-import com.teamresourceful.resourcefulconfig.api.types.options.Position;
-import org.jetbrains.annotations.ApiStatus;
-
 import java.util.function.Predicate;
 
 /**
@@ -19,18 +16,6 @@ public interface ResourcefulConfigButton extends ResourcefulConfigElement {
      * @return returns the description translations of the button.
      */
     String description();
-
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = ">1.21.5")
-    default String target() {
-        return "";
-    }
-
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = ">1.21.5")
-    default Position position() {
-        return Position.AFTER;
-    }
 
     String text();
 

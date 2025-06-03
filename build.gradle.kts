@@ -19,7 +19,7 @@ subprojects {
 
     dependencies {
         if (platform == Platform.FABRIC) {
-            "modApi"(rootProject.libs.modmenu)
+            "modCompileOnly"(rootProject.libs.modmenu)
         }
 
         implementation("net.fabricmc:sponge-mixin:0.15.5+mixin.0.8.7") {

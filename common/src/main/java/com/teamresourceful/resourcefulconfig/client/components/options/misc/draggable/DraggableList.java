@@ -1,7 +1,5 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.misc.draggable;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import com.teamresourceful.resourcefulconfig.client.utils.KeyCodeHelper;
 import net.minecraft.client.gui.GuiGraphics;
@@ -71,6 +69,7 @@ public class DraggableList<T> extends ListWidget {
         graphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
         renderPossiblePositionLine(graphics, mouseX, mouseY);
         graphics.disableScissor();
+
         renderDraggedItem(graphics, mouseX, mouseY);
     }
 
@@ -93,16 +92,12 @@ public class DraggableList<T> extends ListWidget {
         if (this.draggingIndex == -1) return;
         Item item = this.items.get(this.draggingIndex);
         if (!(item instanceof DraggableItem<?> draggableItem)) return;
-        PoseStack stack = graphics.pose();
-        stack.pushPose();
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.75F);
-        stack.translate(0, 0, 300);
+        graphics.nextStratum();
+
         int x = (int) (mouseX - this.draggingOffset.x);
         int y = (int) (mouseY - this.draggingOffset.y);
-        draggableItem.render(graphics, x, y, mouseX, mouseY, true, false, false);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        stack.popPose();
+        draggableItem.render(graphics, x, y, mouseX, mouseY, DraggableFlags.HOVERED | DraggableFlags.FADE_OUT);
     }
 
     public int getItemOver(double mouseX, double mouseY) {

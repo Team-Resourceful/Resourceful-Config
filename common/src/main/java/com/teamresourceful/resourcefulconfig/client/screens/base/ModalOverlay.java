@@ -7,9 +7,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class ModalOverlay extends OverlayScreen {
 
@@ -66,12 +67,12 @@ public class ModalOverlay extends OverlayScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.renderBackground(graphics, mouseX, mouseY, partialTicks);
         renderTransparentBackground(graphics);
 
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.CONTAINER, this.modalLeft, this.modalTop, this.modalWidth, this.modalHeight);
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.HEADER, this.modalLeft, this.modalTop, this.modalWidth, 20 + PADDING * 2);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CONTAINER, this.modalLeft, this.modalTop, this.modalWidth, this.modalHeight);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.HEADER, this.modalLeft, this.modalTop, this.modalWidth, 20 + PADDING * 2);
     }
 
     @Override

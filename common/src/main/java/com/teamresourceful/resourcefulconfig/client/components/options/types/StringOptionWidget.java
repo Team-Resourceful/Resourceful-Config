@@ -4,7 +4,7 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 
 import java.util.function.Function;
@@ -43,15 +43,15 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
 
         graphics.enableScissor(getX() + 4, getY() + 4, getX() + this.width - 4, getY() + this.height - 4);
 
         var pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(4, 4, 0);
+        pose.pushMatrix();
+        pose.translate(4, 4);
         super.renderWidget(graphics, mouseX, mouseY, partialTicks);
-        pose.popPose();
+        pose.popMatrix();
 
         graphics.disableScissor();
     }
@@ -78,9 +78,9 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     public void setResponder() {
         setResponder(s -> {
             if (this.setter.apply(s)) {
-                setTextColor(0xE0E0E0);
+                setTextColor(0xFFE0E0E0);
             } else {
-                setTextColor(0xFF0000);
+                setTextColor(0xFFFF0000);
             }
         });
     }

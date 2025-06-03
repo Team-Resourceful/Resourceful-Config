@@ -3,11 +3,9 @@ package com.teamresourceful.resourcefulconfig.api.types.options;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -97,12 +95,6 @@ public class Option<T extends Annotation, D> {
     @SuppressWarnings("unchecked")
     private Object getData(Annotation annotation, Class<?> clazz) {
         return this.mapper.apply(clazz, (T) annotation);
-    }
-
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = "22.0")
-    public static Map<Option<?, ?>, Object> fromField(Field field, Class<?> type) {
-        return gatherOptions(field::getAnnotation, type);
     }
 
     public static Map<Option<?, ?>, Object> gatherOptions(AnnotationGetter getter, Class<?> type) {

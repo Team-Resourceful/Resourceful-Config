@@ -8,7 +8,8 @@ import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
+import org.jetbrains.annotations.NotNull;
 
 public class ObjectOptionWidget extends BaseWidget {
 
@@ -27,12 +28,12 @@ public class ObjectOptionWidget extends BaseWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
 
         graphics.blitSprite(
-                RenderType::guiTextured,
+                RenderPipelines.GUI_TEXTURED,
                 ModSprites.EDIT,
                 getX() + (getWidth() - contentWidth) / 2, getY() + PADDING,
                 SIZE, SIZE
@@ -72,7 +73,7 @@ public class ObjectOptionWidget extends BaseWidget {
         }
 
         @Override
-        public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             super.renderBackground(graphics, mouseX, mouseY, partialTicks);
         }
     }

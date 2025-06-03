@@ -6,10 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class CustomButton extends AbstractButton {
 
@@ -25,7 +26,7 @@ public class CustomButton extends AbstractButton {
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         ResourceLocation button = isHovered() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
-        graphics.blitSprite(RenderType::guiTextured, button, getX(), getY(), getWidth(), getHeight());
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, button, getX(), getY(), getWidth(), getHeight());
         renderScrollingString(
             graphics, Minecraft.getInstance().font,
             this.text,
@@ -41,7 +42,7 @@ public class CustomButton extends AbstractButton {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
 
     }
 }

@@ -4,13 +4,13 @@
   "package": "com.teamresourceful.resourcefulconfig.mixins",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "client.MinecraftMixin"
+    "client.MinecraftMixin",
+    "client.GuiGraphicsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "client.GuiGraphicsAccessor",
     "common.DedicatedServerAccessor",
     "common.PlayerListAccessor",
     "common.SettingsAccessor"

@@ -1,1 +1,2 @@
-- Fix objects not having search applied
+- Made it so dropdown overlays can now extend beyond the widget width.
+  - This allows for better visibility of long dropdown items.

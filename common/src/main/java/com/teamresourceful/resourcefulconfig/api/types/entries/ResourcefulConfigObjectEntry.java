@@ -29,11 +29,6 @@ public interface ResourcefulConfigObjectEntry extends ResourcefulConfigEntry {
         return List.of();
     }
 
-    /**
-     * @deprecated This method was only ever intended for grabbing information like title of the object nothing else, this was an oversight to include it.
-     */
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = "22")
     default Object instance() {
         return null;
     }

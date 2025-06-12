@@ -144,6 +144,9 @@ public final class DemoConfig {
     @ConfigEntry(id = "object")
     public static final DemoObject object = new DemoObject();
 
+    @ConfigEntry(id = "object2")
+    public static final DemoObject2 object2 = new DemoObject2();
+
     @ConfigEntry(
             id = "demoRenderer",
             translation = "renderer"

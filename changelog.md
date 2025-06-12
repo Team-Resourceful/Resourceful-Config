@@ -1,2 +1,1 @@
-- Made it so dropdown overlays can now extend beyond the widget width.
-  - This allows for better visibility of long dropdown items.
+- Add SerializableObject interface you can implement on ConfigObject's to have a custom save and load.

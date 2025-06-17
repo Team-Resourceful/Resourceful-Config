@@ -13,6 +13,10 @@ public interface ResourcefulConfigObjectEntry extends ResourcefulConfigEntry {
         return List.of();
     }
 
+    default Object instance() {
+        return null;
+    }
+
     default Component getTitle(@NotNull Component fallback) {
         return fallback;
     }

@@ -10,6 +10,7 @@ import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfi
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.SerializableObject;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
@@ -25,8 +26,10 @@ public class Loader {
         forEach(config.elements(), (id, entry) -> {
             JsonElement data = json.get(id);
             if (data == null) return;
-            if (data instanceof JsonObject object) {
-                if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
+            if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
+                if (objectEntry.instance() instanceof SerializableObject serializable) {
+                    serializable.load(data);
+                } else if (data instanceof JsonObject object) {
                     loadObject(objectEntry, object);
                 }
             } else if (entry instanceof ResourcefulConfigValueEntry value) {

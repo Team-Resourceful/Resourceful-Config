@@ -7,6 +7,7 @@ import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfi
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.SerializableObject;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.api.types.options.Option;
@@ -59,6 +60,9 @@ public class Writer {
 
     private static JsoncElement toElement(ResourcefulConfigEntry entry) {
         if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
+            if (objectEntry.instance() instanceof SerializableObject serializable) {
+                return new JsoncPrimitive(serializable.save());
+            }
             return writeEntries(objectEntry.elements(), new JsoncObject());
         }
         if (entry instanceof ResourcefulConfigValueEntry valueEntry) {
@@ -68,17 +72,21 @@ public class Writer {
     }
 
     private static JsoncElement valueOf(Object value) {
-        if (value == null) throw new NullPointerException("Config value cannot be null!");
-        if (value instanceof String string) return new JsoncPrimitive(string);
-        if (value instanceof Number number) return new JsoncPrimitive(number);
-        if (value instanceof Boolean bool) return new JsoncPrimitive(bool);
-        if (value instanceof Enum<?> enumValue) return new JsoncPrimitive(enumValue.name());
-        if (value.getClass().isArray()) {
-            JsoncArray array = new JsoncArray();
-            ParsingUtils.forEach(value, o -> array.add(valueOf(o)));
-            return array;
-        }
-        return null;
+        return switch (value) {
+            case null -> throw new NullPointerException("Config value cannot be null!");
+            case String string -> new JsoncPrimitive(string);
+            case Number number -> new JsoncPrimitive(number);
+            case Boolean bool -> new JsoncPrimitive(bool);
+            case Enum<?> enumValue -> new JsoncPrimitive(enumValue.name());
+            default -> {
+                if (value.getClass().isArray()) {
+                    JsoncArray array = new JsoncArray();
+                    ParsingUtils.forEach(value, o -> array.add(valueOf(o)));
+                    yield array;
+                }
+                yield null;
+            }
+        };
     }
 
     private static String getComments(ResourcefulConfigEntry entry) {

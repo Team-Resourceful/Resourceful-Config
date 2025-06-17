@@ -1,1 +1,1 @@
-- Fix objects not having search applied
+- Add SerializableObject interface you can implement on ConfigObject's to have a custom save and load.

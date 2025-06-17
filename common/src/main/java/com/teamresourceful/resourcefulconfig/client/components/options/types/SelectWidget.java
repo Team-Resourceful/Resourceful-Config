@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,8 +20,8 @@ import java.util.function.Supplier;
 
 public class SelectWidget extends BaseWidget {
 
-    private static final int WIDTH = 80;
-    private static final int FOCUSED_LIST = 80;
+    private static final int MIN_WIDTH = 80;
+    private static final int MAX_WIDTH = MIN_WIDTH * 2;
 
     private final Component heading;
     private final Enum<?>[] options;
@@ -28,7 +29,7 @@ public class SelectWidget extends BaseWidget {
     private final Consumer<Enum<?>[]> setter;
 
     public SelectWidget(Component heading, Enum<?>[] options, Supplier<Enum<?>[]> getter, Consumer<Enum<?>[]> setter) {
-        super(WIDTH, 16);
+        super(MIN_WIDTH, 16);
         this.heading = heading;
         this.options = options;
         this.getter = getter;
@@ -96,8 +97,12 @@ public class SelectWidget extends BaseWidget {
 
     private static class SelectList extends ListWidget {
 
+        private final int ogX;
+
         public SelectList(int x, int y, int height) {
-            super(x + 1, y, WIDTH - 2, height);
+            super(x + 1, y, MIN_WIDTH - 2, height);
+
+            this.ogX = x;
         }
 
         public static SelectList of(SelectWidget widget) {
@@ -108,6 +113,17 @@ public class SelectWidget extends BaseWidget {
                 widgetY = widget.getY() - listHeight - 1;
             }
             return new SelectList(widget.getX(), widgetY, listHeight);
+        }
+
+        @Override
+        public void add(Item item) {
+            super.add(item);
+            if (!(item instanceof SelectItem it)) return;
+            var addition = this.items.size() * 12 > this.height ? 10 : 0;
+            if (it.effectiveWidth() + addition <= this.width) return;
+
+            this.setWidth(Math.min(it.effectiveWidth() + addition, SelectWidget.MAX_WIDTH));
+            this.setX(this.ogX - (this.width - MIN_WIDTH) - 1);
         }
 
         @Override
@@ -125,10 +141,14 @@ public class SelectWidget extends BaseWidget {
         private final Consumer<Enum<?>> setter;
 
         public SelectItem(Enum<?> option, BooleanSupplier selected, Consumer<Enum<?>> setter) {
-            super(WIDTH, 12);
+            super(MIN_WIDTH, 12);
             this.option = option;
             this.selected = selected;
             this.setter = setter;
+        }
+
+        public int effectiveWidth() {
+            return Mth.clamp(Minecraft.getInstance().font.width(Translatable.toComponent(this.option)) + 20, MIN_WIDTH, MAX_WIDTH);
         }
 
         @Override

@@ -10,13 +10,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DropdownWidget extends BaseWidget {
 
-    private static final int WIDTH = 80;
+    private static final int MIN_WIDTH = 80;
+    private static final int MAX_WIDTH = MIN_WIDTH * 2;
 
     private final Supplier<Enum<?>> getter;
     private final Consumer<Enum<?>> setter;
@@ -32,7 +34,7 @@ public class DropdownWidget extends BaseWidget {
     }
 
     public DropdownWidget(Enum<?>[] options, Supplier<Enum<?>> getter, Consumer<Enum<?>> setter) {
-        this(WIDTH, options, getter, setter);
+        this(MIN_WIDTH, options, getter, setter);
     }
 
     @SuppressWarnings("unchecked")
@@ -99,8 +101,12 @@ public class DropdownWidget extends BaseWidget {
 
     private static class DropdownList extends ListWidget {
 
+        private final int ogX;
+
         public DropdownList(int x, int y, int height) {
-            super(x + 1, y, WIDTH - 2, height);
+            super(x + 1, y, MIN_WIDTH - 2, height);
+
+            this.ogX = x;
         }
 
         public static DropdownList of(DropdownWidget widget) {
@@ -111,6 +117,17 @@ public class DropdownWidget extends BaseWidget {
                 widgetY = widget.getY() - listHeight - 1;
             }
             return new DropdownList(widget.getX(), widgetY, listHeight);
+        }
+
+        @Override
+        public void add(Item item) {
+            super.add(item);
+            if (!(item instanceof DropdownItem it)) return;
+            var addition = this.items.size() * 12 > this.height ? 10 : 0;
+            if (it.effectiveWidth() + addition <= this.width) return;
+
+            this.setWidth(Math.min(it.effectiveWidth() + addition, DropdownWidget.MAX_WIDTH));
+            this.setX(this.ogX - (this.width - MIN_WIDTH) - 1);
         }
 
         @Override
@@ -127,9 +144,13 @@ public class DropdownWidget extends BaseWidget {
         private final Consumer<Enum<?>> setter;
 
         public DropdownItem(Enum<?> option, Consumer<Enum<?>> setter) {
-            super(WIDTH, 12);
+            super(MIN_WIDTH, 12);
             this.option = option;
             this.setter = setter;
+        }
+
+        public int effectiveWidth() {
+            return Mth.clamp(Minecraft.getInstance().font.width(Translatable.toComponent(this.option)) + 8, MIN_WIDTH, MAX_WIDTH);
         }
 
         @Override

@@ -1,9 +1,9 @@
 [versions]
 
 # Minecraft
-minecraft = "1.21.6-pre2"
-fabric-api = "0.125.3"
-neoforge = "21.5.0-beta"
+minecraft = "1.21.6"
+fabric-api = "0.127.0"
+neoforge = "21.6.0-beta"
 
 # Libraries
 modmenu = "14.0.0-rc.2"
@@ -14,8 +14,6 @@ resourceful-loom = "1.0.4"
 [libraries]
 
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
-fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version = "0.125.3+1.21.6" }
-# TODO remove the above when actual release as gradle toolkit auto does it
 
 [plugins]
 

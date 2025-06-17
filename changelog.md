@@ -1,1 +1,1 @@
-- Add SerializableObject interface you can implement on ConfigObject's to have a custom save and load.
+- Update to 1.21.6

@@ -7,7 +7,7 @@ import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -66,8 +66,8 @@ public class PresetsSelector extends BaseWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.ACCENT, this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, this.getX() + 1, this.getX() + 1, this.getWidth() - 2, this.getHeight() - 2);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ACCENT, this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, this.getX() + 1, this.getX() + 1, this.getWidth() - 2, this.getHeight() - 2);
 
         int size = (this.getWidth() - 18) / 8;
 
@@ -90,7 +90,7 @@ public class PresetsSelector extends BaseWidget {
                             .append(Component.literal(String.format(Locale.ROOT, "#%06X", rgba)).withColor(0xFFFFFFFF))
                             .append(Component.literal("]")).withColor(rgba | 0xFF000000);
 
-                    screen.setTooltipForNextRenderPass(text);
+                    graphics.setTooltipForNextFrame(text, mouseX, mouseY);
                 }
             }
             i++;

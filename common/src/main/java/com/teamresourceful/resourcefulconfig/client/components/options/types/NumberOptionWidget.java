@@ -4,7 +4,7 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 
 import java.text.DecimalFormat;
@@ -48,15 +48,15 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
 
         graphics.enableScissor(getX() + 4, getY() + 4, getX() + this.width - 4, getY() + this.height - 4);
 
         var pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(4, 4, 0);
+        pose.pushMatrix();
+        pose.translate(4, 4);
         super.renderWidget(graphics, mouseX, mouseY, partialTicks);
-        pose.popPose();
+        pose.popMatrix();
 
         graphics.disableScissor();
     }
@@ -84,12 +84,12 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
             try {
                 T value = this.parser.apply(s);
                 if (this.setter.apply(value)) {
-                    this.setTextColor(0xE0E0E0);
+                    this.setTextColor(0xFFE0E0E0);
                 } else {
-                    this.setTextColor(0xFF0000);
+                    this.setTextColor(0xFFFF0000);
                 }
             } catch (NumberFormatException ignored) {
-                this.setTextColor(0xFF0000);
+                this.setTextColor(0xFFFF0000);
             }
         });
     }

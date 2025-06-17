@@ -12,7 +12,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
@@ -40,7 +41,7 @@ public class ColorOptionWidget extends BaseWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, getX(), getY(), this.height, this.height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.height, this.height);
         graphics.fill(getX() + 1, getY() + 1, getX() + this.height - 1, getY() + this.height - 1, this.getter.getAsInt());
     }
 
@@ -111,10 +112,10 @@ public class ColorOptionWidget extends BaseWidget {
         }
 
         @Override
-        public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             super.renderBackground(graphics, mouseX, mouseY, partialTicks);
-            graphics.blitSprite(RenderType::guiTextured, ModSprites.ACCENT, this.x, this.y, this.width, this.height);
-            graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, this.x + 1, this.y + 1, this.width - 2, this.height - 2);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ACCENT, this.x, this.y, this.width, this.height);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, this.x + 1, this.y + 1, this.width - 2, this.height - 2);
         }
 
         @Override

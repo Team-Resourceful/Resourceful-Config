@@ -8,11 +8,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Matrix4f;
+import org.jetbrains.annotations.NotNull;
 
 public class EyedropperButton extends SpriteButton {
 
@@ -41,18 +40,10 @@ public class EyedropperButton extends SpriteButton {
         }
 
         @Override
-        public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             double guiScale = Minecraft.getInstance().getWindow().getGuiScale();
 
-            graphics.drawSpecial(source -> {
-                Matrix4f matrix4f = graphics.pose().last().pose();
-                var consumer = source.getBuffer(RenderType.guiTextured(SCREEN_TEXTURE));
-                consumer.addVertex(matrix4f, 0f, this.height, 0f).setUv(0f, 1f).setColor(-1);
-                consumer.addVertex(matrix4f, this.width, this.height, 0f).setUv(1f, 1f).setColor(-1);
-                consumer.addVertex(matrix4f, this.width, 0f, 0f).setUv(1f, 0f).setColor(-1);
-                consumer.addVertex(matrix4f, 0f, 0f, 0f).setUv(0f, 0f).setColor(-1);
-            });
-
+            graphics.blit(SCREEN_TEXTURE, 0, 0, this.width, this.height, 0f, 1f, 0f, 1f);
 
             int x = mouseX - 5;
             int y = mouseY - 5;
@@ -62,14 +53,7 @@ public class EyedropperButton extends SpriteButton {
             float u1 = (float) (x + 10) / (float) this.width;
             float v1 = (float) (y + 10) / (float) this.height;
 
-            graphics.drawSpecial(source -> {
-                Matrix4f matrix4f = graphics.pose().last().pose();
-                var consumer = source.getBuffer(RenderType.guiTextured(SCREEN_TEXTURE));
-                consumer.addVertex(matrix4f, x - 5, y + 15, 0f).setUv(u0, v1).setColor(-1);
-                consumer.addVertex(matrix4f, x + 15, y + 15, 0f).setUv(u1, v1).setColor(-1);
-                consumer.addVertex(matrix4f, x + 15, y - 5, 0f).setUv(u1, v0).setColor(-1);
-                consumer.addVertex(matrix4f, x - 5, y - 5, 0f).setUv(u0, v0).setColor(-1);
-            });
+            graphics.blit(SCREEN_TEXTURE, x - 5, y - 5, x + 15, y + 15, u0, u1, v0, v1);
 
             graphics.renderOutline(x - 5, y - 5, 20, 20, 0xFFFFFFFF);
 
@@ -80,7 +64,7 @@ public class EyedropperButton extends SpriteButton {
 
             int pixel = this.image.getPixel(pixelX, pixelY);
 
-            setTooltipForNextRenderPass(Component.literal(String.format("#%08X", pixel)).withColor(pixel));
+            graphics.setTooltipForNextFrame(Component.literal(String.format("#%08X", pixel)).withColor(pixel), mouseX, mouseY);
         }
 
         @Override

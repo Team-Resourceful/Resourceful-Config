@@ -1,11 +1,21 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
+import com.teamresourceful.resourcefulconfig.mixins.client.GuiGraphicsAccessor;
+import net.minecraft.Optionull;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
-import org.joml.Matrix4f;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2f;
 
 public class SaturationBrightnessSelector extends BaseWidget {
 
@@ -74,13 +84,54 @@ public class SaturationBrightnessSelector extends BaseWidget {
             int width, int height,
             int topLeft, int topRight, int bottomLeft, int bottomRight
     ) {
-        Matrix4f matrix4f = graphics.pose().last().pose();
-        graphics.drawSpecial(source -> {
-            VertexConsumer buffer = source.getBuffer(RenderType.gui());
-            buffer.addVertex(matrix4f, x, y + height, 0).setColor(bottomLeft);
-            buffer.addVertex(matrix4f, x + width, y + height, 0).setColor(bottomRight);
-            buffer.addVertex(matrix4f, x + width, y, 0).setColor(topRight);
-            buffer.addVertex(matrix4f, x, y, 0).setColor(topLeft);
-        });
+        var access = (GuiGraphicsAccessor) graphics;
+
+        access.getGuiRenderState().submitGuiElement(new GradientRenderState(
+                new Matrix3x2f(graphics.pose()),
+                x, y, x + width, y + height,
+                topLeft, topRight, bottomLeft, bottomRight
+        ));
+    }
+
+    private record GradientRenderState(
+            Matrix3x2f pose,
+            int x0,
+            int y0,
+            int x1,
+            int y1,
+            int col1,
+            int col2,
+            int col3,
+            int col4
+    ) implements GuiElementRenderState {
+
+        @Override
+        public void buildVertices(@NotNull VertexConsumer consumer, float f) {
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x0(), (float)this.y0(), f).setColor(this.col1());
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x0(), (float)this.y1(), f).setColor(this.col3());
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x1(), (float)this.y1(), f).setColor(this.col4());
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x1(), (float)this.y0(), f).setColor(this.col2());
+        }
+
+        @Override
+        public @NotNull RenderPipeline pipeline() {
+            return RenderPipelines.GUI;
+        }
+
+        @Override
+        public @NotNull TextureSetup textureSetup() {
+            return TextureSetup.noTexture();
+        }
+
+        @Override
+        public @Nullable ScreenRectangle bounds() {
+            // This is ugly
+            return Optionull.map(Minecraft.getInstance().screen, Screen::getRectangle);
+        }
+
+        @Override
+        public @Nullable ScreenRectangle scissorArea() {
+            return Optionull.map(Minecraft.getInstance().screen, Screen::getRectangle);
+        }
     }
 }

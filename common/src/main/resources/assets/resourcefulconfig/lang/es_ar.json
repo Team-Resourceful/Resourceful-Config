@@ -1,0 +1,39 @@
+{
+    "rconfig.server.title": "Servidor Dedicado",
+    "rconfig.server.desc": "Propiedades que se pueden actualizar en tiempo real.",
+    "rconfig.server.wiki": "Wiki",
+
+    "rconfig.server.properties.white-list": "Lista Blanca",
+    "rconfig.server.properties.white-list.desc": "Si esto está habilitado, solo los usuarios en la lista blanca podrán acceder al servidor.",
+
+    "rconfig.server.properties.max-players": "Jugadores Máximos",
+    "rconfig.server.properties.max-players.desc": "El número máximo de jugadores que pueden jugar en el servidor al mismo tiempo.",
+
+    "rconfig.server.properties.motd": "Mensaje del Día",
+    "rconfig.server.properties.motd.desc": "El mensaje que se muestra en la lista de servidores.",
+
+    "rconfig.server.properties.allow-flight": "Permitir Vuelo",
+    "rconfig.server.properties.allow-flight.desc": "Si esto está habilitado, los jugadores pueden volar en el servidor, generalmente necesario en servidores modificados.",
+
+    "rconfig.server.properties.pvp": "Jugador vs Jugador",
+    "rconfig.server.properties.pvp.desc": "Si esto está habilitado, los jugadores pueden atacarse entre sí.",
+
+    "rconfig.server.properties.enforce-whitelist": "Forzar Lista Blanca",
+    "rconfig.server.properties.enforce-whitelist.desc": "Si esto está habilitado, solo los usuarios en la lista blanca podrán acceder al servidor. Si hay usuarios en el servidor que no están en la lista blanca, serán expulsados.",
+
+    "rconfig.ui.constant.close": "Cerrar",
+    "rconfig.ui.constant.reset": "Restablecer",
+    "rconfig.ui.constant.edit": "Editar",
+    "rconfig.ui.constant.edit.string": "Editar Cadena",
+    "rconfig.ui.constant.edit.list": "Editar Lista",
+    "rconfig.ui.constant.edit.object": "Editar Objeto",
+    "rconfig.ui.constant.choose_item": "Elegir Elemento: ",
+    "rconfig.ui.constant.add_item": "Agregar Elemento: ",
+    "rconfig.ui.constant.mod_configs": "Configuraciones del Mod",
+    "rconfig.ui.constant.mod_configs.description": "Seleccioná una configuración para ver o editar.",
+
+  
+    "rconfig.color.preset.defaults": "Predeterminados",
+    "rconfig.color.preset.recents": "Recientes",
+    "rconfig.color.preset.mc_colors": "Colores de Texto"
+}

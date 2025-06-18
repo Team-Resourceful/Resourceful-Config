@@ -16,6 +16,7 @@ import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncArray;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncElement;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncObject;
 import com.teamresourceful.resourcefulconfig.common.jsonc.JsoncPrimitive;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public class Writer {
 
             if (entry.type() == EntryType.ENUM) {
                 List<String> enumNames = new ArrayList<>();
-                for (Enum<?> enumConstant : ((Enum<?>[]) valueEntry.objectType().getEnumConstants())) {
+                for (Enum<?> enumConstant : ModUtils.getEnumConstants(valueEntry.objectType())) {
                     enumNames.add(enumConstant.name());
                 }
                 comments.add("Valid Values: " + String.join(", ", enumNames));

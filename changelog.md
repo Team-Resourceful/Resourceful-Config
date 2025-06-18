@@ -1,1 +1,1 @@
-- Update to 1.21.6
+- Fix issue where enums would valid to be read correctly if they had an abstract method.

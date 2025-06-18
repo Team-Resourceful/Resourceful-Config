@@ -1,1 +1,1 @@
-- Add SerializableObject interface you can implement on ConfigObject's to have a custom save and load.
+- Fix issue where enums would valid to be read correctly if they had an abstract method.

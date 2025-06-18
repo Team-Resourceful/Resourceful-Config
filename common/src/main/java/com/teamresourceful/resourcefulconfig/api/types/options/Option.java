@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.api.types.options;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
@@ -37,7 +38,7 @@ public class Option<T extends Annotation, D> {
             (type, data) -> {
                 Class<?> componentType = type.getComponentType();
                 Map<String, Enum<?>> ids = new HashMap<>();
-                for (Enum<?> e : (Enum<?>[]) componentType.getEnumConstants()) {
+                for (Enum<?> e : ModUtils.getEnumConstants(componentType)) {
                     ids.put(e.name(), e);
                 }
                 List<Enum<?>> duplicates = new ArrayList<>();

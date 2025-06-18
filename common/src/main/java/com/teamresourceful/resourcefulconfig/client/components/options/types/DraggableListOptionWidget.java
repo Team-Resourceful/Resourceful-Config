@@ -9,6 +9,7 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.misc.draggable.DraggableList;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -53,7 +54,7 @@ public class DraggableListOptionWidget extends BaseWidget {
     public static DraggableListOptionWidget of(ResourcefulConfigValueEntry entry, EntryData data) {
         return new DraggableListOptionWidget(
                 entry.options().title().toComponent(),
-                (Enum<?>[]) entry.objectType().getEnumConstants(),
+                ModUtils.getEnumConstants(entry.objectType()),
                 Set.of(data.getOrDefaultOption(Option.DRAGGABLE, new Enum<?>[0])),
                 () -> Arrays.asList((Enum<?>[]) entry.getArray()),
                 value -> {

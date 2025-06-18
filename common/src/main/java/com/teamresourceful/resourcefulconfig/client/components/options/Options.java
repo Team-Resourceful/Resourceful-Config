@@ -19,6 +19,7 @@ import com.teamresourceful.resourcefulconfig.client.components.options.range.Dec
 import com.teamresourceful.resourcefulconfig.client.components.options.range.OptionRange;
 import com.teamresourceful.resourcefulconfig.client.components.options.range.WholeOptionRange;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.*;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
@@ -82,14 +83,14 @@ public final class Options {
 
                         widgets.add(new SelectWidget(
                                 data.getOrDefaultOption(Option.SELECT, Component.literal("Select")),
-                                (Enum<?>[]) entry.objectType().getEnumConstants(),
+                                ModUtils.getEnumConstants(entry.objectType()),
                                 () -> (Enum<?>[]) entry.getArray(),
                                 entry::setArray
                         ));
                     }
                 } else {
                     widgets.add(new DropdownWidget(
-                            (Enum<?>[]) entry.objectType().getEnumConstants(),
+                            ModUtils.getEnumConstants(entry.objectType()),
                             entry::getEnum,
                             entry::setEnum
                     ));

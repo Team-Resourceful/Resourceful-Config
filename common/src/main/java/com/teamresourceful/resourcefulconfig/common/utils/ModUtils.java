@@ -37,6 +37,12 @@ public final class ModUtils {
         LOGGER.debug("[ResourcefulConfig] {}", message);
     }
 
+    public static Enum<?>[] getEnumConstants(Class<?> clazz) {
+        if (clazz.isEnum()) return (Enum<?>[]) clazz.getEnumConstants();
+        if (clazz.getSuperclass().isEnum()) return (Enum<?>[]) clazz.getSuperclass().getEnumConstants();
+        return new Enum<?>[0];
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> T[] castArray(Object[] array, Class<T> clazz) {
         T[] newArray = (T[]) Array.newInstance(clazz, array.length);

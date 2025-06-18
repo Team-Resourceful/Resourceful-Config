@@ -10,9 +10,10 @@ import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfi
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
-import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
+import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import com.teamresourceful.resourcefulconfig.web.info.UserJwtPayload;
 import com.teamresourceful.resourcefulconfig.web.utils.WebServerUtils;
 import com.teamresourceful.resourcefulconfig.web.utils.WebVerifier;
@@ -104,7 +105,7 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
                     json.addProperty("current", valueEntry.getEnum().name());
                     json.addProperty("default", def.name());
                     JsonArray options = new JsonArray();
-                    for (var e : getEnumConstants(valueEntry.objectType())) {
+                    for (var e : ModUtils.getEnumConstants(valueEntry.objectType())) {
                         options.add(e.name());
                     }
                     json.add("options", options);
@@ -144,10 +145,6 @@ public record GetConfigPath(WebVerifier verifier) implements BasePath {
             json.addProperty("max", range.max());
             json.addProperty("step", 1);
         }
-    }
-
-    private static Enum<?>[] getEnumConstants(Class<?> clazz) {
-        return (Enum<?>[]) clazz.getEnumConstants();
     }
 
 }

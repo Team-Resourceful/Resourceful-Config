@@ -153,4 +153,10 @@ public final class DemoConfig {
     )
     @ConfigOption.Renderer("demo:demo")
     public static int demoRenderer = 48;
+
+    @ConfigEntry(
+            id = "demoEnumWithAbstract",
+            translation = "enum with abstract method"
+    )
+    public static DemoEnum demoEnumWithAbstract = DemoEnum.FIRST;
 }

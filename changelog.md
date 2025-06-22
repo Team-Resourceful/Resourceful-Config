@@ -1,1 +1,1 @@
-- Fix issue where enums would valid to be read correctly if they had an abstract method.
+- Fix another issue with parsing abstract enums.

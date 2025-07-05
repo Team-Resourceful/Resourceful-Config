@@ -1,1 +1,1 @@
-- Fix another issue with parsing abstract enums.
+- Add support for hover and click events in option descriptions.

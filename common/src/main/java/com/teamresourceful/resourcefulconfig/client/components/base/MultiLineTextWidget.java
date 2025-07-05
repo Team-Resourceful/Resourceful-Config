@@ -76,9 +76,9 @@ public class MultiLineTextWidget extends AbstractStringWidget {
         int color = this.getColor();
         multiLineLabel.renderLeftAligned(graphics, left, top, 9, color);
 
-        if (this.allowHoverComponents) {
+        if (this.allowHoverComponents && graphics.containsPointInScissor(mouseX, mouseY)) {
             Style style = this.getComponentStyleAt(mouseX, mouseY);
-            if (this.isHovered()) {
+            if (style != null) {
                 graphics.renderComponentHoverEffect(this.getFont(), style, mouseX, mouseY);
             }
         }

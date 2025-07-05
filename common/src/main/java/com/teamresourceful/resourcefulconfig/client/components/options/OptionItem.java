@@ -4,14 +4,19 @@ import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfig
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
+import com.teamresourceful.resourcefulconfig.client.components.base.MultiLineTextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -34,7 +39,7 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
     public OptionItem(Component title, Component description, List<AbstractWidget> widgets) {
         super(0, 0, 0, 0);
         this.title = title.copy().withColor(UIConstants.TEXT_TITLE);
-        this.description = description.copy().withColor(UIConstants.TEXT_PARAGRAPH);
+        this.description = description;
         this.widgets = widgets;
 
         init();
@@ -59,8 +64,9 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
 
         titleDesc.addChild(
                 new MultiLineTextWidget(this.description, font)
-                        .setCentered(false)
                         .setMaxWidth(half)
+                        .setColor(UIConstants.TEXT_PARAGRAPH)
+                        .configureStyleHandling(true, OptionItem::handleStyle)
         );
 
         LinearLayout options = LinearLayout
@@ -99,5 +105,21 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
         this.setWidth(width);
         if (!changed) return;
         init();
+    }
+
+    private static void handleStyle(@NotNull Style style) {
+        var event = style.getClickEvent();
+        var mc = Minecraft.getInstance();
+        if (event != null) {
+            switch (event) {
+                case ClickEvent.CopyToClipboard clipboard -> mc.keyboardHandler.setClipboard(clipboard.value());
+                case ClickEvent.OpenUrl link -> {
+                    Screen screen = Minecraft.getInstance().screen;
+                    if (screen == null) return;
+                    ConfirmLinkScreen.confirmLinkNow(screen, link.uri());
+                }
+                default -> {}
+            }
+        }
     }
 }

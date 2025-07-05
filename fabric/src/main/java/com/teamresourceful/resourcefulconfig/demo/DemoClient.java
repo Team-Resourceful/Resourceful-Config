@@ -10,12 +10,17 @@ import com.teamresourceful.resourcefulconfig.client.ConfigsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 
+import java.net.URI;
 import java.util.List;
 
 public class DemoClient implements ClientModInitializer {
@@ -51,7 +56,11 @@ public class DemoClient implements ClientModInitializer {
 
         @Override
         public Component description() {
-            return Component.literal("test 2");
+            return Component.literal("test 2").withStyle(style -> style
+                    .withColor(ChatFormatting.BLUE)
+                    .withHoverEvent(new HoverEvent.ShowText(Component.literal(":3")))
+                    .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://teamresourceful.com/")))
+            );
         }
 
         @Override

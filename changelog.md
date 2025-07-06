@@ -1,1 +1,1 @@
-- Add support for hover and click events in option descriptions.
+- Remove click sound for descriptions

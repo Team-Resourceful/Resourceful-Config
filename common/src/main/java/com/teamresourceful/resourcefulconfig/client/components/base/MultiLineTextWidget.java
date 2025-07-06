@@ -7,6 +7,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractStringWidget;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.SingleKeyCache;
@@ -103,6 +104,11 @@ public class MultiLineTextWidget extends AbstractStringWidget {
         }
 
         super.onClick(mouseX, mouseY);
+    }
+
+    @Override
+    public void playDownSound(@NotNull SoundManager manager) {
+
     }
 
     private MultiLineTextWidget.CacheKey getFreshCacheKey() {

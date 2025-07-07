@@ -13,4 +13,9 @@ public class ModUtilsImpl {
     public static boolean isDev() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
+
+    @org.jetbrains.annotations.Contract(pure = true)
+    public static boolean isModLoaded(String modid) {
+        return FabricLoader.getInstance().isModLoaded(modid);
+    }
 }

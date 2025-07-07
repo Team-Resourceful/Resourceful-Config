@@ -1,1 +1,1 @@
-- Remove click sound for descriptions
+- Add support for setting searches in screen creation.

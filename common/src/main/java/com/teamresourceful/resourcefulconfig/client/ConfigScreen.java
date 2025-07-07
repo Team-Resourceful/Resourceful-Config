@@ -9,7 +9,6 @@ import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidg
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
-import com.teamresourceful.resourcefulconfig.client.utils.ConfigSearching;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -19,26 +18,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class ConfigScreen extends Screen implements CloseableScreen {
 
     private final Screen parent;
     private final ResourcefulConfig config;
-    private final Function<String, List<String>> termCollector;
+    private final ConfigScreenContext context;
 
     private OptionsListWidget optionsList = null;
     private CategoriesListWidget categoriesList = null;
 
-    public ConfigScreen(Screen parent, ResourcefulConfig config) {
-        this(parent, config, s -> List.of());
-    }
-
-    public ConfigScreen(Screen parent, ResourcefulConfig config, Function<String, List<String>> termCollector) {
+    public ConfigScreen(Screen parent, ResourcefulConfig config, ConfigScreenContext context) {
         super(CommonComponents.EMPTY);
         this.parent = parent;
         this.config = config;
-        this.termCollector = termCollector;
+        this.context = context;
     }
 
     @Override
@@ -63,6 +57,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
         var header = layout.addChild(new HeaderWidget(
                 this.width - UIConstants.PAGE_PADDING * 2,
                 this.config,
+                this.context,
                 () -> {
                     this.updateOptions();
                     this.updateCategories();
@@ -95,7 +90,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
         this.optionsList.clear();
         List<ResourcefulConfigElement> elements = new ArrayList<>();
         for (ResourcefulConfigElement element : this.config.elements()) {
-            if (!ConfigSearching.fulfillsSearch(element, this.termCollector)) continue;
+            if (!this.context.fulfillsSearch(element)) continue;
             elements.add(element);
         }
         Options.populateOptions(this.optionsList, elements);
@@ -105,9 +100,9 @@ public class ConfigScreen extends Screen implements CloseableScreen {
         if (this.categoriesList == null) return;
         this.categoriesList.clear();
         for (ResourcefulConfig value : this.config.categories().values()) {
-            if (!ConfigSearching.fulfillsSearch(value, this.termCollector)) continue;
+            if (!this.context.fulfillsSearch(value)) continue;
             if (value.info().isHidden()) continue;
-            this.categoriesList.add(new CategoryItem(this, value, this.termCollector));
+            this.categoriesList.add(new CategoryItem(this, value, this.context));
         }
     }
 

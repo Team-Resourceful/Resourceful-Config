@@ -22,6 +22,13 @@ public final class Configurator {
 
     public Configurator(String modid) {
         this.modid = modid;
+
+        if (!ModUtils.isModLoaded(modid)) {
+            System.out.println("-- ResourcefulConfig Warning --");
+            System.out.println("The mod with id '" + modid + "' is not loaded, but you are trying to register configs for it.");
+            System.out.println("Ensure the mod id matches your mod's id in the fabric.mod.json or neoforge.mods.toml file.");
+            System.out.println("-- ResourcefulConfig Warning --");
+        }
     }
 
     public void register(Class<?> clazz) {

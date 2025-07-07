@@ -2,12 +2,12 @@ package com.teamresourceful.resourcefulconfig.client.components.header;
 
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigCategory;
+import com.teamresourceful.resourcefulconfig.client.ConfigScreenContext;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
-import com.teamresourceful.resourcefulconfig.client.utils.ConfigSearching;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -18,7 +18,7 @@ public class HeaderControlsWidget extends ContainerWidget {
 
     private final LinearLayout layout;
 
-    public HeaderControlsWidget(int width, ResourcefulConfig config, Runnable onSearchUpdate) {
+    public HeaderControlsWidget(int width, ResourcefulConfig config, ConfigScreenContext context, Runnable onSearchUpdate) {
         super(0, 0, width, 0);
 
         this.layout = LinearLayout.horizontal().spacing(5);
@@ -30,10 +30,11 @@ public class HeaderControlsWidget extends ContainerWidget {
                 .sprite(!willGoBack ? ModSprites.CROSS : ModSprites.CHEVRON_LEFT)
                 .onPress(() -> Minecraft.getInstance().screen.onClose())
                 .tooltip(!willGoBack ? UIConstants.CLOSE : UIConstants.BACK)
-                .build());
+                .build()
+        );
 
-        var searchWidget = new StringOptionWidget(ConfigSearching::getSearch, name -> {
-            if (ConfigSearching.setSearch(name)) {
+        var searchWidget = new StringOptionWidget(context::getQuery, name -> {
+            if (context.setQuery(name)) {
                 onSearchUpdate.run();
             }
             return true;

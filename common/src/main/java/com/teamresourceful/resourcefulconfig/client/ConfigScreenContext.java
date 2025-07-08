@@ -3,11 +3,13 @@ package com.teamresourceful.resourcefulconfig.client;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.client.utils.ConfigSearching;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
+@ApiStatus.Internal
 public class ConfigScreenContext {
 
     private String query = "";

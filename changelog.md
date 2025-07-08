@@ -1,1 +1,1 @@
-- Add support for setting searches in screen creation.
+- Fix crashes with mods using internal constructor

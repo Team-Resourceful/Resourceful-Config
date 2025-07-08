@@ -14,11 +14,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiStatus.Internal
 public class ConfigScreen extends Screen implements CloseableScreen {
 
     private final Screen parent;
@@ -27,6 +29,10 @@ public class ConfigScreen extends Screen implements CloseableScreen {
 
     private OptionsListWidget optionsList = null;
     private CategoriesListWidget categoriesList = null;
+
+    public ConfigScreen(Screen parent, ResourcefulConfig config) {
+        this(parent, config, new ConfigScreenContext());
+    }
 
     public ConfigScreen(Screen parent, ResourcefulConfig config, ConfigScreenContext context) {
         super(CommonComponents.EMPTY);

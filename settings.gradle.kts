@@ -4,7 +4,6 @@ rootProject.name = "ResourcefulConfig"
 
 pluginManagement {
     repositories {
-        maven("https://maven.teamresourceful.com/repository/maven-private/")
         maven("https://maven.fabricmc.net/")
         maven("https://maven.architectury.dev/")
         maven("https://maven.teamresourceful.com/repository/maven-public/")

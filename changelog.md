@@ -1,1 +1,1 @@
-- Fix crashes with mods using internal constructor
+- Update to 1.21.7

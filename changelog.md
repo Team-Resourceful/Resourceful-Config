@@ -1,1 +1,1 @@
-- Update to 1.21.7
+- Fix crash in dev due to incorrect dependency version constraint.

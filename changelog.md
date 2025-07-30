@@ -1,1 +1,1 @@
-- Fix crashes with mods using internal constructor
+- Fix crash in dev due to incorrect dependency version constraint.

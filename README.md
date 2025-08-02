@@ -23,21 +23,21 @@ In an Architectury project, you would implement it like so:
 Common
 ```groovy
 dependencies {
-  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-1.21.7:3.7.1"
+  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-1.21.7:3.7.2"
 }
 ```
 
 Fabric
 ```groovy
 dependencies {
-  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.21.7:3.7.1"
+  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.21.7:3.7.2"
 }
 ```
 
 NeoForge
 ```groovy
 dependencies {
-  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21.7:3.7.1"
+  modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21.7:3.7.2"
 }
 ```
 

@@ -1,1 +1,1 @@
-- Fix crash in dev due to incorrect dependency version constraint.
+- Fix performance issues due to Mojangs nine slice algorithm not batching correctly anymore.

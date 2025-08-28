@@ -1,9 +1,26 @@
 package com.teamresourceful.resourcefulconfig.client.utils;
 
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface State<T> extends Consumer<T>, Supplier<T> {
+
+    static <T> State<T> of(Consumer<T> setter, Supplier<T> getter) {
+        return new State<T>() {
+            @Override
+            public void set(T s) {
+                setter.accept(s);
+            }
+
+            @Override
+            public T get() {
+                return getter.get();
+            }
+        };
+    }
 
     void set(T t);
 

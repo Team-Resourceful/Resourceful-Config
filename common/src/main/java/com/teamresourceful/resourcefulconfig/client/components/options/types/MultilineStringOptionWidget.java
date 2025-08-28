@@ -3,9 +3,10 @@ package com.teamresourceful.resourcefulconfig.client.components.options.types;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
+import com.teamresourceful.resourcefulconfig.client.components.options.text.multiline.MultilineTextBox;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
+import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,13 @@ public class MultilineStringOptionWidget extends BaseWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
+        graphics.blitSprite(
+                RenderPipelines.GUI_TEXTURED,
+                ModSprites.ofButton(this.isHovered()),
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight());
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
 
@@ -72,23 +79,27 @@ public class MultilineStringOptionWidget extends BaseWidget {
         protected void init() {
             super.init();
 
-            var box = addRenderableWidget(MultiLineEditBox.builder()
-                    .setShowBackground(false)
-                    .setX(left)
-                    .setY(top)
-                    .setTextShadow(false)
-                    .build(font, contentWidth, contentHeight, CommonComponents.EMPTY)
-            );
+            var box = new MultilineTextBox(State.of(setter, getter));
+            box.setX(left);
+            box.setY(top);
+            box.withFont(font);
+            box.setWidth(contentWidth);
+            box.setHeight(contentHeight);
 
-            box.setValue(getter.get());
-            box.setValueListener(setter);
+            addRenderableWidget(box);
         }
 
         @Override
         public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             super.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, left, top, contentWidth, contentHeight);
+            graphics.blitSprite(
+                    RenderPipelines.GUI_TEXTURED,
+                    ModSprites.BUTTON,
+                    left,
+                    top,
+                    contentWidth,
+                    contentHeight);
         }
     }
 }

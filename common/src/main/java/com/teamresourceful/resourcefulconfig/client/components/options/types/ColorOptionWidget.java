@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
+import com.teamresourceful.resourcefulconfig.api.client.options.ResourcefulConfigOptionUI;
 import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
@@ -14,8 +15,10 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
@@ -86,7 +89,8 @@ public class ColorOptionWidget extends BaseWidget {
 
             LinearLayout presets = LinearLayout.horizontal().spacing(SPACING * 2);
             presets.addChild(new EyedropperButton(this.state));
-            presets.addChild(DropdownWidget.of(
+            presets.addChild(ResourcefulConfigOptionUI.dropdown(
+                    Component.empty(),
                     this.widget.presets.length == 0 ? PresetType.WITHOUT_DEFAULT : PresetType.VALUES,
                     this.type, this.type
             ));
@@ -147,8 +151,8 @@ public class ColorOptionWidget extends BaseWidget {
         MC_COLORS,
         ;
 
-        private static final PresetType[] VALUES = values();
-        private static final PresetType[] WITHOUT_DEFAULT = {RECENTS, MC_COLORS};
+        private static final List<PresetType> VALUES = List.of(values());
+        private static final List<PresetType> WITHOUT_DEFAULT = List.of(RECENTS, MC_COLORS);
 
         @Override
         public String getTranslationKey() {

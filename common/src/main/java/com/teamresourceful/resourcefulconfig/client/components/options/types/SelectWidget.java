@@ -13,22 +13,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class SelectWidget extends BaseWidget {
+public class SelectWidget<T> extends BaseWidget {
 
     private static final int MIN_WIDTH = 80;
     private static final int MAX_WIDTH = MIN_WIDTH * 2;
 
     private final Component heading;
-    private final Enum<?>[] options;
-    private final Supplier<Enum<?>[]> getter;
-    private final Consumer<Enum<?>[]> setter;
+    private final List<T> options;
+    private final Supplier<List<T>> getter;
+    private final Consumer<List<T>> setter;
 
-    public SelectWidget(Component heading, Enum<?>[] options, Supplier<Enum<?>[]> getter, Consumer<Enum<?>[]> setter) {
+    public SelectWidget(Component heading, List<T> options, Supplier<List<T>> getter, Consumer<List<T>> setter) {
         super(MIN_WIDTH, 16);
         this.heading = heading;
         this.options = options;
@@ -50,14 +51,14 @@ public class SelectWidget extends BaseWidget {
 
     @Override
     public void onClick(double d, double e) {
-        Minecraft.getInstance().setScreen(new SelectOverlay(this));
+        Minecraft.getInstance().setScreen(new SelectOverlay<>(this));
     }
 
-    private static class SelectOverlay extends OverlayScreen {
+    private static class SelectOverlay<T> extends OverlayScreen {
 
-        private final SelectWidget widget;
+        private final SelectWidget<T> widget;
 
-        protected SelectOverlay(SelectWidget widget) {
+        protected SelectOverlay(SelectWidget<T> widget) {
             super(Minecraft.getInstance().screen);
             this.widget = widget;
         }
@@ -65,21 +66,21 @@ public class SelectWidget extends BaseWidget {
         @Override
         protected void init() {
             var list = addRenderableWidget(SelectList.of(widget));
-            for (Enum<?> option : widget.options) {
+            for (T option : widget.options) {
                 list.add(new SelectItem(
                     option,
                     () -> {
-                        Set<Enum<?>> set = Set.of(widget.getter.get());
+                        Set<T> set = Set.copyOf(widget.getter.get());
                         return set.contains(option);
                     },
-                    (value) -> {
-                        Set<Enum<?>> set = new HashSet<>(Set.of(widget.getter.get()));
-                        if (set.contains(value)) {
-                            set.remove(value);
+                    () -> {
+                        Set<T> set = new HashSet<>(widget.getter.get());
+                        if (set.contains(option)) {
+                            set.remove(option);
                         } else {
-                            set.add(value);
+                            set.add(option);
                         }
-                        widget.setter.accept(set.toArray(new Enum<?>[0]));
+                        widget.setter.accept(List.copyOf(set));
                     }
                 ));
             }
@@ -105,10 +106,10 @@ public class SelectWidget extends BaseWidget {
             this.ogX = x;
         }
 
-        public static SelectList of(SelectWidget widget) {
+        public static SelectList of(SelectWidget<?> widget) {
             int windowHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             int widgetY = widget.getY() + widget.getHeight();
-            int listHeight = Math.min(widget.options.length * 12, 12 * 8) + 1;
+            int listHeight = Math.min(widget.options.size() * 12, 12 * 8) + 1;
             if (widgetY + listHeight > windowHeight) {
                 widgetY = widget.getY() - listHeight - 1;
             }
@@ -136,15 +137,15 @@ public class SelectWidget extends BaseWidget {
 
     private static class SelectItem extends BaseWidget implements ListWidget.Item {
 
-        private final Enum<?> option;
+        private final Object option;
         private final BooleanSupplier selected;
-        private final Consumer<Enum<?>> setter;
+        private final Runnable onClick;
 
-        public SelectItem(Enum<?> option, BooleanSupplier selected, Consumer<Enum<?>> setter) {
+        public SelectItem(Object option, BooleanSupplier selected, Runnable onClick) {
             super(MIN_WIDTH, 12);
             this.option = option;
             this.selected = selected;
-            this.setter = setter;
+            this.onClick = onClick;
         }
 
         public int effectiveWidth() {
@@ -169,7 +170,7 @@ public class SelectWidget extends BaseWidget {
 
         @Override
         public void onClick(double mouseX, double e) {
-            this.setter.accept(this.option);
+            this.onClick.run();
         }
 
         @Override

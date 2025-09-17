@@ -1,1 +1,1 @@
-- Fix performance issues due to Mojangs nine slice algorithm not batching correctly anymore.
+- Allow for creation of draggable, selects, and dropdowns outside of the screen itself.

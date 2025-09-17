@@ -12,43 +12,31 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class DropdownWidget extends BaseWidget {
+public class DropdownWidget<T> extends BaseWidget {
 
     private static final int MIN_WIDTH = 80;
     private static final int MAX_WIDTH = MIN_WIDTH * 2;
 
-    private final Supplier<Enum<?>> getter;
-    private final Consumer<Enum<?>> setter;
-    private Enum<?>[] options;
+    private final Component title;
+    private final Supplier<T> getter;
+    private final Consumer<T> setter;
+    private List<T> options;
 
-    private Component title = Component.empty();
 
-    public DropdownWidget(int width, Enum<?>[] options, Supplier<Enum<?>> getter, Consumer<Enum<?>> setter) {
-        super(width, 16);
-        this.options = options;
+    public DropdownWidget(Component title, List<T> options, Supplier<T> getter, Consumer<T> setter) {
+        super(MIN_WIDTH, 16);
+        this.title = title;
+        this.options = List.copyOf(options);
         this.getter = getter;
         this.setter = setter;
     }
 
-    public DropdownWidget(Enum<?>[] options, Supplier<Enum<?>> getter, Consumer<Enum<?>> setter) {
-        this(MIN_WIDTH, options, getter, setter);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends Enum<?>> DropdownWidget of(T[] options, Supplier<T> getter, Consumer<T> setter) {
-        return new DropdownWidget(options, getter::get, t -> setter.accept((T) t));
-    }
-
-    public DropdownWidget setOptions(Enum<?>[] options) {
+    public DropdownWidget<T> setOptions(List<T> options) {
         this.options = options;
-        return this;
-    }
-
-    public DropdownWidget setTitle(Component title) {
-        this.title = title;
         return this;
     }
 
@@ -66,14 +54,14 @@ public class DropdownWidget extends BaseWidget {
 
     @Override
     public void onClick(double d, double e) {
-        Minecraft.getInstance().setScreen(new DropdownOverlay(this));
+        Minecraft.getInstance().setScreen(new DropdownOverlay<>(this));
     }
 
-    private static class DropdownOverlay extends OverlayScreen {
+    private static class DropdownOverlay<T> extends OverlayScreen {
 
-        private final DropdownWidget widget;
+        private final DropdownWidget<T> widget;
 
-        protected DropdownOverlay(DropdownWidget widget) {
+        protected DropdownOverlay(DropdownWidget<T> widget) {
             super(Minecraft.getInstance().screen);
             this.widget = widget;
         }
@@ -81,9 +69,9 @@ public class DropdownWidget extends BaseWidget {
         @Override
         protected void init() {
             var list = addRenderableWidget(DropdownList.of(widget));
-            for (Enum<?> option : widget.options) {
-                list.add(new DropdownItem(option, (value) -> {
-                    widget.setter.accept(value);
+            for (T option : widget.options) {
+                list.add(new DropdownItem(option, () -> {
+                    widget.setter.accept(option);
                     this.onClose();
                 }));
             }
@@ -109,10 +97,10 @@ public class DropdownWidget extends BaseWidget {
             this.ogX = x;
         }
 
-        public static DropdownList of(DropdownWidget widget) {
+        public static <T> DropdownList of(DropdownWidget<T> widget) {
             int windowHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             int widgetY = widget.getY() + widget.getHeight();
-            int listHeight = Math.min(widget.options.length * 12, 12 * 8) + 1;
+            int listHeight = Math.min(widget.options.size() * 12, 12 * 8) + 1;
             if (widgetY + listHeight > windowHeight) {
                 widgetY = widget.getY() - listHeight - 1;
             }
@@ -140,13 +128,13 @@ public class DropdownWidget extends BaseWidget {
 
     private static class DropdownItem extends BaseWidget implements ListWidget.Item {
 
-        private final Enum<?> option;
-        private final Consumer<Enum<?>> setter;
+        private final Object option;
+        private final Runnable onClick;
 
-        public DropdownItem(Enum<?> option, Consumer<Enum<?>> setter) {
+        public DropdownItem(Object option, Runnable setter) {
             super(MIN_WIDTH, 12);
             this.option = option;
-            this.setter = setter;
+            this.onClick = setter;
         }
 
         public int effectiveWidth() {
@@ -167,7 +155,7 @@ public class DropdownWidget extends BaseWidget {
 
         @Override
         public void onClick(double mouseX, double e) {
-            this.setter.accept(this.option);
+            this.onClick.run();
         }
 
         @Override

@@ -148,11 +148,11 @@ public final class DemoConfig {
     public static final DemoObject2 object2 = new DemoObject2();
 
     @ConfigEntry(
-            id = "demoRenderer",
+            id = "demoRenderer2",
             translation = "renderer"
     )
     @ConfigOption.Renderer("demo:demo")
-    public static int demoRenderer = 48;
+    public static String demoRenderer2 = "meow";
 
     @ConfigEntry(
             id = "demoEnumWithAbstract",

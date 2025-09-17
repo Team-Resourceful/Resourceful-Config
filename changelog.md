@@ -1,1 +1,1 @@
-- Fix crash in dev due to incorrect dependency version constraint.
+- Allow for creation of draggable, selects, and dropdowns outside of the screen itself.

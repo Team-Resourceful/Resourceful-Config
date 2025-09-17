@@ -9,7 +9,7 @@ neoforge = "21.5.0-beta"
 modmenu = "14.0.0-rc.2"
 
 # Plugins
-resourceful-loom = "1.0.4"
+resourceful-loom = "1.0.5"
 
 [libraries]
 

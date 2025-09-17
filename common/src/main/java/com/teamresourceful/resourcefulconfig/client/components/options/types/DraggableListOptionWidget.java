@@ -1,15 +1,16 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.options.Option;
+import com.teamresourceful.resourcefulconfig.api.types.options.data.DraggableOptionEntry;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.misc.draggable.DraggableList;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -21,7 +22,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class DraggableListOptionWidget extends BaseWidget {
+public class DraggableListOptionWidget<T> extends BaseWidget {
 
     private static final int WIDTH = 80;
     private static final int SIZE = 12;
@@ -29,33 +30,37 @@ public class DraggableListOptionWidget extends BaseWidget {
     private static final int PADDING = 2;
 
     private final Component title;
-    private final Enum<?>[] options;
-    private final Set<Enum<?>> duplicatables;
-    private final Supplier<List<Enum<?>>> getter;
-    private final Consumer<List<Enum<?>>> setter;
-    private final ConfigOption.Range range;
+    private final List<DraggableOptionEntry<T>> options;
+    private final Supplier<List<T>> getter;
+    private final Consumer<List<T>> setter;
+    private final IntIntPair range;
 
     public DraggableListOptionWidget(
             Component title,
-            Enum<?>[] options, Set<Enum<?>> duplicatables,
-            Supplier<List<Enum<?>>> getter, Consumer<List<Enum<?>>> setter,
-            ConfigOption.Range range
+            List<DraggableOptionEntry<T>> options,
+            Supplier<List<T>> getter, Consumer<List<T>> setter,
+            IntIntPair range
     ) {
         super(WIDTH, 16);
 
         this.title = title;
         this.options = options;
-        this.duplicatables = duplicatables;
         this.getter = getter;
         this.setter = setter;
-        this.range = range;
+        this.range = range == null ? null : IntIntPair.of(range.firstInt(), range.secondInt());
     }
 
-    public static DraggableListOptionWidget of(ResourcefulConfigValueEntry entry, EntryData data) {
-        return new DraggableListOptionWidget(
+    public static DraggableListOptionWidget<Enum<?>> of(ResourcefulConfigValueEntry entry, EntryData data) {
+        var range = data.getOption(Option.RANGE);
+        var entries = new ArrayList<DraggableOptionEntry<Enum<?>>>();
+        var duplicates = Set.of(data.getOrDefaultOption(Option.DRAGGABLE, new Enum<?>[0]));
+        for (Enum<?> e : ModUtils.getEnumConstants(entry.objectType())) {
+            entries.add(new DraggableOptionEntry<>(e, duplicates.contains(e)));
+        }
+
+        return new DraggableListOptionWidget<>(
                 entry.options().title().toComponent(),
-                ModUtils.getEnumConstants(entry.objectType()),
-                Set.of(data.getOrDefaultOption(Option.DRAGGABLE, new Enum<?>[0])),
+                entries,
                 () -> Arrays.asList((Enum<?>[]) entry.getArray()),
                 value -> {
                     Enum<?>[] array = (Enum<?>[]) Array.newInstance(entry.objectType(), value.size());
@@ -64,7 +69,7 @@ public class DraggableListOptionWidget extends BaseWidget {
                     }
                     entry.setArray(array);
                 },
-                data.getOption(Option.RANGE)
+                range == null ? null : IntIntPair.of((int) range.min(), (int) range.max())
         );
     }
 
@@ -90,27 +95,28 @@ public class DraggableListOptionWidget extends BaseWidget {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        new DraggableListOverlay(this).open();
+        new DraggableListOverlay<>(this).open();
     }
 
-    private static class DraggableListOverlay extends ModalOverlay {
+    private static class DraggableListOverlay<T> extends ModalOverlay {
 
-        private final DraggableListOptionWidget widget;
+        private final DraggableListOptionWidget<T> widget;
 
-        protected DraggableListOverlay(DraggableListOptionWidget widget) {
+        protected DraggableListOverlay(DraggableListOptionWidget<T> widget) {
             super();
             this.widget = widget;
             this.title = UIConstants.EDIT_LIST;
         }
 
-        protected Enum<?>[] getOptions() {
-            Set<Enum<?>> options = new LinkedHashSet<>(Arrays.asList(this.widget.options));
-            this.widget.getter.get().forEach(item -> {
-                if (this.widget.duplicatables.contains(item)) return;
-                options.remove(item);
-            });
+        protected List<T> getOptions() {
+            Set<T> chosen = new HashSet<>(this.widget.getter.get());
+            List<T> options = new ArrayList<>();
 
-            return options.toArray(new Enum<?>[0]);
+            for (var option : this.widget.options) {
+                if (chosen.contains(option.value()) && !option.duplicatable()) continue;
+                options.add(option.value());
+            }
+            return options;
         }
 
         @Override
@@ -127,7 +133,7 @@ public class DraggableListOptionWidget extends BaseWidget {
 
             Runnable updateTitle = () -> {
                 if (this.widget.range != null) {
-                    String count = "%d/%d".formatted(this.widget.getter.get().size(), (int) this.widget.range.max());
+                    String count = "%d/%d".formatted(this.widget.getter.get().size(), this.widget.range.secondInt());
                     title.setMessage(Component.empty().append(this.widget.title).append(" ").append(count));
                 } else {
                     title.setMessage(this.widget.title);
@@ -136,16 +142,17 @@ public class DraggableListOptionWidget extends BaseWidget {
 
             updateTitle.run();
 
-            var dropdown = layout.addChild(new DropdownWidget(
+            var dropdown = layout.addChild(new DropdownWidget<>(
+                    UIConstants.ADD_ITEM,
                     this.getOptions(),
                     () -> null,
                     (value) -> {
-                        List<Enum<?>> list = new ArrayList<>(this.widget.getter.get());
+                        List<T> list = new ArrayList<>(this.widget.getter.get());
                         list.addFirst(value);
                         this.widget.setter.accept(list);
                     }
-            ).setTitle(UIConstants.ADD_ITEM));
-            dropdown.active = this.widget.range == null || this.widget.getter.get().size() < this.widget.range.max();
+            ));
+            dropdown.active = this.widget.range == null || this.widget.getter.get().size() < this.widget.range.secondInt();
 
             layout.setPosition(left + 4, top + 1);
             layout.arrangeElements();
@@ -153,16 +160,16 @@ public class DraggableListOptionWidget extends BaseWidget {
 
             int heading = layout.getHeight() + 4;
 
-            DraggableList<Enum<?>> list = addRenderableWidget(new DraggableList<>(left + 1, top + heading, contentWidth - 2, contentHeight - heading));
+            DraggableList<T> list = addRenderableWidget(new DraggableList<>(left + 1, top + heading, contentWidth - 2, contentHeight - heading));
             list.addAll(this.widget.getter.get());
             list.setOnUpdate(value -> {
                 this.widget.setter.accept(value);
-                list.setCanDelete(this.widget.range == null || this.widget.getter.get().size() > this.widget.range.min());
-                dropdown.active = this.widget.range == null || this.widget.getter.get().size() < this.widget.range.max();
+                list.setCanDelete(this.widget.range == null || this.widget.getter.get().size() > this.widget.range.firstInt());
+                dropdown.active = this.widget.range == null || this.widget.getter.get().size() < this.widget.range.secondInt();
                 dropdown.setOptions(this.getOptions());
                 updateTitle.run();
             });
-            list.setCanDelete(this.widget.range == null || this.widget.getter.get().size() > this.widget.range.min());
+            list.setCanDelete(this.widget.range == null || this.widget.getter.get().size() > this.widget.range.firstInt());
         }
 
         @Override

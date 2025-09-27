@@ -5,6 +5,20 @@ import java.util.function.Supplier;
 
 public interface State<T> extends Consumer<T>, Supplier<T> {
 
+    static <T> State<T> of(Consumer<T> setter, Supplier<T> getter) {
+        return new State<>() {
+            @Override
+            public void set(T s) {
+                setter.accept(s);
+            }
+
+            @Override
+            public T get() {
+                return getter.get();
+            }
+        };
+    }
+
     void set(T t);
 
     @Override

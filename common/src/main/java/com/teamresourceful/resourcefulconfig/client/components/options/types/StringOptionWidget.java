@@ -1,16 +1,15 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
-import net.minecraft.client.Minecraft;
+import com.teamresourceful.resourcefulconfig.client.components.options.text.TextBox;
+import com.teamresourceful.resourcefulconfig.client.utils.ListenableState;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.CommonComponents;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class StringOptionWidget extends EditBox implements ResetableWidget {
+public class StringOptionWidget extends TextBox {
 
     private static final int FOCUSED_EXTRA_WIDTH = 40;
     private static final int WIDTH = 80;
@@ -26,34 +25,26 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
     }
 
     public StringOptionWidget(Supplier<String> getter, Function<String, Boolean> setter, boolean canExpand) {
-        super(Minecraft.getInstance().font, WIDTH, 16, CommonComponents.EMPTY);
+        super(WIDTH, 16, ListenableState.of(getter.get()));
         setMaxLength(Short.MAX_VALUE);
-        setBordered(false);
-        setCanLoseFocus(true);
 
         this.getter = getter;
         this.setter = setter;
         this.canExpand = canExpand;
-
-        setValue(getter.get());
-        setResponder();
+        this.state.registerListener(it -> {
+            if (this.setter.apply(it)) {
+                setTextColor(0xFFE0E0E0);
+            } else {
+                setTextColor(0xFFFF0000);
+            }
+        });
     }
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
-
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
-
-        graphics.enableScissor(getX() + 4, getY() + 4, getX() + this.width - 4, getY() + this.height - 4);
-
-        var pose = graphics.pose();
-        pose.pushMatrix();
-        pose.translate(4, 4);
         super.renderWidget(graphics, mouseX, mouseY, partialTicks);
-        pose.popMatrix();
-
-        graphics.disableScissor();
     }
 
     public void updateIfFocused() {
@@ -66,22 +57,5 @@ public class StringOptionWidget extends EditBox implements ResetableWidget {
             setWidth(WIDTH);
             setX(getX() + FOCUSED_EXTRA_WIDTH);
         }
-    }
-
-    @Override
-    public void reset() {
-        setResponder(s -> {});
-        setValue(this.getter.get());
-        setResponder();
-    }
-
-    public void setResponder() {
-        setResponder(s -> {
-            if (this.setter.apply(s)) {
-                setTextColor(0xFFE0E0E0);
-            } else {
-                setTextColor(0xFFFF0000);
-            }
-        });
     }
 }

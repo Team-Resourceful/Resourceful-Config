@@ -19,10 +19,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton
 import com.teamresourceful.resourcefulconfig.client.components.options.range.DecimalOptionRange;
 import com.teamresourceful.resourcefulconfig.client.components.options.range.OptionRange;
 import com.teamresourceful.resourcefulconfig.client.components.options.range.WholeOptionRange;
-import com.teamresourceful.resourcefulconfig.client.components.options.text.TextBox;
-import com.teamresourceful.resourcefulconfig.client.components.options.text.multiline.MultilineTextBox;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.*;
-import com.teamresourceful.resourcefulconfig.client.utils.State;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
@@ -79,7 +76,7 @@ public final class Options {
                             s -> entry.setArray(s.split("\n"))
                     ));
                 } else {
-                    widgets.add(new TextBox(State.of(entry::setString, entry::getString)));
+                    widgets.add(new StringOptionWidget(entry::getString, entry::setString));
                 }
             }
             case ENUM -> {

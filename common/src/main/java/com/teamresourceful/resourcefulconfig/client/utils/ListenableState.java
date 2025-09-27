@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @ApiStatus.Internal
-public class ListenableState<T> extends DelegatedState<T> {
+public class ListenableState<T> implements State<T> {
 
+    protected final State<T> delegate;
     protected final List<Consumer<T>> listeners = new ArrayList<>();
 
     public ListenableState(T value) {
@@ -16,7 +17,7 @@ public class ListenableState<T> extends DelegatedState<T> {
     }
 
     public ListenableState(State<T> value) {
-        super(value);
+        this.delegate = value;
     }
 
     public static <T> ListenableState<T> of(T initial) {
@@ -33,8 +34,13 @@ public class ListenableState<T> extends DelegatedState<T> {
 
     @Override
     public void set(T value) {
-        super.set(value);
-        listeners.forEach(listener -> listener.accept(value));
+        this.delegate.set(value);
+        this.listeners.forEach(listener -> listener.accept(value));
+    }
+
+    @Override
+    public T get() {
+        return this.delegate.get();
     }
 
     public void registerListener(Consumer<T> listener) {

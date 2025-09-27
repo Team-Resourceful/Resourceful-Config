@@ -41,7 +41,7 @@ public class HeaderControlsWidget extends ContainerWidget {
             return true;
         }, false);
         this.searchWidget.setWidth(this.width - UIConstants.PAGE_PADDING * 2 - 16 - 5);
-        this.searchWidget.setHint(Component.literal("Search...").withColor(UIConstants.TEXT_PARAGRAPH));
+        this.searchWidget.setPlaceholder("Search...", UIConstants.TEXT_PARAGRAPH);
         this.layout.addChild(searchWidget);
 
         this.layout.arrangeElements();

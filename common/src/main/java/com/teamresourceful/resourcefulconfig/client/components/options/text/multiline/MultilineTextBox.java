@@ -1,6 +1,5 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.text.multiline;
 
-import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.text.utils.TextBoxStringUtils;
@@ -9,7 +8,6 @@ import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
 
@@ -96,27 +94,23 @@ public class MultilineTextBox extends BaseWidget {
 
         this.scrollbarHovered = false;
         if (renderScrollbar) {
-            //graphics.blitSprite(
-            //        RenderPipelines.GUI_TEXTURED,
-            //        UIConstants.id("lists/scroll/bar"),
-            //        getX() + getWidth() - 5,
-            //        getY() + 4,
-            //        2,
-            //        getHeight() - 8
-            //);
-//
-            //var scrollBarHeight = (int) ((this.height - 8) / (double) this.lastHeight * (this.height - 8));
-            //var scrollBarY = (int) ((this.scroll / (double) this.lastHeight) * (this.height - 8));
-            //graphics.blitSprite(
-            //        RenderPipelines.GUI_TEXTURED,
-            //        UIConstants.id("lists/scroll/thumb"),
-            //        getX() + getWidth() - 6,
-            //        getY() + 4 + scrollBarY,
-            //        4,
-            //        scrollBarHeight
-            //);
+            int minX = getX() + getWidth() - 5;
+            int maxX = getX() + getWidth() - 3;
+            graphics.fill(
+                    minX, getY() + 4,
+                    maxX, getY() + getHeight() - 4,
+                    0xFF121314
+            );
 
-            this.scrollbarHovered = mouseX > getX() + getWidth() - 7 && mouseY > getY() + 4 && mouseY < getY() + this.height - 4;
+            var scrollBarHeight = (int) ((this.height - 8) / (double) this.lastHeight * (this.height - 8));
+            var scrollBarY = (int) ((this.scroll / (double) this.lastHeight) * (this.height - 8));
+            this.scrollbarHovered = mouseX >= minX - 2 && mouseX < maxX + 2;
+
+            graphics.fill(
+                    minX, getY() + 4 + scrollBarY,
+                    maxX, getY() + 4 + scrollBarY + scrollBarHeight,
+                    this.scrollbarHovered ? 0xFF404040 : 0xFF303030
+            );
         }
     }
 

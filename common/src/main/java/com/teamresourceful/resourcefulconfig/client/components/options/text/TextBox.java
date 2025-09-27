@@ -1,117 +1,42 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.text;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.teamresourceful.resourcefulconfig.client.UIConstants;
-import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.text.utils.TextBoxStringUtils;
-import com.teamresourceful.resourcefulconfig.client.components.options.types.ResetableWidget;
 import com.teamresourceful.resourcefulconfig.client.utils.ListenableState;
-import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-
-@SuppressWarnings("unused")
-public class TextBox extends BaseWidget implements ResetableWidget {
+public class TextBox extends BaseWidget {
     protected static final int PADDING = 4;
-    private static final int WIDTH = 80;
     protected final Font font = Minecraft.getInstance().font;
-    protected final State<String> state;
-    protected int textColor = 1;
-    protected int errorColor = 1;
-    protected int placeholderColor = 1;
-    protected String placeholder = "";
-    private Predicate<String> filter = s -> true;
-    private Consumer<String> onChange = s -> {
-    };
-    private Consumer<String> onEnter = s -> {
-    };
+    protected final ListenableState<String> state;
+    protected int textColor = -1;
     private boolean shiftPressed;
     private int maxLength = Short.MAX_VALUE;
     private int displayPos;
     private int cursorPos;
     private int highlightPos;
 
+    protected int placeholderColor = -1;
+    protected String placeholder = "";
 
-    public TextBox(State<@NotNull String> state) {
-        super(WIDTH, 16);
-        this.state = Util.make(
-                ListenableState.of(state), listenable ->
-                        listenable.registerListener(newData -> this.onChange.accept(newData))
-        );
+    public TextBox(int width, int height, ListenableState<@NotNull String> state) {
+        super(width, height);
+        this.state = state;
 
         this.setCursorPosition(this.state.get().length());
         this.setHighlightPos(this.cursorPos);
         this.displayPos = 0;
-    }
-
-    @ApiStatus.Internal
-    public TextBox copyOptionsFrom(TextBox other) {
-        this.filter = other.filter;
-        this.onEnter = other.onEnter;
-        this.placeholder = other.placeholder;
-        this.maxLength = other.maxLength;
-        this.textColor = other.textColor;
-        this.errorColor = other.errorColor;
-        this.placeholderColor = other.placeholderColor;
-        return this;
-    }
-
-    public TextBox withPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
-        return this;
-    }
-
-    public TextBox withMaxLength(int maxLength) {
-        this.maxLength = maxLength;
-        return this;
-    }
-
-    public TextBox withFilter(Predicate<String> filter) {
-        this.filter = filter;
-        return this;
-    }
-
-    public TextBox withEnterCallback(Consumer<String> onEnter) {
-        this.onEnter = onEnter;
-        return this;
-    }
-
-    public TextBox withChangeCallback(Consumer<String> onChange) {
-        this.onChange = onChange;
-        return this;
-    }
-
-    public TextBox withTextColor(int color) {
-        this.textColor = color;
-        return this;
-    }
-
-    public TextBox withErrorColor(int color) {
-        this.errorColor = color;
-        return this;
-    }
-
-    public TextBox withPlaceholderColor(int color) {
-        this.placeholderColor = color;
-        return this;
     }
 
     public String getValue() {
@@ -119,16 +44,14 @@ public class TextBox extends BaseWidget implements ResetableWidget {
     }
 
     public void setValue(String text) {
-        if (this.filter.test(text)) {
-            if (text.length() > this.maxLength) {
-                this.state.set(text.substring(0, this.maxLength));
-            } else {
-                this.state.set(text);
-            }
-
-            this.moveCursorTo(this.state.get().length());
-            this.setHighlightPos(this.cursorPos);
+        if (text.length() > this.maxLength) {
+            this.state.set(text.substring(0, this.maxLength));
+        } else {
+            this.state.set(text);
         }
+
+        this.moveCursorTo(this.state.get().length());
+        this.setHighlightPos(this.cursorPos);
     }
 
     public String getHighlighted() {
@@ -149,11 +72,9 @@ public class TextBox extends BaseWidget implements ResetableWidget {
         }
 
         String string2 = new StringBuilder(this.state.get()).replace(min, max, string).toString();
-        if (this.filter.test(string2)) {
-            this.state.set(string2);
-            this.setCursorPosition(min + l);
-            this.setHighlightPos(this.cursorPos);
-        }
+        this.state.set(string2);
+        this.setCursorPosition(min + l);
+        this.setHighlightPos(this.cursorPos);
     }
 
     private void deleteText(int count) {
@@ -182,10 +103,8 @@ public class TextBox extends BaseWidget implements ResetableWidget {
                 int k = Math.max(i, this.cursorPos);
                 if (j != k) {
                     String string = new StringBuilder(this.state.get()).delete(j, k).toString();
-                    if (this.filter.test(string)) {
-                        this.state.set(string);
-                        this.moveCursorTo(j);
-                    }
+                    this.state.set(string);
+                    this.moveCursorTo(j);
                 }
             }
         }
@@ -294,10 +213,6 @@ public class TextBox extends BaseWidget implements ResetableWidget {
                     this.moveCursorTo(this.state.get().length());
                     yield true;
                 }
-                case InputConstants.KEY_RETURN -> {
-                    this.onEnter.accept(this.state.get());
-                    yield true;
-                }
                 default -> false;
             };
         }
@@ -325,33 +240,15 @@ public class TextBox extends BaseWidget implements ResetableWidget {
         this.moveCursorTo(TextBoxStringUtils.plainHeadByWidth(this.font, string, relativeX).length() + this.displayPos);
     }
 
-    public int getTextColor() {
-        if (this.state.get().isEmpty()) {
-            return ARGB.color(0xFF, 0xFFE0E0E0);
-        } else {
-            return ARGB.color(0xFF, this.filter.test(this.state.get()) ? 0xFFE0E0E0 : 0xFFFF0000);
-        }
-    }
-
-    public void setPlaceholder(Component placeholder) {
-        this.placeholder = placeholder.getString();
-    }
-
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (this.isVisible()) {
-            String value = this.state.get()
-                    .isEmpty() && !this.placeholder.isEmpty() ? this.placeholder : this.state.get();
-
-            ResourceLocation texture = ModSprites.BUTTON;
-
-            graphics.blitSprite(
-                    RenderPipelines.GUI_OPAQUE_TEXTURED_BACKGROUND,
-                    texture,
-                    this.getX(),
-                    this.getY(),
-                    this.width,
-                    this.height);
+            String value = this.state.get();
+            boolean showPlaceholder = value.isEmpty() && !this.placeholder.isEmpty() && !this.isFocused();
+            if (showPlaceholder) {
+                value = this.placeholder;
+            }
+            int textColor = showPlaceholder ? this.placeholderColor : this.textColor;
 
             int displayCursorDiff = this.cursorPos - this.displayPos;
             int displayHighlightDiff = this.highlightPos - this.displayPos;
@@ -370,7 +267,7 @@ public class TextBox extends BaseWidget implements ResetableWidget {
 
             if (!truncatedValue.isEmpty()) {
                 String string2 = cursorVisible ? truncatedValue.substring(0, displayCursorDiff) : truncatedValue;
-                graphics.drawString(this.font, TextBoxStringUtils.format(string2), l, m, getTextColor(), false);
+                graphics.drawString(this.font, TextBoxStringUtils.format(string2), l, m, textColor, false);
                 n = l + TextBoxStringUtils.width(font, string2) + 1;
             }
 
@@ -389,7 +286,7 @@ public class TextBox extends BaseWidget implements ResetableWidget {
                         TextBoxStringUtils.format(truncatedValue.substring(displayCursorDiff)),
                         n,
                         m,
-                        getTextColor(),
+                        textColor,
                         false);
             }
 
@@ -414,7 +311,7 @@ public class TextBox extends BaseWidget implements ResetableWidget {
 
     @Nullable
     @Override
-    public ComponentPath nextFocusPath(FocusNavigationEvent event) {
+    public ComponentPath nextFocusPath(@NotNull FocusNavigationEvent event) {
         return this.visible ? super.nextFocusPath(event) : null;
     }
 
@@ -457,14 +354,16 @@ public class TextBox extends BaseWidget implements ResetableWidget {
         return this.visible;
     }
 
-    public void setVisible(boolean isVisible) {
-        this.visible = isVisible;
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
     }
 
-    @Override
-    public void reset() {
-        //setResponder(s -> {});
-        //setValue(this.getter.get());
-        //setResponder();
+    public void setTextColor(int color) {
+        this.textColor = color;
+    }
+
+    public void setPlaceholder(String placeholder, int color) {
+        this.placeholder = placeholder;
+        this.placeholderColor = color;
     }
 }

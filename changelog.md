@@ -1,1 +1,1 @@
-- Allow for creation of draggable, selects, and dropdowns outside of the screen itself.
+- Allow for use of Ctrl + F to focus search input

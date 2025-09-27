@@ -3,16 +3,17 @@ package com.teamresourceful.resourcefulconfig.demo;
 import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigElementRenderer;
 import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigScreen;
 import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigUI;
+import com.teamresourceful.resourcefulconfig.api.client.options.ResourcefulConfigOptionUI;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.api.types.options.data.DraggableOptionEntry;
 import com.teamresourceful.resourcefulconfig.client.ConfigsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -64,14 +65,26 @@ public class DemoClient implements ClientModInitializer {
         @Override
         public List<AbstractWidget> widgets() {
             return List.of(
-                    Button.builder(
+                    ResourcefulConfigOptionUI.draggable(
                             Component.literal("dsadsa"),
-                            b -> {
+                            List.of(
+                                    new DraggableOptionEntry<>("meow", true),
+                                    new DraggableOptionEntry<>("woof", false),
+                                    new DraggableOptionEntry<>("quack", false),
+                                    new DraggableOptionEntry<>("baa", false)
+                            ),
+                            () -> {
                                 if (element instanceof ResourcefulConfigEntryElement entry && entry.entry() instanceof ResourcefulConfigValueEntry value) {
-                                    value.setInt(value.getInt() + 1);
+                                    return List.of(value.getString().split(","));
+                                }
+                                return List.of();
+                            },
+                            v -> {
+                                if (element instanceof ResourcefulConfigEntryElement entry && entry.entry() instanceof ResourcefulConfigValueEntry value) {
+                                    value.setString(String.join(",", v));
                                 }
                             }
-                    ).size(300, 20).build()
+                    )
             );
         }
     }

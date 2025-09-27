@@ -50,7 +50,9 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
                 }
             }
             if (!hoveringDelete && this.minecraft.screen != null && value instanceof TooltipProvider provider) {
-                graphics.setTooltipForNextFrame(provider.getTooltip(), mouseX, mouseY);
+                if (provider.getTooltip() != null && !provider.getTooltip().getString().isBlank()) {
+                    graphics.setTooltipForNextFrame(provider.getTooltip(), mouseX, mouseY);
+                }
             }
         }
         int color = hovered ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;

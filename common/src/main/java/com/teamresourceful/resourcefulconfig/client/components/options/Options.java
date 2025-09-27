@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.client.components.options;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigUI;
+import com.teamresourceful.resourcefulconfig.api.client.options.ResourcefulConfigOptionUI;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigButton;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
@@ -86,17 +87,17 @@ public final class Options {
                     if (data.hasOption(Option.DRAGGABLE)) {
                         widgets.add(DraggableListOptionWidget.of(entry, data));
                     } else {
-
-                        widgets.add(new SelectWidget(
+                        widgets.add(ResourcefulConfigOptionUI.select(
                                 data.getOrDefaultOption(Option.SELECT, Component.literal("Select")),
-                                ModUtils.getEnumConstants(entry.objectType()),
-                                () -> (Enum<?>[]) entry.getArray(),
-                                entry::setArray
+                                List.of(ModUtils.getEnumConstants(entry.objectType())),
+                                () -> List.of(entry.getArray()),
+                                it -> entry.setArray(it.toArray())
                         ));
                     }
                 } else {
-                    widgets.add(new DropdownWidget(
-                            ModUtils.getEnumConstants(entry.objectType()),
+                    widgets.add(ResourcefulConfigOptionUI.dropdown(
+                            Component.empty(),
+                            List.of(ModUtils.getEnumConstants(entry.objectType())),
                             entry::getEnum,
                             entry::setEnum
                     ));

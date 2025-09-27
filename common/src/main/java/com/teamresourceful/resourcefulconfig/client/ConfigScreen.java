@@ -8,6 +8,7 @@ import com.teamresourceful.resourcefulconfig.client.components.categories.Catego
 import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
+import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,6 +30,8 @@ public class ConfigScreen extends Screen implements CloseableScreen {
 
     private OptionsListWidget optionsList = null;
     private CategoriesListWidget categoriesList = null;
+
+    private StringOptionWidget searchWidget = null;
 
     public ConfigScreen(Screen parent, ResourcefulConfig config) {
         this(parent, config, new ConfigScreenContext());
@@ -69,6 +72,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
                     this.updateCategories();
                 }
         ));
+        this.searchWidget = header.getSearchWidget();
 
         contentHeight -= header.getHeight() + UIConstants.PAGE_PADDING;
 
@@ -127,11 +131,16 @@ public class ConfigScreen extends Screen implements CloseableScreen {
     }
 
     @Override
-    public boolean keyPressed(int i, int j, int k) {
-        if (super.keyPressed(i, j, k)) {
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (Screen.hasControlDown() && key == InputConstants.KEY_F && this.searchWidget != null) {
+            this.setFocused(this.searchWidget);
+            this.searchWidget.setFocused(true);
             return true;
         }
-        if (i == InputConstants.KEY_ESCAPE) {
+        if (super.keyPressed(key, scanCode, modifiers)) {
+            return true;
+        }
+        if (key == InputConstants.KEY_ESCAPE) {
             this.onClose();
             return true;
         }

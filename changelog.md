@@ -1,1 +1,1 @@
-- Fix performance issues due to Mojangs nine slice algorithm not batching correctly anymore.
+- Allow for use of Ctrl + F to focus search input

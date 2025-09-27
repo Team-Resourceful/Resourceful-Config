@@ -36,12 +36,10 @@ public class HeaderContentWidget extends ContainerWidget {
 
         titleDesc.addChild(
                 new StringWidget(twoThirds, 9, config.info().title().toComponent().withColor(UIConstants.TEXT_TITLE), font)
-                        .alignLeft()
         );
 
         titleDesc.addChild(
                 new StringWidget(twoThirds, 9, config.info().description().toComponent().withColor(UIConstants.TEXT_PARAGRAPH), font)
-                        .alignLeft()
         );
 
         LinearLayout links = LinearLayout

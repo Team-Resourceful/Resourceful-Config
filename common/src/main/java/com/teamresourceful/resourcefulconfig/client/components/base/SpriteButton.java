@@ -1,10 +1,12 @@
 package com.teamresourceful.resourcefulconfig.client.components.base;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -40,10 +42,13 @@ public class SpriteButton extends AbstractButton {
             getX() + this.padding, getY() + this.padding,
             getWidth() - this.padding * 2, getHeight() - this.padding * 2
         );
+        if (this.isHovered()) {
+            graphics.requestCursor(this.isActive() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
+        }
     }
 
     @Override
-    public void onPress() {
+    public void onPress(@NotNull InputWithModifiers modifiers) {
         this.onPress.run();
     }
 

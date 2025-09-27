@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +56,7 @@ public class EyedropperButton extends SpriteButton {
 
             graphics.blit(SCREEN_TEXTURE, x - 5, y - 5, x + 15, y + 15, u0, u1, v0, v1);
 
-            graphics.renderOutline(x - 5, y - 5, 20, 20, 0xFFFFFFFF);
+            graphics.submitOutline(x - 5, y - 5, 20, 20, 0xFFFFFFFF);
 
             int pixelX = (int) (mouseX * guiScale);
             int pixelY = (int) (mouseY * guiScale);
@@ -68,11 +69,11 @@ public class EyedropperButton extends SpriteButton {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (button != 0) return false;
+        public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+            if (event.input() != 0) return false;
             double guiScale = Minecraft.getInstance().getWindow().getGuiScale();
-            int pixelX = (int) (mouseX * guiScale);
-            int pixelY = (int) (mouseY * guiScale);
+            int pixelX = (int) (event.x() * guiScale);
+            int pixelY = (int) (event.y() * guiScale);
             if (pixelX < 0 || pixelY < 0 || pixelX >= this.image.getWidth() || pixelY >= this.image.getHeight()) return false;
             this.state.set(HsbColor.fromRgb(this.image.getPixel(pixelX, pixelY)));
             this.onClose();

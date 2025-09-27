@@ -3,6 +3,8 @@ package com.teamresourceful.resourcefulconfig.client.components.options.misc.dra
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import com.teamresourceful.resourcefulconfig.client.utils.KeyCodeHelper;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
 
@@ -110,13 +112,13 @@ public class DraggableList<T> extends ListWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (super.mouseClicked(mouseX, mouseY, button)) return true;
-        if (button == 0) {
-            this.draggingIndex = this.getItemOver(mouseX, mouseY);
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (super.mouseClicked(event, bl)) return true;
+        if (event.input() == 0) {
+            this.draggingIndex = this.getItemOver(event.x(), event.y());
             if (this.draggingIndex != -1) {
                 Item item = this.items.get(this.draggingIndex);
-                this.draggingOffset.set(mouseX - item.getX(), mouseY - item.getY());
+                this.draggingOffset.set(event.x() - item.getX(), event.y() - item.getY());
                 return true;
             }
         }
@@ -124,9 +126,9 @@ public class DraggableList<T> extends ListWidget {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0 && this.draggingIndex != -1) {
-            int newIndex = this.getItemOver(mouseX, mouseY);
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        if (event.input() == 0 && this.draggingIndex != -1) {
+            int newIndex = this.getItemOver(event.x(), event.y());
             if (newIndex != -1 && newIndex != this.draggingIndex) {
                 this.items.add(newIndex, this.items.remove(this.draggingIndex));
                 //noinspection unchecked
@@ -137,7 +139,7 @@ public class DraggableList<T> extends ListWidget {
             }
             this.draggingIndex = -1;
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     public boolean isDraggingItem() {

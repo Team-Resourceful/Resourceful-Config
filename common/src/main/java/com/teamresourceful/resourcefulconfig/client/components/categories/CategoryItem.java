@@ -9,6 +9,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,7 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
     }
 
     @Override
-    public void onClick(double d, double e) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         Minecraft.getInstance().setScreen(new ConfigScreen(this.screen, this.config, this.context));
     }
 

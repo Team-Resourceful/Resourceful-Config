@@ -1,17 +1,19 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.range.OptionRange;
 import net.minecraft.client.InputType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.navigation.CommonInputs;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.DoubleConsumer;
@@ -56,6 +58,12 @@ public class RangeOptionWidget extends BaseWidget {
     }
 
     @Override
+    public void applyCursor(GuiGraphics graphics) {
+        if (!this.isHovered()) return;
+        graphics.requestCursor(this.isActive() ? CursorTypes.RESIZE_EW : CursorTypes.NOT_ALLOWED);
+    }
+
+    @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
@@ -69,6 +77,7 @@ public class RangeOptionWidget extends BaseWidget {
 
         if (mouseX >= getX() + this.padding && mouseX <= getX() + this.width - this.padding && mouseY >= getY() + 4 && mouseY <= getY() + this.height - 4) {
             tooltip = this.display.get();
+            this.applyCursor(graphics);
         }
 
         if (isHoveredOrFocused() && this.canBeFocused) {
@@ -131,34 +140,34 @@ public class RangeOptionWidget extends BaseWidget {
     }
 
     @Override
-    public boolean mouseClicked(double d, double e, int i) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
         if (this.isHovered()) {
-            this.setValueFromMouse(d);
+            this.setValueFromMouse(event.x());
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean mouseDragged(double d, double e, int i, double f, double g) {
-        if (this.isHovered() && i == 0) {
-            this.setValueFromMouse(d);
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+        if (this.isHovered() && event.button() == 0) {
+            this.setValueFromMouse(event.x());
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean keyPressed(int i, int j, int k) {
-        if (CommonInputs.selected(i)) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.isSelection()) {
             this.canChangeValue = !this.canChangeValue;
             return true;
         } else {
             if (this.canChangeValue) {
-                boolean leftArrow = i == InputConstants.KEY_LEFT;
-                if (leftArrow || i == InputConstants.KEY_RIGHT) {
+                boolean leftArrow = event.input() == InputConstants.KEY_LEFT;
+                if (leftArrow || event.input() == InputConstants.KEY_RIGHT) {
                     double step = leftArrow ? -this.step : this.step;
-                    step *= Screen.hasShiftDown() ? 10 : 1;
+                    step *= event.hasShiftDown() ? 10 : 1;
                     double value = (this.getter.getAsDouble() + step) / (float) (this.width - 8);
                     this.setter.accept(Mth.clamp(value, 0.0D, 1.0D));
                     return true;

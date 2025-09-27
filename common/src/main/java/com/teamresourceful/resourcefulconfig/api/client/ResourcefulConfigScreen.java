@@ -30,30 +30,6 @@ public class ResourcefulConfigScreen {
         return make(config);
     }
 
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = ">1.21.7")
-    public static Screen get(@Nullable Screen parent, Configurator configurator, Class<?> clazz) {
-        return Optionull.map(configurator.getConfig(clazz), c -> get(parent, c));
-    }
-
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = ">1.21.7")
-    public static Screen get(@Nullable Screen parent, ResourcefulConfig config) {
-        return new ConfigScreen(parent, config, new ConfigScreenContext());
-    }
-
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = ">1.21.7")
-    public static Screen get(@Nullable Screen parent, ResourcefulConfig config, Function<String, List<String>> termCollector) {
-        return new ConfigScreen(parent, config, new ConfigScreenContext("", termCollector));
-    }
-
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = ">1.21.7")
-    public static Screen get(@Nullable Screen parent, String mod) {
-        return new ConfigsScreen(parent, mod);
-    }
-
     public static Function<@Nullable Screen, Screen> getFactory(String mod) {
         Set<String> configs = Configurations.INSTANCE.getConfigsForMod(mod);
         if (configs.size() != 1) {

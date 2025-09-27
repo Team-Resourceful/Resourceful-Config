@@ -11,8 +11,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfigItem extends ContainerWidget implements ListWidget.Item {
 
@@ -38,8 +40,8 @@ public class ConfigItem extends ContainerWidget implements ListWidget.Item {
                 .vertical()
                 .spacing(UIConstants.SPACING);
 
-        titleDesc.addChild(new StringWidget(width, 9, this.title, font).alignLeft());
-        titleDesc.addChild(new StringWidget(width, 9, this.description, font).alignLeft());
+        titleDesc.addChild(new StringWidget(width, 9, this.title, font));
+        titleDesc.addChild(new StringWidget(width, 9, this.description, font));
 
         titleDesc.arrangeElements();
         titleDesc.setPosition(this.getX() + UIConstants.PAGE_PADDING * 2, this.getY() + UIConstants.PAGE_PADDING * 2);
@@ -64,10 +66,13 @@ public class ConfigItem extends ContainerWidget implements ListWidget.Item {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
         if (this.isHoveredOrFocused()) {
             Minecraft.getInstance().setScreen(
-                    ResourcefulConfigScreen.get(Minecraft.getInstance().screen, this.config)
+                    ResourcefulConfigScreen
+                            .make(this.config)
+                            .withParent(Minecraft.getInstance().screen)
+                            .build()
             );
         }
         return false;

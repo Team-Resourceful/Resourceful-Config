@@ -7,10 +7,12 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NotNull;
 
 public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
 
@@ -54,6 +56,8 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
                     graphics.setTooltipForNextFrame(provider.getTooltip(), mouseX, mouseY);
                 }
             }
+
+            this.applyCursor(graphics);
         }
         int color = hovered ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;
 
@@ -80,8 +84,8 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isHovered() && button == 0 && mouseX >= getX() + getWidth() - 16) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (this.isHovered() && event.button() == 0 && event.x() >= getX() + getWidth() - 16) {
             this.remove.run();
             return true;
         }

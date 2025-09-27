@@ -7,8 +7,10 @@ import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,9 +82,9 @@ public class PresetsSelector extends BaseWidget {
             int y = this.getY() + 3 + (k * size) + (2 * k);
             int rgba = color.toRgba();
             graphics.fill(x, y, x + size, y + size, rgba);
-            graphics.renderOutline(x, y, size, size, 0xFFDDDDDD);
+            graphics.submitOutline(x, y, size, size, 0xFFDDDDDD);
             if (mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size) {
-                graphics.renderOutline(x, y, size, size, 0xFF000000);
+                graphics.submitOutline(x, y, size, size, 0xFF000000);
                 Screen screen = Minecraft.getInstance().screen;
                 if (screen != null) {
                     if (!withAlpha) rgba &= 0x00FFFFFF;
@@ -92,14 +94,16 @@ public class PresetsSelector extends BaseWidget {
 
                     graphics.setTooltipForNextFrame(text, mouseX, mouseY);
                 }
+
+                this.applyCursor(graphics);
             }
             i++;
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button != 0) return false;
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (event.input() != 0) return false;
         int size = (this.getWidth() - 18) / 8;
         int i = 0;
         for (HsbColor color : getColors()) {
@@ -108,7 +112,7 @@ public class PresetsSelector extends BaseWidget {
             int k = i / 8;
             int x = this.getX() + 3 + (j * size) + (2 * j);
             int y = this.getY() + 3 + (k * size) + (2 * k);
-            if (mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size) {
+            if (event.x() >= x && event.x() <= x + size && event.y() >= y && event.y() <= y + size) {
                 RecentColorStorage.add(this.state.get());
                 this.lastType = null;
                 this.state.set(color);

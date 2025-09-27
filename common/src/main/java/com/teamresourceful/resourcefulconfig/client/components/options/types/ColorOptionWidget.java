@@ -13,9 +13,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import org.jetbrains.annotations.NotNull;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -46,10 +47,11 @@ public class ColorOptionWidget extends BaseWidget {
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.height, this.height);
         graphics.fill(getX() + 1, getY() + 1, getX() + this.height - 1, getY() + this.height - 1, this.getter.getAsInt());
+        this.applyCursor(graphics);
     }
 
     @Override
-    public void onClick(double d, double e) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         Minecraft.getInstance().setScreen(new PresetsOverlay(this));
     }
 
@@ -135,9 +137,9 @@ public class ColorOptionWidget extends BaseWidget {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (button != 0 || this.isMouseOver(mouseX, mouseY)) {
-                return super.mouseClicked(mouseX, mouseY, button);
+        public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+            if (event.button() != 0 || this.isMouseOver(event.x(), event.y())) {
+                return super.mouseClicked(event, bl);
             }
             this.onClose();
             return false;

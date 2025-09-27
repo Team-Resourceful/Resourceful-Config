@@ -13,6 +13,7 @@ import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -57,10 +58,7 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
                 .vertical()
                 .spacing(UIConstants.SPACING);
 
-        titleDesc.addChild(
-                new StringWidget(half, 9, this.title, font)
-                        .alignLeft()
-        );
+        titleDesc.addChild(new StringWidget(half, 9, this.title, font));
 
         titleDesc.addChild(
                 new MultiLineTextWidget(this.description, font)
@@ -91,12 +89,12 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.getChildAt(mouseX, mouseY).isEmpty()) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (this.getChildAt(event.x(), event.y()).isEmpty()) {
             setFocused(null);
             return false;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, bl);
     }
 
     @Override

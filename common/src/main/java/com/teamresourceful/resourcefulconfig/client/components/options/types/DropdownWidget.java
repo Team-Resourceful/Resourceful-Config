@@ -8,9 +8,11 @@ import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.OverlayScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -50,10 +52,11 @@ public class DropdownWidget<T> extends BaseWidget {
                 UIConstants.TEXT_PARAGRAPH
         );
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CHEVRON_DOWN, getX() + getWidth() - 12, getY() + 4, 8, 8);
+        this.applyCursor(graphics);
     }
 
     @Override
-    public void onClick(double d, double e) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         Minecraft.getInstance().setScreen(new DropdownOverlay<>(this));
     }
 
@@ -78,12 +81,12 @@ public class DropdownWidget<T> extends BaseWidget {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (getChildAt(mouseX, mouseY).isEmpty()) {
+        public boolean mouseClicked(MouseButtonEvent event, boolean bl) {
+            if (getChildAt(event.x(), event.y()).isEmpty()) {
                 this.onClose();
                 return true;
             }
-            return super.mouseClicked(mouseX, mouseY, button);
+            return super.mouseClicked(event, bl);
         }
     }
 
@@ -151,10 +154,12 @@ public class DropdownWidget<T> extends BaseWidget {
                     getX() + getWidth() - 4, getY() + getHeight() - 1,
                     color
             );
+
+            this.applyCursor(graphics);
         }
 
         @Override
-        public void onClick(double mouseX, double e) {
+        public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
             this.onClick.run();
         }
 

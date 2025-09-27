@@ -32,7 +32,9 @@ public final class Options {
 
     public static void populateOptions(OptionsListWidget widget, List<ResourcefulConfigElement> elements) {
         for (ResourcefulConfigElement element : elements) {
-            if (element.isHidden()) continue;
+            if (element.isHidden()) {
+                continue;
+            }
 
             var renderer = ResourcefulConfigUI.getElementRenderer(element);
             if (renderer != null) {
@@ -51,7 +53,8 @@ public final class Options {
                     case ResourcefulConfigSeparatorElement separator -> widget.add(
                             new SeparatorItem(separator.title().toComponent(), separator.description().toComponent())
                     );
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
         }
@@ -116,9 +119,12 @@ public final class Options {
                             () -> "#" + String.format("%06X", entry.getInt()),
                             s -> {
                                 try {
-                                    if (s.length() == 8 && !color.alpha()) s = s.substring(2);
+                                    if (s.length() == 8 && !color.alpha()) {
+                                        s = s.substring(2);
+                                    }
                                     if (s.length() == 3) {
-                                        s = "" + s.charAt(0) + s.charAt(0) + s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(2);
+                                        s = "" + s.charAt(0) + s.charAt(0) + s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(
+                                                2);
                                     }
                                     entry.setInt(Long.decode(s).intValue());
                                     return true;
@@ -144,12 +150,21 @@ public final class Options {
                     widgets.add(new RangeOptionWidget(range));
                 } else {
                     widgets.add(switch (entry.type()) {
-                        case BYTE ->
-                                new NumberOptionWidget<>(entry::getByte, entry::setByte, parseNumber(data, Byte::parseByte), NumberOptionWidget.INTEGER_FILTER);
-                        case SHORT ->
-                                new NumberOptionWidget<>(entry::getShort, entry::setShort, parseNumber(data, Short::parseShort), NumberOptionWidget.INTEGER_FILTER);
-                        case LONG ->
-                                new NumberOptionWidget<>(entry::getLong, entry::setLong, parseNumber(data, Long::parseLong), NumberOptionWidget.INTEGER_FILTER);
+                        case BYTE -> new NumberOptionWidget<>(
+                                entry::getByte,
+                                entry::setByte,
+                                parseNumber(data, Byte::parseByte),
+                                NumberOptionWidget.INTEGER_FILTER);
+                        case SHORT -> new NumberOptionWidget<>(
+                                entry::getShort,
+                                entry::setShort,
+                                parseNumber(data, Short::parseShort),
+                                NumberOptionWidget.INTEGER_FILTER);
+                        case LONG -> new NumberOptionWidget<>(
+                                entry::getLong,
+                                entry::setLong,
+                                parseNumber(data, Long::parseLong),
+                                NumberOptionWidget.INTEGER_FILTER);
                         default -> throw new IllegalStateException("Unexpected value: " + entry.type());
                     });
                 }
@@ -160,10 +175,16 @@ public final class Options {
                     widgets.add(new RangeOptionWidget(range));
                 } else {
                     widgets.add(switch (entry.type()) {
-                        case FLOAT ->
-                                new NumberOptionWidget<>(entry::getFloat, entry::setFloat, Float::parseFloat, NumberOptionWidget.DECIMAL_FILTER);
-                        case DOUBLE ->
-                                new NumberOptionWidget<>(entry::getDouble, entry::setDouble, Double::parseDouble, NumberOptionWidget.DECIMAL_FILTER);
+                        case FLOAT -> new NumberOptionWidget<>(
+                                entry::getFloat,
+                                entry::setFloat,
+                                Float::parseFloat,
+                                NumberOptionWidget.DECIMAL_FILTER);
+                        case DOUBLE -> new NumberOptionWidget<>(
+                                entry::getDouble,
+                                entry::setDouble,
+                                Double::parseDouble,
+                                NumberOptionWidget.DECIMAL_FILTER);
                         default -> throw new IllegalStateException("Unexpected value: " + entry.type());
                     });
                 }

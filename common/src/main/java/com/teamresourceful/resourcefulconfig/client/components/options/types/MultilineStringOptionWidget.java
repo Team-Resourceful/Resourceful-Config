@@ -3,11 +3,12 @@ package com.teamresourceful.resourcefulconfig.client.components.options.types;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
+import com.teamresourceful.resourcefulconfig.client.components.options.text.multiline.MultilineTextBox;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
+import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.network.chat.CommonComponents;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -30,7 +31,14 @@ public class MultilineStringOptionWidget extends BaseWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(RenderType::guiTextured, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
+        graphics.blitSprite(
+                RenderType::guiTextured,
+                ModSprites.ofButton(this.isHovered()),
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight()
+        );
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
 
@@ -71,27 +79,28 @@ public class MultilineStringOptionWidget extends BaseWidget {
         protected void init() {
             super.init();
 
-            MultiLineEditBox box = addRenderableWidget(new MultiLineEditBox(
-                    font,
-                    left, top,
-                    contentWidth, contentHeight,
-                    CommonComponents.EMPTY, CommonComponents.EMPTY
-            ) {
-                @Override
-                protected void renderBackground(GuiGraphics guiGraphics) {
+            var box = new MultilineTextBox(State.of(setter, getter));
+            box.setX(left);
+            box.setY(top);
+            box.withFont(font);
+            box.setWidth(contentWidth);
+            box.setHeight(contentHeight);
 
-                }
-            });
-
-            box.setValue(getter.get());
-            box.setValueListener(setter);
+            addRenderableWidget(box);
         }
 
         @Override
-        public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             super.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
-            graphics.blitSprite(RenderType::guiTextured, ModSprites.BUTTON, left, top, contentWidth, contentHeight);
+            graphics.blitSprite(
+                    RenderType::guiTextured,
+                    ModSprites.BUTTON,
+                    left,
+                    top,
+                    contentWidth,
+                    contentHeight
+            );
         }
     }
 }

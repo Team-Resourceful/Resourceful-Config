@@ -1,1 +1,2 @@
 - Allow for use of Ctrl + F to focus search input
+- Fix section symbols not rendering in text inputs

@@ -4,9 +4,12 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreenContext;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
+import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
 
 public class HeaderWidget extends ContainerWidget {
+
+    protected final StringOptionWidget searchWidget;
 
     public HeaderWidget(int width, ResourcefulConfig config, ConfigScreenContext context, Runnable onSearchUpdate) {
         super(0, 0, width, 0);
@@ -29,6 +32,12 @@ public class HeaderWidget extends ContainerWidget {
 
         controls.setHeight(this.height);
         content.setHeight(this.height);
+
+        this.searchWidget = controls.searchWidget;
+    }
+
+    public StringOptionWidget getSearchWidget() {
+        return this.searchWidget;
     }
 
 }

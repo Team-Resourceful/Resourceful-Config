@@ -14,8 +14,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -122,25 +125,25 @@ public class ConfigScreen extends Screen implements CloseableScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.getChildAt(mouseX, mouseY).isEmpty()) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (this.getChildAt(event.x(), event.y()).isEmpty()) {
             setFocused(null);
             return false;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, bl);
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (Screen.hasControlDown() && key == InputConstants.KEY_F && this.searchWidget != null) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
+        if (event.hasControlDown() && event.input() == InputConstants.KEY_F && this.searchWidget != null) {
             this.setFocused(this.searchWidget);
             this.searchWidget.setFocused(true);
             return true;
         }
-        if (super.keyPressed(key, scanCode, modifiers)) {
+        if (super.keyPressed(event)) {
             return true;
         }
-        if (key == InputConstants.KEY_ESCAPE) {
+        if (event.input() == InputConstants.KEY_ESCAPE) {
             this.onClose();
             return true;
         }

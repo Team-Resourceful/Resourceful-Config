@@ -1,2 +1,1 @@
-- Fix issue for draggable lists if they contain abstract methods
-- Fix multiline tooltips not rendering as multiline
+- Update to 1.21.9

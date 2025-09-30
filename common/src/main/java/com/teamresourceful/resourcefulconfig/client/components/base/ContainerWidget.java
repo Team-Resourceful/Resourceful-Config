@@ -6,6 +6,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -121,18 +122,19 @@ public abstract class ContainerWidget extends AbstractWidget implements Containe
 
     // Buttons
 
-    @Override public final void onClick(double d, double e) {}
-    @Override public final void onRelease(double d, double e) {}
-    @Override protected final void onDrag(double d, double e, double f, double g) {}
+
+    @Override public void onClick(@NotNull MouseButtonEvent event, boolean bl) {}
+    @Override public void onRelease(@NotNull MouseButtonEvent event) {}
+    @Override public void onDrag(@NotNull MouseButtonEvent event, double dragX, double dragY) {}
 
     @Override
-    public boolean mouseClicked(double d, double e, int i) {
-        Optional<GuiEventListener> optional = this.getChildAt(d, e);
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        Optional<GuiEventListener> optional = this.getChildAt(event.x(), event.y());
         if (optional.isPresent()) {
             GuiEventListener guiEventListener = optional.get();
-            if (guiEventListener.mouseClicked(d, e, i)) {
+            if (guiEventListener.mouseClicked(event, bl)) {
                 this.setFocused(guiEventListener);
-                if (i == 0) {
+                if (event.input() == 0) {
                     this.setDragging(true);
                 }
 
@@ -142,13 +144,14 @@ public abstract class ContainerWidget extends AbstractWidget implements Containe
         return false;
     }
 
+
     @Override
-    public boolean mouseReleased(double d, double e, int i) {
-        return ContainerEventHandler.super.mouseReleased(d, e, i);
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        return ContainerEventHandler.super.mouseReleased(event);
     }
 
     @Override
-    public boolean mouseDragged(double d, double e, int i, double f, double g) {
-        return ContainerEventHandler.super.mouseDragged(d, e, i, f, g);
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+        return ContainerEventHandler.super.mouseDragged(event, dragX, dragY);
     }
 }

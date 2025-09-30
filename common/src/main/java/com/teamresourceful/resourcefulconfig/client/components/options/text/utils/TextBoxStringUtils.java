@@ -10,6 +10,7 @@ import net.minecraft.util.StringUtil;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public class TextBoxStringUtils {
@@ -90,7 +91,7 @@ public class TextBoxStringUtils {
         return string.substring(pos.getValue());
     }
 
-    public static boolean isAllowedChatCharacter(char character) {
+    public static boolean isAllowedChatCharacter(int character) {
         return StringUtil.isAllowedChatCharacter(character) || character == '§';
     }
 
@@ -120,7 +121,7 @@ public class TextBoxStringUtils {
         }
 
         @Override
-        public boolean accept(int i, Style style, int j) {
+        public boolean accept(int i, @NotNull Style style, int j) {
             switch (j) {
                 case 10:
                     this.lineBreak = i;
@@ -159,7 +160,7 @@ public class TextBoxStringUtils {
         }
 
         @Override
-        public boolean accept(int i, Style ignored, int j) {
+        public boolean accept(int i, @NotNull Style ignored, int j) {
             this.maxWidth -= width(font, Character.toString(j));
             if (this.maxWidth >= 0.0F) {
                 this.position = i + Character.charCount(j);

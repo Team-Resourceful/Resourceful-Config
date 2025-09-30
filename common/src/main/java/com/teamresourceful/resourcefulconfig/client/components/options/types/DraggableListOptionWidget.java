@@ -13,7 +13,9 @@ import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -95,7 +97,7 @@ public class DraggableListOptionWidget<T> extends BaseWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         new DraggableListOverlay<>(this).open();
     }
 
@@ -124,13 +126,12 @@ public class DraggableListOptionWidget<T> extends BaseWidget {
         protected void init() {
             super.init();
 
-            LinearLayout layout = LinearLayout.horizontal();
-
+            var layout = new EqualSpacingLayout(this.contentWidth, 16, EqualSpacingLayout.Orientation.HORIZONTAL);
 
             final StringWidget title = layout.addChild(new StringWidget(
                     this.contentWidth - 84, 16,
                     Component.empty(), font
-            ).alignLeft());
+            ));
 
             Runnable updateTitle = () -> {
                 if (this.widget.range != null) {
@@ -153,9 +154,10 @@ public class DraggableListOptionWidget<T> extends BaseWidget {
                         this.widget.setter.accept(list);
                     }
             ));
+            dropdown.setWidth(84);
             dropdown.active = this.widget.range == null || this.widget.getter.get().size() < this.widget.range.secondInt();
 
-            layout.setPosition(left + 4, top + 1);
+            layout.setPosition(left, top + 1);
             layout.arrangeElements();
             layout.visitWidgets(this::addRenderableWidget);
 

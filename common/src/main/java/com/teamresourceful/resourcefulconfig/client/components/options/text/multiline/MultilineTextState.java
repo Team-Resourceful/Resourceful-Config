@@ -5,7 +5,6 @@ import com.teamresourceful.resourcefulconfig.client.utils.ListenableState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
@@ -102,7 +101,7 @@ class MultilineTextState {
 		}
 
 		this.cursor = Mth.clamp(this.cursor, 0, this.value.length());
-		if (!this.selecting && !Screen.hasShiftDown()) {
+		if (!this.selecting && !Minecraft.getInstance().hasShiftDown()) {
 			this.selectCursor = this.cursor;
 		}
 	}

@@ -16,10 +16,10 @@ public class ResourcefulConfigNeoForge {
 
     public ResourcefulConfigNeoForge(IEventBus bus, FMLModContainer container) {
         WebServer.start();
-        if (FMLLoader.getDist().isDedicatedServer()) {
+        if (FMLLoader.getCurrent().getDist().isDedicatedServer()) {
             CompatabilityLayers.initServer();
         }
-        if (FMLLoader.getDist().isClient()) {
+        if (FMLLoader.getCurrent().getDist().isClient()) {
             ResourcefulConfigNeoForgeClient.onClientInit(container);
         }
         bus.addListener(ResourcefulConfigNeoForge::onCommonSetup);
@@ -27,7 +27,7 @@ public class ResourcefulConfigNeoForge {
     }
 
     public static void onCommonSetup(FMLLoadCompleteEvent event) {
-        if (FMLLoader.getDist().isClient()) {
+        if (FMLLoader.getCurrent().getDist().isClient()) {
             ResourcefulConfigNeoForgeClient.onClientComplete();
         }
     }

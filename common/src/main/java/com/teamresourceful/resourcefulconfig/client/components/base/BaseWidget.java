@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.base;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,6 +17,11 @@ public abstract class BaseWidget extends AbstractWidget {
         super(0, 0, width, height, CommonComponents.EMPTY);
         this.minecraft = Minecraft.getInstance();
         this.font = this.minecraft.font;
+    }
+
+    public void applyCursor(GuiGraphics graphics) {
+        if (!this.isHovered()) return;
+        graphics.requestCursor(this.isActive() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
     }
 
     @Override

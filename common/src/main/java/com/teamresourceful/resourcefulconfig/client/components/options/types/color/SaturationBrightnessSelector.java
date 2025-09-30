@@ -11,6 +11,7 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -54,15 +55,15 @@ public class SaturationBrightnessSelector extends BaseWidget {
             }
         }
 
-        graphics.renderOutline(getX() + posX - 1, getY() + posY - 1, 3, 3, 0xFF000000);
+        graphics.submitOutline(getX() + posX - 1, getY() + posY - 1, 3, 3, 0xFF000000);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button != 0) return false;
-        if (!isMouseOver(mouseX, mouseY)) return false;
-        int x = (int) mouseX - this.getX();
-        int y = (int) mouseY - this.getY();
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (event.input() != 0) return false;
+        if (!isMouseOver(event.x(), event.y())) return false;
+        int x = (int) event.x() - this.getX();
+        int y = (int) event.y() - this.getY();
         if (x < 0 || x >= this.getWidth() || y < 0 || y >= this.getHeight()) return false;
         this.state.set(HsbColor.of(
                 this.state.get().hue(),
@@ -74,8 +75,8 @@ public class SaturationBrightnessSelector extends BaseWidget {
     }
 
     @Override
-    public boolean mouseDragged(double d, double e, int i, double f, double g) {
-        return mouseClicked(d, e, i);
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double d, double e) {
+        return this.mouseClicked(event, false);
     }
 
     private void drawGradient(
@@ -106,11 +107,11 @@ public class SaturationBrightnessSelector extends BaseWidget {
     ) implements GuiElementRenderState {
 
         @Override
-        public void buildVertices(@NotNull VertexConsumer consumer, float f) {
-            consumer.addVertexWith2DPose(this.pose(), (float)this.x0(), (float)this.y0(), f).setColor(this.col1());
-            consumer.addVertexWith2DPose(this.pose(), (float)this.x0(), (float)this.y1(), f).setColor(this.col3());
-            consumer.addVertexWith2DPose(this.pose(), (float)this.x1(), (float)this.y1(), f).setColor(this.col4());
-            consumer.addVertexWith2DPose(this.pose(), (float)this.x1(), (float)this.y0(), f).setColor(this.col2());
+        public void buildVertices(@NotNull VertexConsumer consumer) {
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x0(), (float)this.y0()).setColor(this.col1());
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x0(), (float)this.y1()).setColor(this.col3());
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x1(), (float)this.y1()).setColor(this.col4());
+            consumer.addVertexWith2DPose(this.pose(), (float)this.x1(), (float)this.y0()).setColor(this.col2());
         }
 
         @Override

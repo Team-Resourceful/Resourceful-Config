@@ -36,7 +36,7 @@ public class KeyCodeHelper {
 
     public static boolean isMouseKeyPressed(int button) {
         Minecraft mc = Minecraft.getInstance();
-        return GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), button) == GLFW.GLFW_PRESS;
+        return GLFW.glfwGetMouseButton(mc.getWindow().handle(), button) == GLFW.GLFW_PRESS;
     }
 
     static {

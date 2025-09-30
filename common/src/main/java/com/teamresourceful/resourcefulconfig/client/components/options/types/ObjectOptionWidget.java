@@ -8,6 +8,7 @@ import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,13 +45,14 @@ public class ObjectOptionWidget extends BaseWidget {
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,
                 UIConstants.TEXT_TITLE
         );
+
+        this.applyCursor(graphics);
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         new ObjectEditOverlay(this.entry).open();
     }
-
 
     private static class ObjectEditOverlay extends ModalOverlay {
 

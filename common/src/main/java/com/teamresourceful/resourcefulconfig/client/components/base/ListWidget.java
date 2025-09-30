@@ -1,11 +1,14 @@
 package com.teamresourceful.resourcefulconfig.client.components.base;
 
+import com.mojang.blaze3d.platform.cursor.CursorType;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,7 +89,7 @@ public class ListWidget extends ContainerWidget {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
         if (this.scrolling) {
             double scrollBarHeight = (this.height / (double) this.lastHeight) * this.height;
             double scrollBarDragY = dragY / (this.height - scrollBarHeight);
@@ -96,7 +99,7 @@ public class ListWidget extends ContainerWidget {
             );
             return true;
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
@@ -106,23 +109,23 @@ public class ListWidget extends ContainerWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (isMouseOver(mouseX, mouseY)) {
-            if (isMouseOverScrollBar(mouseX, mouseY)) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (isMouseOver(event.x(), event.y())) {
+            if (isMouseOverScrollBar(event.x(), event.y())) {
                 this.scrolling = true;
                 return true;
             }
-            return super.mouseClicked(mouseX, mouseY, button);
+            return super.mouseClicked(event, bl);
         }
         return false;
     }
 
     @Override
-    public boolean mouseReleased(double d, double e, int i) {
-        if (i == 0) {
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        if (event.input() == 0) {
             this.scrolling = false;
         }
-        return super.mouseReleased(d, e, i);
+        return super.mouseReleased(event);
     }
 
     private boolean isMouseOverScrollBar(double mouseX, double mouseY) {

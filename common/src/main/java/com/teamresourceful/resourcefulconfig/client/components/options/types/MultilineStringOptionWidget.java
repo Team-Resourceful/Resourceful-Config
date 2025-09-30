@@ -7,8 +7,8 @@ import com.teamresourceful.resourcefulconfig.client.components.options.text.mult
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -38,7 +38,8 @@ public class MultilineStringOptionWidget extends BaseWidget {
                 getX(),
                 getY(),
                 getWidth(),
-                getHeight());
+                getHeight()
+        );
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
 
@@ -54,10 +55,12 @@ public class MultilineStringOptionWidget extends BaseWidget {
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,
                 UIConstants.TEXT_TITLE
         );
+
+        this.applyCursor(graphics);
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         new MutlilineStringOverlay(getter, setter).open();
     }
 

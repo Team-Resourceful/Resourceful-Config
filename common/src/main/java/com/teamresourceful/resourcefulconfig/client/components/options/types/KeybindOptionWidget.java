@@ -6,9 +6,12 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.utils.KeyCodeHelper;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -52,32 +55,32 @@ public class KeybindOptionWidget extends BaseWidget {
             getX() + 4, getY() + 2, getX() + getWidth() - 4, getY() + getHeight() - 2,
             UIConstants.TEXT_PARAGRAPH
         );
+
+        this.applyCursor(graphics);
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         this.isEditing = true;
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
         if (this.isEditing) {
-            this.setter.accept(-100 - button);
+            this.setter.accept(-100 - event.input());
             this.isEditing = false;
             return true;
         }
-
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, bl);
     }
 
     @Override
-    public boolean keyPressed(int i, int j, int k) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
         if (this.isEditing) {
-            this.setter.accept(i == InputConstants.KEY_ESCAPE ? 0 : i);
+            this.setter.accept(event.input() == InputConstants.KEY_ESCAPE ? 0 : event.input());
             this.isEditing = false;
             return true;
         }
-
-        return super.keyPressed(i, j, k);
+        return super.keyPressed(event);
     }
 }

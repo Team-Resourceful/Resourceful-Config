@@ -10,7 +10,9 @@ import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +84,7 @@ public class TextBox extends BaseWidget {
             return;
         }
 
-        if (Screen.hasControlDown()) {
+        if (Minecraft.getInstance().hasControlDown()) {
             if (this.highlightPos != this.cursorPos) {
                 this.insertText("");
             } else {
@@ -161,47 +163,47 @@ public class TextBox extends BaseWidget {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
         if (!this.isVisible() || !this.isFocused()) {
             return false;
         }
 
-        this.shiftPressed = Screen.hasShiftDown();
-        if (Screen.isSelectAll(keyCode)) {
+        this.shiftPressed = event.hasShiftDown();
+        if (event.isSelectAll()) {
             this.moveCursorTo(this.state.get().length());
             this.setHighlightPos(0);
             return true;
-        } else if (Screen.isCopy(keyCode)) {
+        } else if (event.isCopy()) {
             Minecraft.getInstance().keyboardHandler.setClipboard(this.getHighlighted());
             return true;
-        } else if (Screen.isPaste(keyCode)) {
+        } else if (event.isPaste()) {
             this.insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
             return true;
-        } else if (Screen.isCut(keyCode)) {
+        } else if (event.isCut()) {
             Minecraft.getInstance().keyboardHandler.setClipboard(this.getHighlighted());
             this.insertText("");
             return true;
         } else {
-            return switch (keyCode) {
+            return switch (event.input()) {
                 case InputConstants.KEY_BACKSPACE -> {
                     this.shiftPressed = false;
                     this.deleteText(-1);
-                    this.shiftPressed = Screen.hasShiftDown();
+                    this.shiftPressed = event.hasShiftDown();
                     yield true;
                 }
                 case InputConstants.KEY_DELETE -> {
                     this.shiftPressed = false;
                     this.deleteText(1);
-                    this.shiftPressed = Screen.hasShiftDown();
+                    this.shiftPressed = event.hasShiftDown();
                     yield true;
                 }
                 case InputConstants.KEY_RIGHT -> {
-                    int pos = Screen.hasControlDown() ? this.getWordPosition(1) : this.getCursorPos(1);
+                    int pos = event.hasControlDown() ? this.getWordPosition(1) : this.getCursorPos(1);
                     this.moveCursorTo(pos);
                     yield true;
                 }
                 case InputConstants.KEY_LEFT -> {
-                    int pos = Screen.hasControlDown() ? this.getWordPosition(-1) : this.getCursorPos(-1);
+                    int pos = event.hasControlDown() ? this.getWordPosition(-1) : this.getCursorPos(-1);
                     this.moveCursorTo(pos);
                     yield true;
                 }
@@ -219,24 +221,21 @@ public class TextBox extends BaseWidget {
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
+    public boolean charTyped(@NotNull CharacterEvent event) {
         if (!this.isVisible() || !this.isFocused()) {
             return false;
         }
-        if (!TextBoxStringUtils.isAllowedChatCharacter(codePoint)) {
+        if (!TextBoxStringUtils.isAllowedChatCharacter(event.codepoint())) {
             return false;
         }
-        this.insertText(Character.toString(codePoint));
+        this.insertText(event.codepointAsString());
         return true;
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        int relativeX = Mth.floor(mouseX) - this.getX() - PADDING;
-        String string = TextBoxStringUtils.plainHeadByWidth(
-                this.font,
-                this.state.get().substring(this.displayPos),
-                this.width - PADDING * 2);
+    public void onClick(MouseButtonEvent event, boolean doubleClicked) {
+        int relativeX = Mth.floor(event.x()) - this.getX() - PADDING;
+        String string = TextBoxStringUtils.plainHeadByWidth(this.font, this.state.get().substring(this.displayPos), this.width - PADDING * 2);
         this.moveCursorTo(TextBoxStringUtils.plainHeadByWidth(this.font, string, relativeX).length() + this.displayPos);
     }
 

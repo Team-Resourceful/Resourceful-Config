@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -76,12 +77,12 @@ public class ModalOverlay extends OverlayScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int i) {
-        if (mouseX < this.modalLeft || mouseX > this.modalLeft + this.modalWidth || mouseY < this.modalTop || mouseY > this.modalTop + this.modalHeight) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean bl) {
+        if (event.x() < this.modalLeft || event.x() > this.modalLeft + this.modalWidth || event.y() < this.modalTop || event.y() > this.modalTop + this.modalHeight) {
             this.onClose();
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, i);
+        return super.mouseClicked(event, bl);
     }
 
     public void open() {

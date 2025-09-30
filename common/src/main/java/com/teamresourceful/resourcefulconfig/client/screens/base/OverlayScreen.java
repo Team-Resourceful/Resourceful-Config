@@ -43,7 +43,7 @@ public abstract class OverlayScreen extends Screen {
 
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int i, int j, float f) {
-        this.background.renderWithTooltip(graphics, -1, -1, f);
+        this.background.renderWithTooltipAndSubtitles(graphics, -1, -1, f);
         graphics.nextStratum();
     }
 

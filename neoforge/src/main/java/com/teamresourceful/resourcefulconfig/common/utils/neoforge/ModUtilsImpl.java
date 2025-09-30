@@ -11,10 +11,10 @@ public class ModUtilsImpl {
     }
 
     public static boolean isDev() {
-        return !FMLLoader.isProduction();
+        return !FMLLoader.getCurrent().isProduction();
     }
 
     public static boolean isModLoaded(String modid) {
-        return FMLLoader.getLoadingModList().getModFileById(modid) != null;
+        return FMLLoader.getCurrent().getLoadingModList().getModFileById(modid) != null;
     }
 }

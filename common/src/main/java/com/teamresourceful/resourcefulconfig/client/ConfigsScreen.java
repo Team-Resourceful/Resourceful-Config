@@ -8,8 +8,10 @@ import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -68,12 +70,12 @@ public class ConfigsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.getChildAt(mouseX, mouseY).isEmpty()) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        if (this.getChildAt(event.x(), event.y()).isEmpty()) {
             setFocused(null);
             return false;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, bl);
     }
 
     @Override

@@ -29,8 +29,8 @@ public class ConfigHeaderItem extends ContainerWidget implements ListWidget.Item
                 .vertical()
                 .spacing(UIConstants.SPACING);
 
-        titleDesc.addChild(new StringWidget(width, 9, UIConstants.MOD_CONFIGS, font).alignLeft());
-        titleDesc.addChild(new StringWidget(width, 9, UIConstants.MOD_CONFIGS_DESCRIPTION, font).alignLeft());
+        titleDesc.addChild(new StringWidget(width, 9, UIConstants.MOD_CONFIGS, font));
+        titleDesc.addChild(new StringWidget(width, 9, UIConstants.MOD_CONFIGS_DESCRIPTION, font));
 
         titleDesc.arrangeElements();
         titleDesc.setPosition(this.getX() + UIConstants.PAGE_PADDING * 2, this.getY() + UIConstants.PAGE_PADDING * 2);

@@ -11,8 +11,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "common.DedicatedServerAccessor",
-    "common.PlayerListAccessor",
-    "common.SettingsAccessor"
+    "common.DedicatedServerAccessor"
   ]
 }

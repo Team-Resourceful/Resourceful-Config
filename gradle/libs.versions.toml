@@ -1,9 +1,9 @@
 [versions]
 
 # Minecraft
-minecraft = "1.21.7"
-fabric-api = "0.129.0"
-neoforge = "21.7.20-beta"
+minecraft = "1.21.9"
+fabric-api = "0.133.14"
+neoforge = "21.9.1-beta"
 
 # Libraries
 modmenu = "14.0.0-rc.2"

@@ -6,6 +6,7 @@ import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -51,7 +52,8 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
             }
             if (!hoveringDelete && this.minecraft.screen != null && value instanceof TooltipProvider provider) {
                 if (provider.getTooltip() != null && !provider.getTooltip().getString().isBlank()) {
-                    graphics.setTooltipForNextFrame(provider.getTooltip(), mouseX, mouseY);
+                    Font font = this.minecraft.font;
+                    graphics.setTooltipForNextFrame(font, font.split(provider.getTooltip(), Integer.MAX_VALUE), mouseX, mouseY);
                 }
             }
         }

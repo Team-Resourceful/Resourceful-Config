@@ -134,6 +134,16 @@ public final class DemoConfig {
             ChatFormatting.GREEN
     };
 
+
+    @ConfigEntry(
+            id = "demoDraggableWithTooltip",
+            translation = "draggable with tooltip"
+    )
+    @ConfigOption.Draggable
+    public static DemoEnum[] demoDraggableWithTooltip = new DemoEnum[]{
+            DemoEnum.FIRST
+    };
+
     @ConfigEntry(
             id = "demoKeybind",
             translation = "keybind"

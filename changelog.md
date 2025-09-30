@@ -1,1 +1,2 @@
-- Allow for creation of draggable, selects, and dropdowns outside of the screen itself.
+- Fix issue for draggable lists if they contain abstract methods
+- Fix multiline tooltips not rendering as multiline

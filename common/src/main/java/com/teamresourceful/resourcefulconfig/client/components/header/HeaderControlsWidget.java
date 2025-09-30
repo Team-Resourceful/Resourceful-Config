@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 public class HeaderControlsWidget extends ContainerWidget {
 
     private final LinearLayout layout;
+    protected final StringOptionWidget searchWidget;
 
     public HeaderControlsWidget(int width, ResourcefulConfig config, ConfigScreenContext context, Runnable onSearchUpdate) {
         super(0, 0, width, 0);
@@ -33,14 +34,14 @@ public class HeaderControlsWidget extends ContainerWidget {
                 .build()
         );
 
-        var searchWidget = new StringOptionWidget(context::getQuery, name -> {
+        this.searchWidget = new StringOptionWidget(context::getQuery, name -> {
             if (context.setQuery(name)) {
                 onSearchUpdate.run();
             }
             return true;
         }, false);
-        searchWidget.setWidth(this.width - UIConstants.PAGE_PADDING * 2 - 16 - 5);
-        searchWidget.setHint(Component.literal("Search...").withColor(UIConstants.TEXT_PARAGRAPH));
+        this.searchWidget.setWidth(this.width - UIConstants.PAGE_PADDING * 2 - 16 - 5);
+        this.searchWidget.setPlaceholder("Search...", UIConstants.TEXT_PARAGRAPH);
         this.layout.addChild(searchWidget);
 
         this.layout.arrangeElements();

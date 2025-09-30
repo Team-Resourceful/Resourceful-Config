@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.api.types.options;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigObject;
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 
 import java.util.function.Predicate;
 
@@ -13,7 +14,7 @@ public enum EntryType {
     DOUBLE(type -> type == double.class || type == Double.class),
     BOOLEAN(type -> type == boolean.class || type == Boolean.class),
     STRING(type -> type == String.class),
-    ENUM(Class::isEnum),
+    ENUM(ModUtils::isEnum),
     OBJECT(type -> type.isAnnotationPresent(ConfigObject.class)),
     ;
 

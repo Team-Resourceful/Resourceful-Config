@@ -43,6 +43,10 @@ public final class ModUtils {
         LOGGER.debug("[ResourcefulConfig] {}", message);
     }
 
+    public static boolean isEnum(Class<?> clazz) {
+        return clazz.isEnum() || clazz.getSuperclass().isEnum();
+    }
+
     public static Enum<?>[] getEnumConstants(Class<?> clazz) {
         if (clazz.isEnum()) return (Enum<?>[]) clazz.getEnumConstants();
         if (clazz.getSuperclass().isEnum()) return (Enum<?>[]) clazz.getSuperclass().getEnumConstants();

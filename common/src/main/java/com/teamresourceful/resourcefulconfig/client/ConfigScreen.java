@@ -135,7 +135,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
 
     @Override
     public boolean keyPressed(@NotNull KeyEvent event) {
-        if (Screen.hasControlDown() && event.input() == InputConstants.KEY_F && this.searchWidget != null) {
+        if (event.hasControlDown() && event.input() == InputConstants.KEY_F && this.searchWidget != null) {
             this.setFocused(this.searchWidget);
             this.searchWidget.setFocused(true);
             return true;

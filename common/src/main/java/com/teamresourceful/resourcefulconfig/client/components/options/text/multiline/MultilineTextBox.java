@@ -8,8 +8,12 @@ import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 public class MultilineTextBox extends BaseWidget {
 
@@ -123,44 +127,44 @@ public class MultilineTextBox extends BaseWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubleClicked) {
         if (!this.isVisible()) return false;
 
-        if (this.lastHeight > this.height - 8 && mouseX > getX() + getWidth() - 7) {
-            this.setScroll((mouseY - getY() - 4) / (this.height - 8) * this.lastHeight);
+        if (this.lastHeight > this.height - 8 && event.x() > getX() + getWidth() - 7) {
+            this.setScroll((event.y() - getY() - 4) / (this.height - 8) * this.lastHeight);
             return true;
         }
 
-        return this.state.onMouseClick(mouseX - getX() - 4, mouseY - getY() - 4 + scroll, button);
+        return this.state.onMouseClick(event.x() - getX() - 4, event.y() - getY() - 4 + scroll, event.input());
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double deltaX, double deltaY) {
         if (!this.isVisible()) return false;
 
-        if (this.lastHeight > this.height - 8 && mouseX > getX() + getWidth() - 7) {
-            return this.mouseClicked(mouseX, mouseY, button);
+        if (this.lastHeight > this.height - 8 && event.x() > getX() + getWidth() - 7) {
+            return this.mouseClicked(event, false);
         }
 
-        return this.state.onMouseDrag(mouseX - getX() - 4, mouseY - getY() - 4 + scroll, button);
+        return this.state.onMouseDrag(event.x() - getX() - 4, event.y() - getY() - 4 + scroll, event.input());
     }
 
     @Override
-    public boolean keyPressed(int key, int scan, int modifier) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
         if (!this.isVisible()) return false;
 
-        var result = this.state.onKeyPress(key);
+        var result = this.state.onKeyPress(event);
         this.lastHeight = this.state.lines(this.width - 8).size() * this.font.lineHeight;
         this.setScroll(this.state.getLineAtCursor() * this.font.lineHeight);
         return result;
     }
 
     @Override
-    public boolean charTyped(char character, int modifier) {
+    public boolean charTyped(@NotNull CharacterEvent event) {
         if (!this.isVisible()) return false;
 
         this.setScroll(this.state.getLineAtCursor() * this.font.lineHeight);
-        return this.state.onCharTyped(character);
+        return this.state.onCharTyped(event);
     }
 
     public boolean isVisible() {

@@ -1,2 +1,2 @@
-- Allow for use of Ctrl + F to focus search input
-- Fix section symbols not rendering in text inputs
+- Fix issue for draggable lists if they contain abstract methods
+- Fix multiline tooltips not rendering as multiline

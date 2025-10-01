@@ -34,6 +34,15 @@ public record ParsedObjectEntry(
     }
 
     @Override
+    public Object instance() {
+        try {
+            return field.get(null);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     public Component getTitle(@NotNull Component fallback) {
         try {
            return Translatable.toSpeifiedComponent(field.get(null), fallback);

@@ -87,7 +87,7 @@ public record WholeOptionRange(LongConsumer setter, LongSupplier getter, long mi
 
     @Override
     public void setPercent(double value) {
-        this.setter.accept((long) Mth.clampedLerp(min, max, value));
+        this.setter.accept((long) Mth.clampedLerp(value, min, max));
     }
 
     @Override

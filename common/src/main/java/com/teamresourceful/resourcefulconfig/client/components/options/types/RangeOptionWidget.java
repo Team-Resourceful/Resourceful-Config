@@ -81,21 +81,20 @@ public class RangeOptionWidget extends BaseWidget {
         }
 
         if (isHoveredOrFocused() && this.canBeFocused) {
-
-            renderScrollingString(
-                    graphics, font,
+            var renderer = graphics.textRendererForWidget(
+                    this,
+                    GuiGraphics.HoveredTextEffects.NONE
+            );
+            renderer.acceptScrollingWithDefaultCenter(
                     this.minDisplay,
-                    getX() + 2, getY() + 2,
-                    getX() + this.padding - 2, getY() + this.height - 2,
-                    -1
+                    getX() + 2, getX() + this.padding - 2,
+                    getY() + 2, getY() + this.height - 2
             );
 
-            renderScrollingString(
-                    graphics, font,
+            renderer.acceptScrollingWithDefaultCenter(
                     this.maxDisplay,
-                    getX() + this.width - this.padding + 2, getY() + 2,
-                    getX() + this.width - 2, getY() + this.height - 2,
-                    -1
+                    getX() + this.width - this.padding + 2, getX() + this.width - 2,
+                    getY() + this.height - 2, getY() + 2
             );
 
             if (mouseX >= getX() + 2 && mouseX <= getX() + this.padding - 2) {

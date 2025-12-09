@@ -1,6 +1,6 @@
 package com.teamresourceful.resourcefulconfig.api.types;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 public interface ResourcefulConfigElement {
 
     @Nullable
-    default ResourceLocation renderer() {
+    default Identifier renderer() {
         return null;
     }
 

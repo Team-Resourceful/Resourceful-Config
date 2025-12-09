@@ -59,7 +59,7 @@ public record DecimalOptionRange(DoubleConsumer setter, DoubleSupplier getter, d
 
     @Override
     public void setPercent(double value) {
-        this.setter.accept(Mth.clampedLerp(min, max, value));
+        this.setter.accept(Mth.clampedLerp(value, min, max));
     }
 
     @Override

@@ -32,7 +32,7 @@ public abstract class OverlayScreen extends Screen {
 
     @Override
     protected void repositionElements() {
-        this.background.resize(Minecraft.getInstance(), this.width, this.height);
+        this.background.resize(this.width, this.height);
         if (this.background instanceof OverlayScreen overlay) overlay.isInitialized = false;
         if (this.isInitialized) {
             Minecraft.getInstance().setScreen(this.background);

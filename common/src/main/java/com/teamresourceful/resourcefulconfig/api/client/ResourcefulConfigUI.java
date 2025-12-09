@@ -7,7 +7,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.layouts.Layout;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ResourcefulConfigUI {
 
-    private static final Map<ResourceLocation, ResourcefulConfigElementRenderer.Factory> RENDERERS = new HashMap<>();
+    private static final Map<Identifier, ResourcefulConfigElementRenderer.Factory> RENDERERS = new HashMap<>();
 
     /**
      * Opens a modal screen with the given title and constructor.
@@ -83,7 +83,7 @@ public class ResourcefulConfigUI {
      * @param onClick The action to run when the button is clicked.
      * @return The created button.
      */
-    public static AbstractWidget button(int x, int y, int width, int height, ResourceLocation sprite, @Nullable Component tooltip, Runnable onClick) {
+    public static AbstractWidget button(int x, int y, int width, int height, Identifier sprite, @Nullable Component tooltip, Runnable onClick) {
         var button = SpriteButton.builder(width, height)
                 .padding(2)
                 .sprite(sprite)
@@ -100,7 +100,7 @@ public class ResourcefulConfigUI {
      * @param type    The type of element to register the renderer for.
      * @param factory The factory that creates the renderer.
      */
-    public static void registerElementRenderer(ResourceLocation type, ResourcefulConfigElementRenderer.Factory factory) {
+    public static void registerElementRenderer(Identifier type, ResourcefulConfigElementRenderer.Factory factory) {
         if (RENDERERS.containsKey(type)) {
             throw new IllegalArgumentException("Renderer for type " + type + " already registered");
         }

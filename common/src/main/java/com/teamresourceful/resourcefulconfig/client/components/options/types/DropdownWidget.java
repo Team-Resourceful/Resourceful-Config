@@ -45,12 +45,18 @@ public class DropdownWidget<T> extends BaseWidget {
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
-        renderScrollingString(
-                graphics, this.font, Translatable.toComponent(this.getter.get(), this.title),
-                getX() + 4, getY() + 4,
-                getX() + getWidth() - 16, getY() + getHeight() - 4,
-                UIConstants.TEXT_PARAGRAPH
+
+        graphics.textRendererForWidget(
+                this,
+                GuiGraphics.HoveredTextEffects.NONE
+        ).acceptScrollingWithDefaultCenter(
+                Translatable.toComponent(this.getter.get(), this.title).copy().withColor(UIConstants.TEXT_PARAGRAPH),
+                getX() + 4,
+                getX() + getWidth() - 16,
+                getY() + 4,
+                getY() + getHeight() - 4
         );
+
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CHEVRON_DOWN, getX() + getWidth() - 12, getY() + 4, 8, 8);
         this.applyCursor(graphics);
     }
@@ -148,11 +154,14 @@ public class DropdownWidget<T> extends BaseWidget {
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX() + 1, getY(), getWidth() - 1, getHeight());
             int color = this.isHovered() ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;
-            renderScrollingString(
-                    graphics, this.font, Translatable.toComponent(this.option),
-                    getX() + 4, getY() + 1,
-                    getX() + getWidth() - 4, getY() + getHeight() - 1,
-                    color
+
+            graphics.textRendererForWidget(
+                    this,
+                    GuiGraphics.HoveredTextEffects.NONE
+            ).acceptScrollingWithDefaultCenter(
+                    Translatable.toComponent(this.option).copy().withColor(color),
+                    getX() + 4, getX() + getWidth() - 16,
+                    getY() + 1, getY() + getHeight() - 1
             );
 
             this.applyCursor(graphics);

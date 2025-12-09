@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.text.multiline;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.text.utils.TextBoxStringUtils;
@@ -115,6 +116,20 @@ public class MultilineTextBox extends BaseWidget {
                     maxX, getY() + 4 + scrollBarY + scrollBarHeight,
                     this.scrollbarHovered ? 0xFF404040 : 0xFF303030
             );
+        }
+
+        this.applyCursor(graphics);
+    }
+
+    @Override
+    public void applyCursor(GuiGraphics graphics) {
+        if (!this.isHovered()) return;
+        if (!this.isActive()) {
+            graphics.requestCursor(CursorTypes.NOT_ALLOWED);
+        } else if (this.scrollbarHovered) {
+            graphics.requestCursor(CursorTypes.POINTING_HAND);
+        } else {
+            graphics.requestCursor(CursorTypes.IBEAM);
         }
     }
 

@@ -63,11 +63,21 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
         }
         int color = hovered ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;
 
-        renderScrollingString(
-                graphics, this.font, Translatable.toComponent(this.value),
-                x + 16, y + 1,
-                x + getWidth() - 32, y + getHeight() - 1,
-                fadeOut ? ARGB.color(0x80, color) : color
+
+        int left = x + 16;
+        int right = x + getWidth() - 32;
+        var renderer = graphics.textRendererForWidget(
+                this,
+                GuiGraphics.HoveredTextEffects.NONE
+        );
+        renderer.acceptScrolling(
+                Translatable.toComponent(this.value).copy().withColor(fadeOut ? ARGB.color(0x80, color) : color),
+                (left + right) / 2,
+                left,
+                right,
+                y + 1,
+                y + getHeight() - 1,
+                renderer.defaultParameters().withOpacity(fadeOut ? 0x80 : color)
         );
     }
 

@@ -67,10 +67,10 @@ public record EntryData(
     }
 
     public static class Builder {
+        private final Map<Option<?, ?>, Object> options = new HashMap<>();
+
         private TranslatableValue title = TranslatableValue.EMPTY;
         private TranslatableValue comment = TranslatableValue.EMPTY;
-
-        private Map<Option<?, ?>, Object> options = new HashMap<>();
 
         public Builder translation(String value, String translation) {
             this.title = new TranslatableValue(value, translation);
@@ -93,7 +93,7 @@ public record EntryData(
         }
 
         public EntryData build() {
-            return new EntryData(title, comment, options);
+            return new EntryData(title, comment, Map.copyOf(options));
         }
     }
 }

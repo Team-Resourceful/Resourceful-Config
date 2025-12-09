@@ -18,7 +18,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.net.URI;
 import java.util.List;
@@ -28,7 +28,7 @@ public class DemoClient implements ClientModInitializer {
     public void onInitializeClient() {
         if (!Demo.DEMO) return;
 
-        ResourcefulConfigUI.registerElementRenderer(ResourceLocation.parse("demo:demo"), Renderer::new);
+        ResourcefulConfigUI.registerElementRenderer(Identifier.parse("demo:demo"), Renderer::new);
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> {
             dispatcher.register(ClientCommandManager.literal("rconfigdemo").executes(context -> {

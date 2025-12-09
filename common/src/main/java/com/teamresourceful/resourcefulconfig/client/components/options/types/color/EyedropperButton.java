@@ -11,12 +11,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class EyedropperButton extends SpriteButton {
 
-    private static final ResourceLocation SCREEN_TEXTURE = ResourceLocation.fromNamespaceAndPath("resourcefulconfig", "dynamic/screen");
+    private static final Identifier SCREEN_TEXTURE = Identifier.fromNamespaceAndPath("resourcefulconfig", "dynamic/screen");
 
     public EyedropperButton(HsbState state) {
         super(12, 12, 2, ModSprites.EYE_DROPPER, () -> {
@@ -56,7 +56,7 @@ public class EyedropperButton extends SpriteButton {
 
             graphics.blit(SCREEN_TEXTURE, x - 5, y - 5, x + 15, y + 15, u0, u1, v0, v1);
 
-            graphics.submitOutline(x - 5, y - 5, 20, 20, 0xFFFFFFFF);
+            graphics.renderOutline(x - 5, y - 5, 20, 20, 0xFFFFFFFF);
 
             int pixelX = (int) (mouseX * guiScale);
             int pixelY = (int) (mouseY * guiScale);

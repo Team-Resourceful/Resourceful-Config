@@ -10,17 +10,17 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SpriteButton extends AbstractButton {
 
     protected final int padding;
-    protected final ResourceLocation sprite;
+    protected final Identifier sprite;
     protected final Runnable onPress;
 
-    protected SpriteButton(int width, int height, int padding, ResourceLocation sprite, Runnable onPress, @Nullable Component tooltip) {
+    protected SpriteButton(int width, int height, int padding, Identifier sprite, Runnable onPress, @Nullable Component tooltip) {
         super(0, 0, width + padding * 2, height + padding * 2, tooltip == null ? CommonComponents.EMPTY : tooltip);
         this.padding = padding;
         this.sprite = sprite;
@@ -33,8 +33,8 @@ public class SpriteButton extends AbstractButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        ResourceLocation button = isHovered() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        Identifier button = isHovered() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, button, getX(), getY(), getWidth(), getHeight());
         graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
@@ -62,7 +62,7 @@ public class SpriteButton extends AbstractButton {
             private final int width;
             private final int height;
             private int padding;
-            private ResourceLocation sprite;
+            private Identifier sprite;
             private Runnable onPress = () -> {};
             private Component tooltip = null;
 
@@ -76,7 +76,7 @@ public class SpriteButton extends AbstractButton {
                 return this;
             }
 
-            public Builder sprite(ResourceLocation sprite) {
+            public Builder sprite(Identifier sprite) {
                 this.sprite = sprite;
                 return this;
             }

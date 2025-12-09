@@ -55,7 +55,7 @@ public class SaturationBrightnessSelector extends BaseWidget {
             }
         }
 
-        graphics.submitOutline(getX() + posX - 1, getY() + posY - 1, 3, 3, 0xFF000000);
+        graphics.renderOutline(getX() + posX - 1, getY() + posY - 1, 3, 3, 0xFF000000);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.teamresourceful.resourcefulconfig.api.types.options;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -72,13 +72,13 @@ public class Option<T extends Annotation, D> {
             type -> true,
             (type, data) -> List.of(data.value())
     );
-    public static final Option<ConfigOption.Renderer, ResourceLocation> RENDERER = Option.of(
+    public static final Option<ConfigOption.Renderer, Identifier> RENDERER = Option.of(
             ConfigOption.Renderer.class,
             type -> true,
             (type, data) -> {
                 String value = data.value();
                 if (value.isEmpty()) return null;
-                return ResourceLocation.tryParse(value);
+                return Identifier.tryParse(value);
             }
     );
 

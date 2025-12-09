@@ -5,7 +5,7 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfo;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedEntryElement;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.jetbrains.annotations.NotNull;
 

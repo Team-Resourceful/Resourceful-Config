@@ -82,9 +82,9 @@ public class PresetsSelector extends BaseWidget {
             int y = this.getY() + 3 + (k * size) + (2 * k);
             int rgba = color.toRgba();
             graphics.fill(x, y, x + size, y + size, rgba);
-            graphics.submitOutline(x, y, size, size, 0xFFDDDDDD);
+            graphics.renderOutline(x, y, size, size, 0xFFDDDDDD);
             if (mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size) {
-                graphics.submitOutline(x, y, size, size, 0xFF000000);
+                graphics.renderOutline(x, y, size, size, 0xFF000000);
                 Screen screen = Minecraft.getInstance().screen;
                 if (screen != null) {
                     if (!withAlpha) rgba &= 0x00FFFFFF;

@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.categories;
 
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreenContext;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
@@ -34,12 +35,14 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON_HOVER, getX() + 1, getY(), getWidth() - 2, getHeight());
         }
         int color = this.isHovered() ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;
-        renderScrollingString(
-                graphics, Minecraft.getInstance().font,
-                this.config.info().title().toComponent(),
-                getX() + PADDING * 2, getY() + PADDING,
-                getX() + PADDING * 2 + getWidth() - PADDING * 4, getY() + getHeight() - PADDING,
-                color
+
+        graphics.textRendererForWidget(
+                this,
+                GuiGraphics.HoveredTextEffects.NONE
+        ).acceptScrollingWithDefaultCenter(
+                this.config.info().title().toComponent().copy().withColor(color),
+                getX() + PADDING * 2, getX() + PADDING * 2 + getWidth() - PADDING * 4,
+                getY() + PADDING, getY() + getHeight() - PADDING
         );
     }
 

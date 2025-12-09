@@ -3,7 +3,7 @@ package com.teamresourceful.resourcefulconfig.api.types.elements;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.options.Option;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -15,7 +15,7 @@ public interface ResourcefulConfigEntryElement extends ResourcefulConfigElement 
     ResourcefulConfigEntry entry();
 
     @Override
-    default ResourceLocation renderer() {
+    default Identifier renderer() {
         return entry().options().getOrDefaultOption(Option.RENDERER, null);
     }
 

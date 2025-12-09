@@ -1,15 +1,15 @@
 [versions]
 
 # Minecraft
-minecraft = "1.21.9"
-fabric-api = "0.133.14"
-neoforge = "21.9.1-beta"
+minecraft = "1.21.11"
+fabric-api = "0.139.4"
+neoforge = "21.9.0-beta"
 
 # Libraries
 modmenu = "14.0.0-rc.2"
 
 # Plugins
-resourceful-loom = "1.0.6"
+resourceful-loom = "1.0.7"
 
 [libraries]
 

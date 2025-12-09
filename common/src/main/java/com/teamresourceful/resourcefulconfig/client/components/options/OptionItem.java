@@ -64,7 +64,7 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
                 new MultiLineTextWidget(this.description, font)
                         .setCentered(false)
                         .setMaxWidth(half)
-                        .configureStyleHandling(true, OptionItem::handleStyle)
+                        //todo .configureStyleHandling(true, OptionItem::handleStyle)
         );
 
         LinearLayout options = LinearLayout

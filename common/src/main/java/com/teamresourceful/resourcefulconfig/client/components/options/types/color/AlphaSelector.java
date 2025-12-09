@@ -40,7 +40,7 @@ public class AlphaSelector extends BaseWidget {
         }
 
         int posX = Mth.floor((this.state.get().alpha() / 255f) * this.getWidth());
-        graphics.submitOutline(getX() + posX - 1, getY() - 1, 3, getHeight() + 2, 0xFF000000);
+        graphics.renderOutline(getX() + posX - 1, getY() - 1, 3, getHeight() + 2, 0xFF000000);
     }
 
     @Override

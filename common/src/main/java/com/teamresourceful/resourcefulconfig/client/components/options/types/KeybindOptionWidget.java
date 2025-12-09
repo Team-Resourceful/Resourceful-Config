@@ -40,7 +40,8 @@ public class KeybindOptionWidget extends BaseWidget {
             boolean strikethrough = System.currentTimeMillis() / 500 % 2 == 0;
             return Component.literal("> ")
                     .withColor(UIConstants.TEXT_PARAGRAPH)
-                    .append(display.withStyle(style -> style.withUnderlined(strikethrough).withColor(UIConstants.TEXT_TITLE)))
+                    .append(display.withStyle(style -> style.withUnderlined(strikethrough)
+                            .withColor(UIConstants.TEXT_TITLE)))
                     .append(Component.literal(" <"));
         }
         return display;
@@ -50,10 +51,18 @@ public class KeybindOptionWidget extends BaseWidget {
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), getWidth(), getHeight());
 
-        renderScrollingString(
-            graphics, this.font, getDisplay(),
-            getX() + 4, getY() + 2, getX() + getWidth() - 4, getY() + getHeight() - 2,
-            UIConstants.TEXT_PARAGRAPH
+        int left = getX() + 4;
+        int right = getX() + getWidth() - 4;
+        graphics.textRendererForWidget(
+                this,
+                GuiGraphics.HoveredTextEffects.NONE
+        ).acceptScrolling(
+                getDisplay().copy().withColor(UIConstants.TEXT_PARAGRAPH),
+                (left + right) / 2,
+                left,
+                right,
+                getY() + 2,
+                getY() + getHeight() - 2
         );
 
         this.applyCursor(graphics);

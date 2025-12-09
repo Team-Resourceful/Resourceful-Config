@@ -17,7 +17,7 @@ issueTrackerURL = "https://github.com/Team-Resourceful/Resourceful-Config/issues
 [[dependencies.resourcefulconfig]]
     modId = "neoforge"
     type = "required"
-    versionRange = "[21.11,)"
+    versionRange = "[21.11.0-beta,)"
     ordering = "NONE"
     side = "BOTH"
 

@@ -88,16 +88,13 @@ public class RangeOptionWidget extends BaseWidget {
             renderer.acceptScrollingWithDefaultCenter(
                     this.minDisplay,
                     getX() + 2, getX() + this.padding - 2,
-                    getY() + 2,
-                    getY() + this.height - 2
+                    getY() + 2, getY() + this.height - 2
             );
 
             renderer.acceptScrollingWithDefaultCenter(
                     this.maxDisplay,
-                    getX() + this.width - this.padding + 2,
-                    getX() + this.width - 2,
-                    getY() + this.height - 2,
-                    getY() + 2
+                    getX() + this.width - this.padding + 2, getX() + this.width - 2,
+                    getY() + this.height - 2, getY() + 2
             );
 
             if (mouseX >= getX() + 2 && mouseX <= getX() + this.padding - 2) {

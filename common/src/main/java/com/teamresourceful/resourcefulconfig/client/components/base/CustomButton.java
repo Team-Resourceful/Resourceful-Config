@@ -3,7 +3,6 @@ package com.teamresourceful.resourcefulconfig.client.components.base;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -36,8 +35,8 @@ public class CustomButton extends AbstractButton {
         ).acceptScrollingWithDefaultCenter(
                 Component.empty().append(this.text).withColor(UIConstants.TEXT_TITLE),
                 getX() + 2,
-                getY() + 2,
                 getX() + getWidth() - 2,
+                getY() + 2,
                 getY() + getHeight() - 2
         );
 

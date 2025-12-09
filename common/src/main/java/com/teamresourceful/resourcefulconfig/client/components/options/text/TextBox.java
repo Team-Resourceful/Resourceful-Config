@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.text;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.text.utils.TextBoxStringUtils;
 import com.teamresourceful.resourcefulconfig.client.utils.ListenableState;
@@ -298,6 +299,8 @@ public class TextBox extends BaseWidget {
                 this.renderHighlight(graphics, o, m - 1, p - 1, m + 1 + 9);
             }
         }
+
+        this.applyCursor(graphics);
     }
 
     private void renderHighlight(GuiGraphics graphics, int minX, int minY, int maxX, int maxY) {
@@ -306,6 +309,12 @@ public class TextBox extends BaseWidget {
         int y1 = Math.min(minY, maxY);
         int y2 = Math.max(minY, maxY);
         graphics.fill(RenderPipelines.GUI_TEXT_HIGHLIGHT, x1, y1, x2, y2, 0xff0000ff);
+    }
+
+    @Override
+    public void applyCursor(GuiGraphics graphics) {
+        if (!this.isHovered()) return;
+        graphics.requestCursor(this.isActive() ? CursorTypes.IBEAM : CursorTypes.NOT_ALLOWED);
     }
 
     @Nullable

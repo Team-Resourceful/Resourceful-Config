@@ -1,1 +1,1 @@
-- Update to 1.21.11
+- Config headers now dynamically size based on content and buttons will no longer overlap text instead will make a new row.

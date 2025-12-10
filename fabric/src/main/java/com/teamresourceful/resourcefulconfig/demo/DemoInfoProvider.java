@@ -21,7 +21,11 @@ public class DemoInfoProvider implements ResourcefulConfigInfo {
 
     @Override
     public TranslatableValue description() {
-        return new TranslatableValue("This is a demo provider config.");
+        return new TranslatableValue(
+                "This is a demo provider config. " +
+                "This is super long to test multiline descriptions in the header of the config screen. " +
+                "Even longer than that to see how it wraps around and looks in the UI."
+        );
     }
 
     @Override
@@ -36,7 +40,16 @@ public class DemoInfoProvider implements ResourcefulConfigInfo {
 
     @Override
     public ResourcefulConfigLink[] links() {
-        return new ResourcefulConfigLink[0];
+        return new ResourcefulConfigLink[] {
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+                ResourcefulConfigLink.create("https://example.com", "", TranslatableValue.EMPTY),
+        };
     }
 
     @Override

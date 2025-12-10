@@ -10,8 +10,10 @@ import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,21 +32,10 @@ public class HeaderContentWidget extends ContainerWidget {
 
         this.layout = new EqualSpacingLayout(this.width - UIConstants.PAGE_PADDING * 2, 0, EqualSpacingLayout.Orientation.HORIZONTAL);
 
-        LinearLayout titleDesc = LinearLayout
-                .vertical()
-                .spacing(UIConstants.SPACING);
-
-        titleDesc.addChild(
-                new StringWidget(twoThirds, 9, config.info().title().toComponent().withColor(UIConstants.TEXT_TITLE), font)
-        );
-
-        titleDesc.addChild(
-                new StringWidget(twoThirds, 9, config.info().description().toComponent().withColor(UIConstants.TEXT_PARAGRAPH), font)
-        );
-
-        LinearLayout links = LinearLayout
-                .horizontal()
-                .spacing(UIConstants.SPACING);
+        GridLayout links = new GridLayout().spacing(UIConstants.SPACING);
+        int maxCols = Math.max(1, (this.width - twoThirds - UIConstants.PAGE_PADDING) / 20);
+        int col = 0;
+        int row = 0;
 
         for (ResourcefulConfigLink link : config.info().links()) {
             SpriteButton button = SpriteButton.builder(12, 12)
@@ -57,7 +48,12 @@ public class HeaderContentWidget extends ContainerWidget {
                     })
                     .tooltip(link.text().toComponent())
                     .build();
-            links.addChild(button);
+            links.addChild(button, row, col);
+            col++;
+            if (col >= maxCols) {
+                col = 0;
+                row++;
+            }
         }
 
         for (ResourcefulConfigInfoButton infoButton : config.info().buttons()) {
@@ -67,15 +63,35 @@ public class HeaderContentWidget extends ContainerWidget {
                     .onPress(infoButton::onClick)
                     .tooltip(infoButton.text().toComponent())
                     .build();
-            links.addChild(button);
+            links.addChild(button, row, col);
+            col++;
+            if (col >= maxCols) {
+                col = 0;
+                row++;
+            }
         }
+
+        links.arrangeElements();
+
+        int textWidth = Math.max(this.width - links.getWidth() - UIConstants.PAGE_PADDING * 2, twoThirds);
+
+        LinearLayout titleDesc = LinearLayout.vertical().spacing(UIConstants.SPACING);
+        titleDesc.addChild(
+                new StringWidget(textWidth, 9, config.info().title().toComponent().withColor(UIConstants.TEXT_TITLE), font)
+        );
+
+        var description = titleDesc.addChild(
+                new MultiLineTextWidget(config.info().description().toComponent().withColor(UIConstants.TEXT_PARAGRAPH), font)
+        );
+        description.setMaxWidth(textWidth);
+        description.setMaxRows(3);
 
         this.layout.addChild(titleDesc);
         this.layout.addChild(links, settings -> settings.alignVerticallyMiddle().alignHorizontallyRight());
         this.layout.arrangeElements();
         this.layout.visitWidgets(this::addRenderableWidget);
 
-        this.height = this.layout.getHeight() + UIConstants.PAGE_PADDING * 2;
+        this.height = Math.max(22, this.layout.getHeight()) + UIConstants.PAGE_PADDING * 2;
     }
 
     @Override

@@ -1,2 +1,1 @@
-- Allow for use of Ctrl + F to focus search input
-- Fix section symbols not rendering in text inputs
+- Allow for the creation of custom Options

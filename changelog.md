@@ -1,1 +1,1 @@
-- Fix custom serializable objects not working correctly
+- Allow for the creation of custom Options

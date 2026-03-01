@@ -94,6 +94,8 @@ public class DraggableListOptionWidget<T> extends BaseWidget {
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,
                 UIConstants.TEXT_TITLE
         );
+        
+        this.applyCursor(graphics);
     }
 
     @Override

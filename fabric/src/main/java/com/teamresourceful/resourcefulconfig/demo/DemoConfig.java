@@ -2,7 +2,12 @@ package com.teamresourceful.resourcefulconfig.demo;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
 import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
+import com.teamresourceful.resourcefulconfig.api.types.info.ListEntrySummaryProvider;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ConfigInfo.Provider(DemoInfoProvider.class)
 @Config(
@@ -169,4 +174,121 @@ public final class DemoConfig {
             translation = "enum with abstract method"
     )
     public static DemoEnum demoEnumWithAbstract = DemoEnum.FIRST;
+
+    @ConfigEntry(id = "list")
+    @Comment("Filter rules. Each rule targets a category and sets a threshold.")
+    public static final List<FilterRule> filterRules = new ArrayList<>(List.of(new FilterRule()));
+
+    @ConfigObject
+    public static class FilterRule implements ListEntrySummaryProvider {
+
+        @ConfigEntry(id = "name")
+        public String name = "default";
+
+        @ConfigEntry(id = "category")
+        public ChatFormatting category = ChatFormatting.WHITE;
+
+        @ConfigEntry(id = "threshold")
+        @ConfigOption.Range(min = 0, max = 100)
+        @ConfigOption.Slider
+        public int threshold = 50;
+
+        @ConfigEntry(id = "enabled")
+        public boolean enabled = true;
+
+        @Override
+        public Component getTitle(int index) {
+            return Component.literal(name + " (" + threshold + "%)");
+        }
+    }
+
+    @ConfigEntry(id = "list2")
+    @Comment("Named color presets.")
+    public static final List<ColorPreset> colorPresets = new ArrayList<>();
+
+    @ConfigObject
+    public static class ColorPreset implements ListEntrySummaryProvider {
+
+        @ConfigEntry(id = "label")
+        public String label = "preset";
+
+        @ConfigEntry(id = "color")
+        @ConfigOption.Color
+        public int color = 0xFF0000;
+
+        @Override
+        public Component getTitle(int index) {
+            return Component.literal(label).withColor(color);
+        }
+
+        @Override
+        public Component getDescription(int index) {
+            return Component.literal("#" + String.format("%06X", color));
+        }
+    }
+
+    @ConfigEntry(id = "list3")
+    @Comment("Number entries — exercises int, double, and range fields.")
+    public static final List<NumberEntry> numberEntries = new ArrayList<>();
+
+    @ConfigObject
+    public static class NumberEntry implements ListEntrySummaryProvider {
+
+        @ConfigEntry(id = "count")
+        @ConfigOption.Range(min = 0, max = 64)
+        public int count = 1;
+
+        @ConfigEntry(id = "multiplier")
+        public double multiplier = 1.0;
+
+        @ConfigEntry(id = "offset")
+        @ConfigOption.Range(min = -100, max = 100)
+        @ConfigOption.Slider
+        public int offset = 0;
+
+        @Override
+        public Component getTitle(int index) {
+            return Component.literal("x" + multiplier + " +" + offset);
+        }
+    }
+
+    @ConfigEntry(id = "list4")
+    @Comment("Text entries — exercises string and multiline fields.")
+    public static final List<TextEntry> textEntries = new ArrayList<>();
+
+    @ConfigObject
+    public static class TextEntry implements ListEntrySummaryProvider {
+
+        @ConfigEntry(id = "title")
+        public String title = "untitled";
+
+        @ConfigEntry(id = "body")
+        @ConfigOption.Multiline
+        public String body = "";
+
+        @Override
+        public Component getTitle(int index) {
+            return Component.literal(title);
+        }
+
+        @Override
+        public Component getDescription(int index) {
+            String preview = body.length() > 32 ? body.substring(0, 32) + "…" : body;
+            return Component.literal(preview);
+        }
+    }
+
+    @ConfigEntry(id = "list5")
+    @Comment("A plain list with no summary provider — uses the reflection fallback.")
+    public static final List<SimpleEntry> simpleEntries = new ArrayList<>();
+
+    @ConfigObject
+    public static class SimpleEntry {
+
+        @ConfigEntry(id = "value")
+        public int value = 0;
+
+        @ConfigEntry(id = "active")
+        public boolean active = false;
+    }
 }

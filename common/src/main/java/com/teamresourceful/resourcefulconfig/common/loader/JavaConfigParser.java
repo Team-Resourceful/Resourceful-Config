@@ -3,6 +3,7 @@ package com.teamresourceful.resourcefulconfig.common.loader;
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
 import com.teamresourceful.resourcefulconfig.api.loader.ConfigParser;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
@@ -10,16 +11,17 @@ import com.teamresourceful.resourcefulconfig.common.config.ParsingUtils;
 import com.teamresourceful.resourcefulconfig.common.info.ParsedInfo;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedButtonElement;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedEntryElement;
+import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedListEntryElement;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedObjectEntryElement;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedSeparator;
-import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedInstanceEntry;
-import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedObjectEntry;
-import com.teamresourceful.resourcefulconfig.common.loader.entries.ParsedObservableEntry;
+import com.teamresourceful.resourcefulconfig.common.loader.entries.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +56,21 @@ public class JavaConfigParser implements ConfigParser {
                     ParsedObjectEntry objectEntry = new ParsedObjectEntry(field);
                     populateEntries(instance, objectEntry);
                     config.elements().add(new ParsedObjectEntryElement(data.id(), objectEntry));
+                } else if (type == EntryType.LIST) {
+                    Class<?> objectType = getListObjectType(field);
+                    if (objectType == null) {
+                        throw new IllegalArgumentException("List entry " + field.getName() + " must have a generic type parameter!");
+                    }
+                    boolean isObjectType = objectType.isAnnotationPresent(ConfigObject.class);
+                    boolean isValueType = !isObjectType && getEntryType(objectType).isAllowedInArrays();
+                    if (!isObjectType && !isValueType) {
+                        throw new IllegalArgumentException("List entry " + field.getName() + " element type must be a @ConfigObject or a supported value type (byte, short, int, long, float, double, boolean, String, enum)!");
+                    }
+                    if (isObjectType) {
+                        assertListObjectElement(field.getName(), objectType);
+                    }
+                    List<?> listInstance = (List<?>) ParsingUtils.getField(field, null);
+                    config.elements().add(new ParsedListEntryElement(data.id(), new ParsedListEntry(field, objectType, listInstance)));
                 } else if (field.getType() == Observable.class) {
                     ParsedObservableEntry observableEntry = ParsedObservableEntry.of(type, field, null);
                     config.elements().add(new ParsedEntryElement(data.id(), observableEntry));
@@ -89,7 +106,15 @@ public class JavaConfigParser implements ConfigParser {
         return config;
     }
 
-    private static void populateEntries(Object instance, ParsedObjectEntry entry) {
+    static void populateEntries(Object instance, ParsedObjectEntry entry) {
+        populateObjectEntryElements(instance, entry.elements());
+    }
+
+    public static void populateEntries(Object instance, ParsedListObjectEntry entry) {
+        populateObjectEntryElements(instance, entry.elements());
+    }
+
+    private static void populateObjectEntryElements(Object instance, List<ResourcefulConfigElement> elements) {
         assertValidClass(instance.getClass());
         for (Field field : instance.getClass().getDeclaredFields()) {
             ConfigEntry data = assertAccessibleEntry(instance, field);
@@ -98,11 +123,14 @@ public class JavaConfigParser implements ConfigParser {
             if (type == EntryType.OBJECT) {
                 throw new IllegalArgumentException("Entry " + field.getName() + " cannot be an object!");
             }
+            if (type == EntryType.LIST) {
+                throw new IllegalArgumentException("Entry " + field.getName() + " cannot be a list inside an object!");
+            }
 
             var separator = field.getAnnotation(ConfigOption.Separator.class);
 
             if (separator != null) {
-                entry.elements().add(ParsedSeparator.of(field));
+                elements.add(ParsedSeparator.of(field));
             }
 
             ResourcefulConfigValueEntry valueEntry;
@@ -115,7 +143,29 @@ public class JavaConfigParser implements ConfigParser {
             if (valueEntry.defaultValue() == null) {
                 throw new IllegalArgumentException("Entry " + field.getName() + " must not have a null default value!");
             }
-            entry.elements().add(new ParsedEntryElement(data.id(), valueEntry));
+            elements.add(new ParsedEntryElement(data.id(), valueEntry));
+        }
+    }
+
+    private static void assertListObjectElement(String fieldName, Class<?> objectType) {
+        assertValidClass(objectType);
+        try {
+            var constructor = objectType.getDeclaredConstructor();
+            if (!Modifier.isPublic(constructor.getModifiers())) {
+                throw new IllegalArgumentException("List entry " + fieldName + " element class " + objectType.getSimpleName() + " must have a public no-arg constructor!");
+            }
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("List entry " + fieldName + " element class " + objectType.getSimpleName() + " must have a public no-arg constructor!");
+        }
+        // Validate all @ConfigEntry fields using the same rules as populateEntries
+        Object instance;
+        try {
+            instance = objectType.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to instantiate " + objectType.getSimpleName() + " for validation", e);
+        }
+        for (Field field : objectType.getDeclaredFields()) {
+            assertAccessibleEntry(instance, field);
         }
     }
 
@@ -139,6 +189,8 @@ public class JavaConfigParser implements ConfigParser {
     }
 
     private static Class<?> getFieldType(Object instance, Field field, EntryType entry) {
+        if (entry == EntryType.LIST) return List.class;
+
         Class<?> type = field.getType();
         if (type == Observable.class) {
             try {
@@ -202,6 +254,7 @@ public class JavaConfigParser implements ConfigParser {
 
     private static EntryType getEntryType(Field field) {
         Class<?> fieldType = field.getType();
+        if (fieldType == List.class) return EntryType.LIST;
         if (fieldType == Observable.class) fieldType = ((Observable<?>) ParsingUtils.getField(field, null)).type();
         if (fieldType.isArray()) fieldType = fieldType.getComponentType();
         return getEntryType(fieldType);
@@ -209,6 +262,7 @@ public class JavaConfigParser implements ConfigParser {
 
     private static EntryType getEntryType(Class<?> type) {
         if (type.getAnnotation(ConfigObject.class) != null) return EntryType.OBJECT;
+        if (type == List.class) return EntryType.LIST;
         if (type == Long.TYPE || type == Long.class) return EntryType.LONG;
         if (type == Integer.TYPE || type == Integer.class) return EntryType.INTEGER;
         if (type == Short.TYPE || type == Short.class) return EntryType.SHORT;
@@ -219,5 +273,21 @@ public class JavaConfigParser implements ConfigParser {
         if (type == String.class) return EntryType.STRING;
         if (type.isEnum()) return EntryType.ENUM;
         throw new IllegalArgumentException("Entry " + type + " is not a valid type!");
+    }
+
+    private static Class<?> getListObjectType(Field field) {
+        Type generic = field.getGenericType();
+        if (!(generic instanceof ParameterizedType pt)) return null;
+        Type arg = pt.getActualTypeArguments()[0];
+        if (!(arg instanceof Class<?> clazz)) return null;
+        return clazz;
+    }
+
+    public static EntryType resolveElementType(Class<?> type) {
+        return getEntryType(type);
+    }
+
+    private static EntryType getValueEntryType(Class<?> type) {
+        return getEntryType(type);
     }
 }

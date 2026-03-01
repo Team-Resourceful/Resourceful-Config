@@ -3,6 +3,7 @@ package com.teamresourceful.resourcefulconfig.api.types.options;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigObject;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public enum EntryType {
@@ -16,6 +17,7 @@ public enum EntryType {
     STRING(type -> type == String.class),
     ENUM(ModUtils::isEnum),
     OBJECT(type -> type.isAnnotationPresent(ConfigObject.class)),
+    LIST(type -> type == List.class);
     ;
 
     private final Predicate<Class<?>> predicate;
@@ -29,10 +31,10 @@ public enum EntryType {
     }
 
     public boolean isAllowedInArrays() {
-        return this != OBJECT;
+        return this != LIST;
     }
 
     public boolean mustBeFinal() {
-        return this == OBJECT;
+        return this == OBJECT || this == LIST;
     }
 }

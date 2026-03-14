@@ -20,6 +20,7 @@ public class UIConstants {
     public static final Component EDIT_OBJECT = Component.translatable("rconfig.ui.constant.edit.object");
     public static final Component CHOOSE_ITEM = Component.translatable("rconfig.ui.constant.choose_item");
     public static final Component ADD_ITEM = Component.translatable("rconfig.ui.constant.add_item");
+    public static final Component ADD_ITEM_TOOLTIP = Component.translatable("rconfig.ui.constant.add_item.tooltip");
     public static final Component REMOVE_ITEM = Component.translatable("rconfig.ui.constant.remove_item");
     public static final Component MOVE_UP = Component.translatable("rconfig.ui.constant.move_up");
     public static final Component MOVE_DOWN = Component.translatable("rconfig.ui.constant.move_down");

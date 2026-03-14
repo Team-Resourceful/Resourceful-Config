@@ -2,7 +2,7 @@ package com.teamresourceful.resourcefulconfig.api.types.info;
 
 import net.minecraft.network.chat.Component;
 
-public interface ListEntrySummaryProvider {
+public interface ListEntryInfoProvider {
 
     Component getTitle(int index);
 

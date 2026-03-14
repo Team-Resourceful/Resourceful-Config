@@ -4,15 +4,17 @@ import net.minecraft.network.chat.Component;
 
 public interface ResourcefulConfigListEntry extends ResourcefulConfigEntry {
 
-    int size();
-
     Class<?> objectType();
+
+    int size();
 
     ResourcefulConfigEntry get(int index);
 
     void move(int from, int to);
 
     void remove(int index);
+
+    void clear();
 
     void add(int index);
 
@@ -21,11 +23,11 @@ public interface ResourcefulConfigListEntry extends ResourcefulConfigEntry {
     Component getDescription(int index);
 
     default void add() {
-        add(size());
+        this.add(this.size());
     }
 
     default int wrap(int index) {
-        if (size() == 0) return 0;
-        return Math.floorMod(index, size());
+        if (this.size() == 0) return 0;
+        return Math.floorMod(index, this.size());
     }
 }

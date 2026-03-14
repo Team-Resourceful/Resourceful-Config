@@ -34,10 +34,10 @@ public class SpriteButton extends AbstractButton {
 
     @Override
     protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        Identifier button = isHovered() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
+        Identifier button = this.isHovered() && this.isActive() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, button, getX(), getY(), getWidth(), getHeight());
         graphics.blitSprite(
-                RenderPipelines.GUI_TEXTURED,
+            RenderPipelines.GUI_TEXTURED,
             this.sprite,
             getX() + this.padding, getY() + this.padding,
             getWidth() - this.padding * 2, getHeight() - this.padding * 2
@@ -59,40 +59,48 @@ public class SpriteButton extends AbstractButton {
 
     public static class Builder {
 
-            private final int width;
-            private final int height;
-            private int padding;
-            private Identifier sprite;
-            private Runnable onPress = () -> {};
-            private Component tooltip = null;
+        private final int width;
+        private final int height;
+        private int padding;
+        private Identifier sprite;
+        private Runnable onPress = () -> {};
+        private Component tooltip = null;
+        private boolean disabled = false;
 
-            public Builder(int width, int height) {
-                this.width = width;
-                this.height = height;
-            }
+        public Builder(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
 
-            public Builder padding(int padding) {
-                this.padding = padding;
-                return this;
-            }
+        public Builder padding(int padding) {
+            this.padding = padding;
+            return this;
+        }
 
-            public Builder sprite(Identifier sprite) {
-                this.sprite = sprite;
-                return this;
-            }
+        public Builder sprite(Identifier sprite) {
+            this.sprite = sprite;
+            return this;
+        }
 
-            public Builder onPress(Runnable onPress) {
-                this.onPress = onPress;
-                return this;
-            }
+        public Builder onPress(Runnable onPress) {
+            this.onPress = onPress;
+            return this;
+        }
 
-            public Builder tooltip(Component tooltip) {
-                this.tooltip = tooltip;
-                return this;
-            }
+        public Builder tooltip(Component tooltip) {
+            this.tooltip = tooltip;
+            return this;
+        }
 
-            public SpriteButton build() {
-                return new SpriteButton(width, height, padding, sprite, onPress, tooltip);
-            }
+        public Builder disabled(boolean disabled) {
+            this.disabled = disabled;
+            return this;
+        }
+
+        public SpriteButton build() {
+            var button = new SpriteButton(width, height, padding, sprite, onPress, tooltip);
+            button.active = !this.disabled;
+            return button;
+        }
     }
 }

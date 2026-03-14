@@ -15,6 +15,7 @@ import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedListEn
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedObjectEntryElement;
 import com.teamresourceful.resourcefulconfig.common.loader.elements.ParsedSeparator;
 import com.teamresourceful.resourcefulconfig.common.loader.entries.*;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -25,6 +26,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiStatus.Internal
 public class JavaConfigParser implements ConfigParser {
 
     @Override
@@ -62,9 +64,8 @@ public class JavaConfigParser implements ConfigParser {
                         throw new IllegalArgumentException("List entry " + field.getName() + " must have a generic type parameter!");
                     }
                     boolean isObjectType = objectType.isAnnotationPresent(ConfigObject.class);
-                    boolean isValueType = !isObjectType && getEntryType(objectType).isAllowedInArrays();
-                    if (!isObjectType && !isValueType) {
-                        throw new IllegalArgumentException("List entry " + field.getName() + " element type must be a @ConfigObject or a supported value type (byte, short, int, long, float, double, boolean, String, enum)!");
+                    if (!isObjectType && !getEntryType(objectType).isAllowedInArrays()) {
+                        throw new IllegalArgumentException("List entry " + field.getName() + " element type must be a @ConfigObject or a supported value type (byte, short, int, long, float, double, boolean, String, Enum)!");
                     }
                     if (isObjectType) {
                         assertListObjectElement(field.getName(), objectType);
@@ -157,7 +158,7 @@ public class JavaConfigParser implements ConfigParser {
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("List entry " + fieldName + " element class " + objectType.getSimpleName() + " must have a public no-arg constructor!");
         }
-        // Validate all @ConfigEntry fields using the same rules as populateEntries
+
         Object instance;
         try {
             instance = objectType.getDeclaredConstructor().newInstance();

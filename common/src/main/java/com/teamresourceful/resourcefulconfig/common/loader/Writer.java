@@ -106,7 +106,7 @@ public class Writer {
         final EntryData options = entry.options();
 
         if (entry instanceof ResourcefulConfigListEntry listEntry) {
-            comments.add("List of " + listEntry.objectType().getSimpleName());
+            comments.add("List Type: " + listEntry.objectType().getSimpleName());
         }
 
         if (entry instanceof ResourcefulConfigValueEntry valueEntry) {

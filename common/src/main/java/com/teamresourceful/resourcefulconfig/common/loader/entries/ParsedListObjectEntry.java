@@ -36,10 +36,6 @@ public record ParsedListObjectEntry(
 
     @Override
     public Component getTitle(@NotNull Component fallback) {
-        try {
-            return Translatable.toSpeifiedComponent(instance, fallback);
-        } catch (Exception e) {
-            return fallback;
-        }
+        return Translatable.toSpeifiedComponent(this.instance, fallback);
     }
 }

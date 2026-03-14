@@ -49,7 +49,10 @@ public record ParsedListItemValueEntry(
     @Override
     public boolean setByte(byte value) {
         if (type != EntryType.BYTE) return false;
-        if (options.hasOption(Option.RANGE) && !options.inRange(value)) { reset(); return false; }
+        if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
+            reset();
+            return false;
+        }
         list.set(index, value);
         return true;
     }
@@ -62,7 +65,10 @@ public record ParsedListItemValueEntry(
     @Override
     public boolean setShort(short value) {
         if (type != EntryType.SHORT) return false;
-        if (options.hasOption(Option.RANGE) && !options.inRange(value)) { reset(); return false; }
+        if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
+            reset();
+            return false;
+        }
         list.set(index, value);
         return true;
     }
@@ -75,7 +81,10 @@ public record ParsedListItemValueEntry(
     @Override
     public boolean setInt(int value) {
         if (type != EntryType.INTEGER) return false;
-        if (options.hasOption(Option.RANGE) && !options.inRange(value)) { reset(); return false; }
+        if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
+            reset();
+            return false;
+        }
         list.set(index, value);
         return true;
     }
@@ -88,7 +97,10 @@ public record ParsedListItemValueEntry(
     @Override
     public boolean setLong(long value) {
         if (type != EntryType.LONG) return false;
-        if (options.hasOption(Option.RANGE) && !options.inRange(value)) { reset(); return false; }
+        if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
+            reset();
+            return false;
+        }
         list.set(index, value);
         return true;
     }
@@ -101,7 +113,10 @@ public record ParsedListItemValueEntry(
     @Override
     public boolean setFloat(float value) {
         if (type != EntryType.FLOAT) return false;
-        if (options.hasOption(Option.RANGE) && !options.inRange(value)) { reset(); return false; }
+        if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
+            reset();
+            return false;
+        }
         list.set(index, value);
         return true;
     }
@@ -114,7 +129,10 @@ public record ParsedListItemValueEntry(
     @Override
     public boolean setDouble(double value) {
         if (type != EntryType.DOUBLE) return false;
-        if (options.hasOption(Option.RANGE) && !options.inRange(value)) { reset(); return false; }
+        if (options.hasOption(Option.RANGE) && !options.inRange(value)) {
+            reset();
+            return false;
+        }
         list.set(index, value);
         return true;
     }

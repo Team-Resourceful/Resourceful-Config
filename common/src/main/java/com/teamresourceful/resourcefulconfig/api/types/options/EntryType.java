@@ -17,7 +17,7 @@ public enum EntryType {
     STRING(type -> type == String.class),
     ENUM(ModUtils::isEnum),
     OBJECT(type -> type.isAnnotationPresent(ConfigObject.class)),
-    LIST(type -> type == List.class);
+    LIST(type -> type == List.class),
     ;
 
     private final Predicate<Class<?>> predicate;
@@ -31,7 +31,7 @@ public enum EntryType {
     }
 
     public boolean isAllowedInArrays() {
-        return this != LIST;
+        return this != LIST && this != OBJECT;
     }
 
     public boolean mustBeFinal() {

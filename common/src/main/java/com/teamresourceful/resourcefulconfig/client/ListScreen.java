@@ -5,7 +5,6 @@ import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfig
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
-import com.teamresourceful.resourcefulconfig.client.components.base.CustomButton;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionItem;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
@@ -15,6 +14,7 @@ import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
@@ -63,6 +63,7 @@ public class ListScreen extends Screen implements CloseableScreen {
                     .padding(2)
                     .sprite(ModSprites.CHEVRON_UP)
                     .tooltip(UIConstants.MOVE_UP)
+                    .disabled(index == 0)
                     .onPress(() -> {
                         if (index > 0) {
                             entry.move(index, index - 1);
@@ -74,6 +75,7 @@ public class ListScreen extends Screen implements CloseableScreen {
                     .padding(2)
                     .sprite(ModSprites.CHEVRON_DOWN)
                     .tooltip(UIConstants.MOVE_DOWN)
+                    .disabled(index == entry.size() - 1)
                     .onPress(() -> {
                         if (index < entry.size() - 1) {
                             entry.move(index, index + 1);
@@ -108,20 +110,28 @@ public class ListScreen extends Screen implements CloseableScreen {
             ));
         }
 
-        addRenderableWidget(new CustomButton(
-                96, 12,
-                UIConstants.ADD_ITEM,
-                () -> {
+        addRenderableWidget(SpriteButton.builder(12, 12)
+                .padding(2)
+                .sprite(ModSprites.CHEVRON_LEFT)
+                .onPress(this::onClose)
+                .tooltip(UIConstants.BACK)
+                .build()
+        ).setPosition(UIConstants.PAGE_PADDING, UIConstants.PAGE_PADDING);
+
+        var title = entry.options().title().toComponent().withColor(UIConstants.TEXT_TITLE);
+        addRenderableWidget(new StringWidget(title, font))
+                .setPosition((this.width - font.width(title)) / 2, UIConstants.PAGE_PADDING + 5);
+
+        addRenderableWidget(SpriteButton.builder(12, 12)
+                .padding(2)
+                .sprite(ModSprites.ADD)
+                .onPress(() -> {
                     entry.add();
                     rebuildWidgets();
-                }
-        )).setPosition(UIConstants.PAGE_PADDING, UIConstants.PAGE_PADDING);
-
-        addRenderableWidget(new CustomButton(
-                96, 12,
-                CommonComponents.GUI_DONE,
-                this::onClose
-        )).setPosition(this.width - 96 - UIConstants.PAGE_PADDING, UIConstants.PAGE_PADDING);
+                })
+                .tooltip(UIConstants.ADD_ITEM_TOOLTIP)
+                .build()
+        ).setPosition(this.width - 16 - UIConstants.PAGE_PADDING, UIConstants.PAGE_PADDING);
     }
 
     @Override
@@ -144,5 +154,6 @@ public class ListScreen extends Screen implements CloseableScreen {
     }
 
     @Override
-    public void onClosed(@Nullable Screen screen) {}
+    public void onClosed(@Nullable Screen screen) {
+    }
 }

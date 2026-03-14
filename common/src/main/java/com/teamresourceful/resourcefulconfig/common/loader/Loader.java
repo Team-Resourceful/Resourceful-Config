@@ -40,9 +40,9 @@ public class Loader {
     private static void load(ResourcefulConfigEntry entry, String context, JsonElement data) {
         if (entry instanceof ResourcefulConfigListEntry listEntry) {
             if (!(data instanceof JsonArray array)) return;
-            while (listEntry.size() > 0) listEntry.remove(0);
+            listEntry.clear();
             for (JsonElement element : array) {
-                listEntry.add(listEntry.size());
+                listEntry.add();
                 ResourcefulConfigEntry itemEntry = listEntry.get(-1);
                 load(itemEntry, context, element);
             }

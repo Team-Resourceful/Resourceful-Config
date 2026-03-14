@@ -3,8 +3,7 @@ package com.teamresourceful.resourcefulconfig.common.loader.entries;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigListEntry;
-import com.teamresourceful.resourcefulconfig.api.types.info.ListEntrySummaryProvider;
-import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
+import com.teamresourceful.resourcefulconfig.api.types.info.ListEntryInfoProvider;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import com.teamresourceful.resourcefulconfig.common.loader.JavaConfigParser;
@@ -74,6 +73,11 @@ public record ParsedListEntry(
     }
 
     @Override
+    public void clear() {
+        list.clear();
+    }
+
+    @Override
     public void add(int index) {
         int i = list.isEmpty() ? 0 : Math.floorMod(index, list.size() + 1);
         list.add(i, defaultElement());
@@ -97,7 +101,7 @@ public record ParsedListEntry(
     public Component getTitle(int index) {
         Object item = list.get(wrap(index));
 
-        if (item instanceof ListEntrySummaryProvider provider) {
+        if (item instanceof ListEntryInfoProvider provider) {
             return provider.getTitle(index);
         }
 
@@ -107,7 +111,7 @@ public record ParsedListEntry(
     @Override
     public Component getDescription(int index) {
         Object item = list.get(wrap(index));
-        if (item instanceof ListEntrySummaryProvider provider) {
+        if (item instanceof ListEntryInfoProvider provider) {
             return provider.getDescription(index);
         }
         return Component.empty();

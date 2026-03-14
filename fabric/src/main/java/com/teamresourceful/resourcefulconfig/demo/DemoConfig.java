@@ -2,7 +2,12 @@ package com.teamresourceful.resourcefulconfig.demo;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
 import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
+import com.teamresourceful.resourcefulconfig.api.types.info.ListEntryInfoProvider;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ConfigInfo.Provider(DemoInfoProvider.class)
 @Config(
@@ -169,4 +174,35 @@ public final class DemoConfig {
             translation = "enum with abstract method"
     )
     public static DemoEnum demoEnumWithAbstract = DemoEnum.FIRST;
+
+    @ConfigEntry(id = "demoList")
+    public static final List<DemoListEntry> demoList = new ArrayList<>(List.of(new DemoListEntry()));
+
+    @ConfigObject
+    public static class DemoListEntry implements ListEntryInfoProvider {
+
+        @ConfigEntry(id = "name")
+        public String name = "default";
+
+        @ConfigEntry(id = "formatting")
+        public ChatFormatting formatting = ChatFormatting.WHITE;
+
+        @ConfigEntry(id = "threshold")
+        @ConfigOption.Range(min = 0, max = 100)
+        @ConfigOption.Slider
+        public int threshold = 50;
+
+        @ConfigEntry(id = "enabled")
+        public boolean enabled = true;
+
+        @Override
+        public Component getTitle(int index) {
+            return Component.literal(name + " (" + threshold + "%)");
+        }
+
+        @Override
+        public Component getDescription(int index) {
+            return Component.literal("Category: " + formatting.name() + " Enabled: " + enabled);
+        }
+    }
 }

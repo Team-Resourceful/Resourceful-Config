@@ -8,6 +8,7 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
 import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigSeparatorElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigListEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
@@ -48,6 +49,8 @@ public final class Options {
                     ));
                     case ResourcefulConfigEntryElement entry when entry.entry() instanceof ResourcefulConfigValueEntry value ->
                             populateValueEntry(widget, value);
+                    case ResourcefulConfigEntryElement entry when entry.entry() instanceof ResourcefulConfigListEntry list ->
+                            populateListEntry(widget, list);
                     case ResourcefulConfigEntryElement entry when entry.entry() instanceof ResourcefulConfigObjectEntry object ->
                             widget.add(new OptionItem(object, List.of(new ObjectOptionWidget(object))));
                     case ResourcefulConfigSeparatorElement separator -> widget.add(
@@ -60,9 +63,19 @@ public final class Options {
         }
     }
 
-    private static void populateValueEntry(OptionsListWidget list, ResourcefulConfigValueEntry entry) {
-        final EntryData data = entry.options();
+    private static void populateListEntry(OptionsListWidget list, ResourcefulConfigListEntry entry) {
+        var reset = SpriteButton.builder(12, 12)
+                .padding(2)
+                .sprite(ModSprites.RESET)
+                .tooltip(UIConstants.RESET)
+                .onPress(entry::reset)
+                .build();
 
+        list.add(new OptionItem(entry, List.of(new ListOptionWidget(entry), reset)));
+    }
+
+    public static List<AbstractWidget> entryWidgets(ResourcefulConfigValueEntry entry) {
+        final EntryData data = entry.options();
         List<AbstractWidget> widgets = new ArrayList<>();
 
         switch (entry.type()) {
@@ -123,8 +136,7 @@ public final class Options {
                                         s = s.substring(2);
                                     }
                                     if (s.length() == 3) {
-                                        s = "" + s.charAt(0) + s.charAt(0) + s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(
-                                                2);
+                                        s = "" + s.charAt(0) + s.charAt(0) + s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(2);
                                     }
                                     entry.setInt(Long.decode(s).intValue());
                                     return true;
@@ -192,6 +204,12 @@ public final class Options {
             case OBJECT -> throw new IllegalStateException("Unexpected value: " + entry.type());
         }
 
+        return widgets;
+    }
+
+    private static void populateValueEntry(OptionsListWidget list, ResourcefulConfigValueEntry entry) {
+        List<AbstractWidget> widgets = new ArrayList<>(entryWidgets(entry));
+
         var reset = SpriteButton.builder(12, 12)
                 .padding(2)
                 .sprite(ModSprites.RESET)
@@ -200,7 +218,6 @@ public final class Options {
                 .build();
 
         widgets.add(reset);
-
         list.add(new OptionItem(entry, widgets));
     }
 

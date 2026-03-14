@@ -5,6 +5,7 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigListEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.SerializableObject;
@@ -60,6 +61,15 @@ public class Writer {
     }
 
     private static JsoncElement toElement(ResourcefulConfigEntry entry) {
+        if (entry instanceof ResourcefulConfigListEntry listEntry) {
+            JsoncArray array = new JsoncArray();
+
+            for (int i = 0; i < listEntry.size(); i++) {
+                array.add(toElement(listEntry.get(i)));
+            }
+
+            return array;
+        }
         if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
             if (objectEntry.instance() instanceof SerializableObject serializable) {
                 return new JsoncPrimitive(serializable.save());
@@ -94,6 +104,10 @@ public class Writer {
         List<String> comments = new ArrayList<>();
 
         final EntryData options = entry.options();
+
+        if (entry instanceof ResourcefulConfigListEntry listEntry) {
+            comments.add("List Type: " + listEntry.objectType().getSimpleName());
+        }
 
         if (entry instanceof ResourcefulConfigValueEntry valueEntry) {
 
@@ -132,7 +146,7 @@ public class Writer {
             }
         }
 
-        if (comments.isEmpty() && entry.type() != EntryType.BOOLEAN && entry.type() != EntryType.STRING && entry.type() != EntryType.OBJECT) {
+        if (comments.isEmpty() && entry.type() != EntryType.BOOLEAN && entry.type() != EntryType.STRING && entry.type() != EntryType.OBJECT && entry.type() != EntryType.LIST) {
             comments.add("Type: " + entry.type().name().charAt(0) + entry.type().name().substring(1).toLowerCase());
         }
 
@@ -140,6 +154,4 @@ public class Writer {
 
         return String.join("\n", comments);
     }
-
-
 }

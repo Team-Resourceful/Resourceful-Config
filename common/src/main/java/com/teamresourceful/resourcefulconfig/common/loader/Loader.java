@@ -8,6 +8,7 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfigElement;
 import com.teamresourceful.resourcefulconfig.api.types.elements.ResourcefulConfigEntryElement;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
+import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigListEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigObjectEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
 import com.teamresourceful.resourcefulconfig.api.types.entries.SerializableObject;
@@ -26,17 +27,7 @@ public class Loader {
         forEach(config.elements(), (id, entry) -> {
             JsonElement data = json.get(id);
             if (data == null) return;
-            if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
-                if (objectEntry.instance() instanceof SerializableObject serializable) {
-                    serializable.load(data);
-                } else if (data instanceof JsonObject object) {
-                    loadObject(objectEntry, object);
-                }
-            } else if (entry instanceof ResourcefulConfigValueEntry value) {
-                if (!setValue(data, id, value)) {
-                    ModUtils.log("Failed to set value for " + id);
-                }
-            }
+            load(entry, id, data);
         });
 
         config.categories().forEach((id, category) -> {
@@ -44,6 +35,28 @@ public class Loader {
             if (!(data instanceof JsonObject object)) return;
             loadConfig(category, object);
         });
+    }
+
+    private static void load(ResourcefulConfigEntry entry, String context, JsonElement data) {
+        if (entry instanceof ResourcefulConfigListEntry listEntry) {
+            if (!(data instanceof JsonArray array)) return;
+            listEntry.clear();
+            for (JsonElement element : array) {
+                listEntry.add();
+                ResourcefulConfigEntry itemEntry = listEntry.get(-1);
+                load(itemEntry, context, element);
+            }
+        } else if (entry instanceof ResourcefulConfigObjectEntry objectEntry) {
+            if (objectEntry.instance() instanceof SerializableObject serializable) {
+                serializable.load(data);
+            } else if (data instanceof JsonObject object) {
+                loadObject(objectEntry, object);
+            }
+        } else if (entry instanceof ResourcefulConfigValueEntry value) {
+            if (!setValue(data, context, value)) {
+                ModUtils.log("Failed to set value for " + context);
+            }
+        }
     }
 
     private static void loadObject(ResourcefulConfigObjectEntry object, JsonObject json) {
@@ -58,10 +71,10 @@ public class Loader {
         });
     }
 
-    private static Object convert(JsonElement element, String id, ResourcefulConfigValueEntry entry) {
+    private static Object convert(JsonElement element, String context, ResourcefulConfigValueEntry entry) {
         if (element instanceof JsonArray array) {
             List<Object> list = new ArrayList<>();
-            array.forEach(e -> list.add(convert(e, id, entry)));
+            array.forEach(e -> list.add(convert(e, context, entry)));
             list.removeIf(Objects::isNull);
             return list;
         } else if (element instanceof JsonPrimitive primitive) {
@@ -84,7 +97,7 @@ public class Loader {
                     if (value != null) {
                         return value;
                     }
-                    ModUtils.log("Failed to parse enum value for " + id);
+                    ModUtils.log("Failed to parse enum value for " + context);
                 }
                 return primitive.getAsString();
             }
@@ -92,9 +105,8 @@ public class Loader {
         return null;
     }
 
-
-    private static boolean setValue(JsonElement json, String id, ResourcefulConfigValueEntry data) {
-        Object o = convert(json, id, data);
+    private static boolean setValue(JsonElement json, String context, ResourcefulConfigValueEntry data) {
+        Object o = convert(json, context, data);
         if (o instanceof List<?> list) return data.setArray(list.toArray());
         else if (o instanceof String string) return data.setString(string);
         else if (o instanceof Boolean booleanValue) return data.setBoolean(booleanValue);

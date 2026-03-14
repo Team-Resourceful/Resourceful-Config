@@ -4,7 +4,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 public class UIConstants {
-
     public static final int BACKGROUND = 0xFF131517;
     public static final int TEXT_TITLE = 0xFFFAF9F6;
     public static final int TEXT_PARAGRAPH = 0xFF727478;
@@ -21,6 +20,10 @@ public class UIConstants {
     public static final Component EDIT_OBJECT = Component.translatable("rconfig.ui.constant.edit.object");
     public static final Component CHOOSE_ITEM = Component.translatable("rconfig.ui.constant.choose_item");
     public static final Component ADD_ITEM = Component.translatable("rconfig.ui.constant.add_item");
+    public static final Component ADD_ITEM_TOOLTIP = Component.translatable("rconfig.ui.constant.add_item.tooltip");
+    public static final Component REMOVE_ITEM = Component.translatable("rconfig.ui.constant.remove_item");
+    public static final Component MOVE_UP = Component.translatable("rconfig.ui.constant.move_up");
+    public static final Component MOVE_DOWN = Component.translatable("rconfig.ui.constant.move_down");
     public static final Component MOD_CONFIGS = Component.translatable("rconfig.ui.constant.mod_configs").withColor(UIConstants.TEXT_TITLE);
     public static final Component MOD_CONFIGS_DESCRIPTION = Component.translatable("rconfig.ui.constant.mod_configs.description").withColor(UIConstants.TEXT_PARAGRAPH);
 }

@@ -16,13 +16,16 @@ public class ModSprites {
 
     public static final Identifier RESET = Identifier.fromNamespaceAndPath("resourcefulconfig", "reset");
     public static final Identifier EDIT = Identifier.fromNamespaceAndPath("resourcefulconfig", "edit");
+    public static final Identifier CHEVRON_UP = Identifier.fromNamespaceAndPath("resourcefulconfig", "chevron_up");
     public static final Identifier CHEVRON_DOWN = Identifier.fromNamespaceAndPath("resourcefulconfig", "chevron_down");
     public static final Identifier CHEVRON_LEFT = Identifier.fromNamespaceAndPath("resourcefulconfig", "chevron_left");
+    public static final Identifier DROPDOWN_CHEVRON = Identifier.fromNamespaceAndPath("resourcefulconfig", "dropdown_chevron");
     public static final Identifier CROSS = Identifier.fromNamespaceAndPath("resourcefulconfig", "cross");
     public static final Identifier CHECK = Identifier.fromNamespaceAndPath("resourcefulconfig", "check");
     public static final Identifier DRAGGABLE = Identifier.fromNamespaceAndPath("resourcefulconfig", "draggable");
     public static final Identifier DELETE = Identifier.fromNamespaceAndPath("resourcefulconfig", "delete");
     public static final Identifier EYE_DROPPER = Identifier.fromNamespaceAndPath("resourcefulconfig", "eye_dropper");
+    public static final Identifier ADD = Identifier.fromNamespaceAndPath("resourcefulconfig", "add");
 
     public static final Identifier HEADER = Identifier.fromNamespaceAndPath("resourcefulconfig", "header");
     public static final Identifier CONTAINER = Identifier.fromNamespaceAndPath("resourcefulconfig", "container");

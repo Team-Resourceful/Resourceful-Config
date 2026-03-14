@@ -52,13 +52,13 @@ public class SelectWidget<T> extends BaseWidget {
                 getY() + 4, getY() + getHeight() - 4
         );
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CHEVRON_DOWN, getX() + getWidth() - 12, getY() + 4, 8, 8);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.DROPDOWN_CHEVRON, getX() + getWidth() - 12, getY() + 4, 8, 8);
 
         this.applyCursor(graphics);
     }
 
     @Override
-    public void onClick(MouseButtonEvent event, boolean bl) {
+    public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
         Minecraft.getInstance().setScreen(new SelectOverlay<>(this));
     }
 

@@ -205,4 +205,7 @@ public final class DemoConfig {
             return Component.literal("Category: " + formatting.name() + " Enabled: " + enabled);
         }
     }
+
+    @ConfigEntry(id = "demoList2")
+    public static final List<String> demoList2 = new ArrayList<>(List.of("Hello", "World"));
 }

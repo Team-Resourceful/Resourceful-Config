@@ -1,1 +1,2 @@
-- Config headers now dynamically size based on content and buttons will no longer overlap text instead will make a new row.
+- Fix draggable list not showing cursor (0xar-ds)
+- Add support for lists (0xar-ds)

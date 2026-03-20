@@ -5,7 +5,7 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
@@ -31,7 +31,7 @@ public class BooleanOptionWidget extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         boolean value = this.getter.getAsBoolean();
         int offX = getX() + 1;
         int onX = getX() + 1 + HALF_WIDTH;
@@ -39,8 +39,8 @@ public class BooleanOptionWidget extends BaseWidget {
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofSwitch(value), value ? onX : offX, getY() + 1, SWITCH_WIDTH, this.height - 2);
-        drawCenteredString(graphics, this.font, CommonComponents.OPTION_OFF, offX + HALF_SWITCH_WIDTH, getY() + 4, color, value && isHovered());
-        drawCenteredString(graphics, this.font, CommonComponents.OPTION_ON, onX + HALF_SWITCH_WIDTH, getY() + 4, color, !value && isHovered());
+        extractCenteredString(graphics, this.font, CommonComponents.OPTION_OFF, offX + HALF_SWITCH_WIDTH, getY() + 4, color, value && isHovered());
+        extractCenteredString(graphics, this.font, CommonComponents.OPTION_ON, onX + HALF_SWITCH_WIDTH, getY() + 4, color, !value && isHovered());
         this.applyCursor(graphics);
     }
 
@@ -49,8 +49,8 @@ public class BooleanOptionWidget extends BaseWidget {
         this.setter.accept(!this.getter.getAsBoolean());
     }
 
-    public static void drawCenteredString(GuiGraphics graphics, Font font, Component component, int x, int y, int color, boolean shadowed) {
+    public static void extractCenteredString(GuiGraphicsExtractor graphics, Font font, Component component, int x, int y, int color, boolean shadowed) {
         int actualX = x - font.width(component) / 2;
-        graphics.drawString(font, component, actualX, y, color, shadowed);
+        graphics.text(font, component, actualX, y, color, shadowed);
     }
 }

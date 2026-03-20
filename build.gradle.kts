@@ -6,8 +6,8 @@ import com.teamresourceful.utils.getPlatform
 plugins {
     java
     id("maven-publish")
-    alias(libs.plugins.resourceful.loom)
     alias(libs.plugins.resourceful.gradle)
+    alias(libs.plugins.resourceful.minecraft) apply false
 }
 
 subprojects {
@@ -17,12 +17,36 @@ subprojects {
 
     val platform = getPlatform()
 
-    dependencies {
-        if (platform == Platform.FABRIC) {
-            "modCompileOnly"(rootProject.libs.modmenu)
-        }
+    when (platform) {
+        Platform.COMMON -> apply(plugin = "com.teamresourceful.plugins.minecraft-platform-common")
+        Platform.FABRIC -> apply(plugin = "com.teamresourceful.plugins.minecraft-platform-fabric")
+        Platform.NEOFORGE -> apply(plugin = "com.teamresourceful.plugins.minecraft-platform-neoforge")
+    }
 
-        compileOnly("net.fabricmc:sponge-mixin:0.15.5+mixin.0.8.7")
+    if (platform != Platform.COMMON) {
+        tasks.withType<JavaCompile> {
+            val serviceArgs = listOf(
+                "-Xplugin:ServicePlugin",
+                "--service-plugin-platform=$platform",
+                "--service-plugin-platform-class=com.teamresourceful.resourcefulconfig.common.utils.Platform",
+            )
+
+            options.encoding = "UTF-8"
+            options.compilerArgs.add(serviceArgs.joinToString(separator = " "))
+        }
+    }
+
+    repositories {
+        maven("https://prmaven.neoforged.net/NeoForge/pr2879")
+    }
+
+    dependencies {
+        if (platform != Platform.COMMON) {
+            annotationProcessor(rootProject.libs.service.plugin)
+        }
+        if (platform == Platform.FABRIC) {
+            compileOnly(rootProject.libs.modmenu)
+        }
     }
 
     javaPublishing {

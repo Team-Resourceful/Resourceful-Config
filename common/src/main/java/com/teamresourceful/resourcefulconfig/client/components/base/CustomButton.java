@@ -3,7 +3,7 @@ package com.teamresourceful.resourcefulconfig.client.components.base;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
@@ -25,13 +25,13 @@ public class CustomButton extends AbstractButton {
     }
 
     @Override
-    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         Identifier button = isHovered() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, button, getX(), getY(), getWidth(), getHeight());
 
         graphics.textRendererForWidget(
                 this,
-                GuiGraphics.HoveredTextEffects.NONE
+                GuiGraphicsExtractor.HoveredTextEffects.NONE
         ).acceptScrollingWithDefaultCenter(
                 Component.empty().append(this.text).withColor(UIConstants.TEXT_TITLE),
                 getX() + 2,

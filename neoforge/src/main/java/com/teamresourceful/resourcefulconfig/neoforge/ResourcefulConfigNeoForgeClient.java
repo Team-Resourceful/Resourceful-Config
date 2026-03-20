@@ -12,7 +12,7 @@ public class ResourcefulConfigNeoForgeClient {
     public static void onClientInit(ModContainer container) {
         container.registerExtensionPoint(
             IConfigScreenFactory.class,
-            (client, parent) -> ResourcefulConfigScreen.getFactory(null).apply(parent)
+            (_, parent) -> ResourcefulConfigScreen.getFactory(null).apply(parent)
         );
     }
 

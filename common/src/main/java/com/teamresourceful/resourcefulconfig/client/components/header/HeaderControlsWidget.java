@@ -9,10 +9,10 @@ import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWid
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class HeaderControlsWidget extends ContainerWidget {
 
@@ -51,9 +51,9 @@ public class HeaderControlsWidget extends ContainerWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CONTAINER, getX(), getY(), width, height);
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

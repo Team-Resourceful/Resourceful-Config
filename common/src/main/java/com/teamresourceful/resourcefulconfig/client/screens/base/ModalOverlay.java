@@ -3,7 +3,7 @@ package com.teamresourceful.resourcefulconfig.client.screens.base;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
@@ -68,9 +68,9 @@ public class ModalOverlay extends OverlayScreen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderBackground(graphics, mouseX, mouseY, partialTicks);
-        renderTransparentBackground(graphics);
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+        extractTransparentBackground(graphics);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CONTAINER, this.modalLeft, this.modalTop, this.modalWidth, this.modalHeight);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.HEADER, this.modalLeft, this.modalTop, this.modalWidth, 20 + PADDING * 2);

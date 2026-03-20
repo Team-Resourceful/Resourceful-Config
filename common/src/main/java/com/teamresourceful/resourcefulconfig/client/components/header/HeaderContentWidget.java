@@ -9,7 +9,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWid
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
@@ -95,9 +95,9 @@ public class HeaderContentWidget extends ContainerWidget {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CONTAINER, getX(), getY(), width, height);
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

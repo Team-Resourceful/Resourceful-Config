@@ -6,7 +6,7 @@ import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ public class ListOptionWidget extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
@@ -37,7 +37,7 @@ public class ListOptionWidget extends BaseWidget {
                 getX() + (getWidth() - contentWidth) / 2, getY() + PADDING,
                 SIZE, SIZE
         );
-        graphics.drawString(
+        graphics.text(
                 font, UIConstants.EDIT,
                 getX() + (getWidth() - contentWidth) / 2 + SIZE + SPACING,
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,

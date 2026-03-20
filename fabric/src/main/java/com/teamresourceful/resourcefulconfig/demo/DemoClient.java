@@ -10,8 +10,8 @@ import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfig
 import com.teamresourceful.resourcefulconfig.api.types.options.data.DraggableOptionEntry;
 import com.teamresourceful.resourcefulconfig.client.ConfigsScreen;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.ClickEvent;
@@ -30,15 +30,15 @@ public class DemoClient implements ClientModInitializer {
 
         ResourcefulConfigUI.registerElementRenderer(Identifier.parse("demo:demo"), Renderer::new);
 
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> {
-            dispatcher.register(ClientCommandManager.literal("rconfigdemo").executes(context -> {
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, _) -> {
+            dispatcher.register(ClientCommands.literal("rconfigdemo").executes(_ -> {
                 Minecraft.getInstance().schedule(() -> Minecraft.getInstance().setScreen(
                         ResourcefulConfigScreen.make(Demo.configurator, DemoConfig.class).build()
                 ));
                 return 1;
             }));
 
-            dispatcher.register(ClientCommandManager.literal("rconfigdemos").executes(context -> {
+            dispatcher.register(ClientCommands.literal("rconfigdemos").executes(_ -> {
                 Minecraft.getInstance().schedule(() -> Minecraft.getInstance().setScreen(
                         new ConfigsScreen(null, null)
                 ));

@@ -11,10 +11,9 @@ import com.teamresourceful.resourcefulconfig.client.components.options.misc.drag
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
-import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -77,7 +76,7 @@ public class DraggableListOptionWidget<T> extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
@@ -88,7 +87,7 @@ public class DraggableListOptionWidget<T> extends BaseWidget {
                 getX() + (getWidth() - contentWidth) / 2, getY() + PADDING,
                 SIZE, SIZE
         );
-        graphics.drawString(
+        graphics.text(
                 font, UIConstants.EDIT,
                 getX() + (getWidth() - contentWidth) / 2 + SIZE + SPACING,
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,
@@ -178,8 +177,8 @@ public class DraggableListOptionWidget<T> extends BaseWidget {
         }
 
         @Override
-        public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-            super.renderBackground(graphics, mouseX, mouseY, partialTicks);
+        public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+            super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, left, top + 20, contentWidth, contentHeight - 20);
         }

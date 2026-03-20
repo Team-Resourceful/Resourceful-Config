@@ -1,7 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public class AlphaSelector extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         HsbColor color = state.get();
 
         int size = Math.min(getWidth(), getHeight()) / 2;
@@ -40,7 +40,7 @@ public class AlphaSelector extends BaseWidget {
         }
 
         int posX = Mth.floor((this.state.get().alpha() / 255f) * this.getWidth());
-        graphics.renderOutline(getX() + posX - 1, getY() - 1, 3, getHeight() + 2, 0xFF000000);
+        graphics.outline(getX() + posX - 1, getY() - 1, 3, getHeight() + 2, 0xFF000000);
     }
 
     @Override

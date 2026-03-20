@@ -8,7 +8,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWid
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -50,14 +50,14 @@ public class ConfigItem extends ContainerWidget implements ListWidget.Item {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 ModSprites.ofButton(this.isHovered()),
                 getX() + UIConstants.PAGE_PADDING, getY() + UIConstants.PAGE_PADDING,
                 width - UIConstants.PAGE_PADDING * 2, height - UIConstants.PAGE_PADDING * 2
         );
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

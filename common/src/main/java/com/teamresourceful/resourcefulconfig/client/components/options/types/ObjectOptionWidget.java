@@ -7,7 +7,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public class ObjectOptionWidget extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
 
         int contentWidth = font.width(UIConstants.EDIT) + SPACING + SIZE;
@@ -39,7 +39,7 @@ public class ObjectOptionWidget extends BaseWidget {
                 getX() + (getWidth() - contentWidth) / 2, getY() + PADDING,
                 SIZE, SIZE
         );
-        graphics.drawString(
+        graphics.text(
                 font, UIConstants.EDIT,
                 getX() + (getWidth() - contentWidth) / 2 + SIZE + SPACING,
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,
@@ -72,11 +72,6 @@ public class ObjectOptionWidget extends BaseWidget {
             OptionsListWidget list = addRenderableWidget(new OptionsListWidget(this.contentWidth, this.contentHeight));
             list.setPosition(this.left, this.top);
             Options.populateOptions(list, this.entry.elements());
-        }
-
-        @Override
-        public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-            super.renderBackground(graphics, mouseX, mouseY, partialTicks);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.screens.base;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +42,8 @@ public abstract class OverlayScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics graphics, int i, int j, float f) {
-        this.background.renderWithTooltipAndSubtitles(graphics, -1, -1, f);
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        this.background.extractRenderStateWithTooltipAndSubtitles(graphics, -1, -1, partialTicks);
         graphics.nextStratum();
     }
 

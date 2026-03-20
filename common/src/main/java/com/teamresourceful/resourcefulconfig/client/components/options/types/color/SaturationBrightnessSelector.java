@@ -3,16 +3,16 @@ package com.teamresourceful.resourcefulconfig.client.components.options.types.co
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
-import com.teamresourceful.resourcefulconfig.mixins.client.GuiGraphicsAccessor;
+import com.teamresourceful.resourcefulconfig.mixins.client.GuiGraphicsExtractorAccessor;
 import net.minecraft.Optionull;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ public class SaturationBrightnessSelector extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         HsbColor color = state.get();
 
         int posX = Math.round(color.saturation() * this.getWidth());
@@ -43,7 +43,7 @@ public class SaturationBrightnessSelector extends BaseWidget {
             for (int dx = 0; dx < 10; dx++) {
                 float minS = dx / 10f;
                 float maxS = (dx + 1) / 10f;
-                drawGradient(
+                extractGradient(
                         graphics,
                         getX() + dx * tileWidth, getY() + (10 - dy - 1) * tileHeight,
                         tileWidth, tileHeight,
@@ -55,7 +55,7 @@ public class SaturationBrightnessSelector extends BaseWidget {
             }
         }
 
-        graphics.renderOutline(getX() + posX - 1, getY() + posY - 1, 3, 3, 0xFF000000);
+        graphics.outline(getX() + posX - 1, getY() + posY - 1, 3, 3, 0xFF000000);
     }
 
     @Override
@@ -79,15 +79,15 @@ public class SaturationBrightnessSelector extends BaseWidget {
         return this.mouseClicked(event, false);
     }
 
-    private void drawGradient(
-            GuiGraphics graphics,
+    private void extractGradient(
+            GuiGraphicsExtractor graphics,
             int x, int y,
             int width, int height,
             int topLeft, int topRight, int bottomLeft, int bottomRight
     ) {
-        var access = (GuiGraphicsAccessor) graphics;
+        var access = (GuiGraphicsExtractorAccessor) graphics;
 
-        access.getGuiRenderState().submitGuiElement(new GradientRenderState(
+        access.getGuiRenderState().addGuiElement(new GradientRenderState(
                 new Matrix3x2f(graphics.pose()),
                 x, y, x + width, y + height,
                 topLeft, topRight, bottomLeft, bottomRight

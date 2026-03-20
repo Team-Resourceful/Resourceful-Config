@@ -3,8 +3,9 @@ package com.teamresourceful.resourcefulconfig.client.components.options.types;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.options.text.TextBox;
 import com.teamresourceful.resourcefulconfig.client.utils.ListenableState;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -41,10 +42,10 @@ public class StringOptionWidget extends TextBox {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
     }
 
     public void updateIfFocused() {

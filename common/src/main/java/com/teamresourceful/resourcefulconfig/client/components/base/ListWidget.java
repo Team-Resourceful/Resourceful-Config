@@ -1,8 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.base;
 
-import com.mojang.blaze3d.platform.cursor.CursorType;
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.LayoutElement;
@@ -58,7 +56,7 @@ public class ListWidget extends ContainerWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         boolean showsScrollBar = this.lastHeight > this.height;
         int actualWidth = getWidth() - (showsScrollBar ? SCROLLBAR_WIDTH + 4 : 0);
 
@@ -72,7 +70,7 @@ public class ListWidget extends ContainerWidget {
             item.setX(getX());
             item.setY(y);
 
-            item.render(graphics, mouseX, mouseY, partialTicks);
+            item.extractRenderState(graphics, mouseX, mouseY, partialTicks);
             y += item.getHeight();
             this.lastHeight += item.getHeight();
         }

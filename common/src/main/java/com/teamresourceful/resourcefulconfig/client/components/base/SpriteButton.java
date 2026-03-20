@@ -2,7 +2,7 @@ package com.teamresourceful.resourcefulconfig.client.components.base;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -33,7 +33,7 @@ public class SpriteButton extends AbstractButton {
     }
 
     @Override
-    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int i, int i1, float partialTicks) {
         Identifier button = this.isHovered() && this.isActive() ? ModSprites.BUTTON_HOVER : ModSprites.BUTTON;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, button, getX(), getY(), getWidth(), getHeight());
         graphics.blitSprite(

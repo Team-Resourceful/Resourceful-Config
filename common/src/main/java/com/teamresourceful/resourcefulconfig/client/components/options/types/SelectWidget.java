@@ -7,7 +7,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.OverlayScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -40,12 +40,12 @@ public class SelectWidget<T> extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX(), getY(), getWidth(), getHeight());
 
         graphics.textRendererForWidget(
                 this,
-                GuiGraphics.HoveredTextEffects.NONE
+                GuiGraphicsExtractor.HoveredTextEffects.NONE
         ).acceptScrollingWithDefaultCenter(
                 this.heading.copy().withColor(UIConstants.TEXT_PARAGRAPH),
                 getX() + 4, getX() + getWidth() - 16,
@@ -136,10 +136,10 @@ public class SelectWidget<T> extends BaseWidget {
         }
 
         @Override
-        public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ACCENT, getX() - 1, getY() - 1, getWidth() + 2, getHeight() + 2);
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), getWidth(), getHeight());
-            super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+            super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -161,7 +161,7 @@ public class SelectWidget<T> extends BaseWidget {
         }
 
         @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX() + 1, getY(), getWidth() - 1, getHeight());
             if (this.selected.getAsBoolean()) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.CHECK, getX() + 4, getY() + 2, 8, 8);
@@ -170,7 +170,7 @@ public class SelectWidget<T> extends BaseWidget {
 
             graphics.textRendererForWidget(
                     this,
-                    GuiGraphics.HoveredTextEffects.NONE
+                    GuiGraphicsExtractor.HoveredTextEffects.NONE
             ).acceptScrollingWithDefaultCenter(
                     Translatable.toComponent(this.option).copy().withColor(color),
                     getX() + 16, getX() + getWidth() - 4,

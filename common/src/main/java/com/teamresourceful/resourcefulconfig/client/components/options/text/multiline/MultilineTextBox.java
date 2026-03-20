@@ -8,7 +8,7 @@ import com.teamresourceful.resourcefulconfig.client.utils.ListenableState;
 import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -37,7 +37,7 @@ public class MultilineTextBox extends BaseWidget {
         return this;
     }
 
-    protected void renderText(GuiGraphics graphics, int x, int y, int width) {
+    protected void extractText(GuiGraphicsExtractor graphics, int x, int y, int width) {
         var cursor = this.state.cursor();
         var selection = this.state.selection();
         var lines = this.state.lines(this.width - 8);
@@ -45,7 +45,7 @@ public class MultilineTextBox extends BaseWidget {
         for (var line : lines) {
             var text = this.state.value().substring(line.start(), line.end());
 
-            graphics.drawString(this.font, TextBoxStringUtils.format(text), x, y, -1);
+            graphics.text(this.font, TextBoxStringUtils.format(text), x, y, -1);
 
             if (this.state.hasSelection()) {
                 if (line.contains(selection.end()) || line.contains(selection.start())) {
@@ -84,7 +84,7 @@ public class MultilineTextBox extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (!this.isVisible()) return;
 
         var texture = ModSprites.BUTTON;
@@ -94,7 +94,7 @@ public class MultilineTextBox extends BaseWidget {
         boolean renderScrollbar = this.lastHeight > this.height - 8;
 
         graphics.enableScissor(getX() + 2, getY() + 3, getX() + getWidth() - 4, getY() + getHeight() - 2);
-        this.renderText(graphics, getX() + 6 - (renderScrollbar ? 2 : 0), (int) (getY() + 4 - scroll), getWidth() - 12);
+        this.extractText(graphics, getX() + 6 - (renderScrollbar ? 2 : 0), (int) (getY() + 4 - scroll), getWidth() - 12);
         graphics.disableScissor();
 
         this.scrollbarHovered = false;
@@ -122,7 +122,7 @@ public class MultilineTextBox extends BaseWidget {
     }
 
     @Override
-    public void applyCursor(GuiGraphics graphics) {
+    public void applyCursor(@NotNull GuiGraphicsExtractor graphics) {
         if (!this.isHovered()) return;
         if (!this.isActive()) {
             graphics.requestCursor(CursorTypes.NOT_ALLOWED);

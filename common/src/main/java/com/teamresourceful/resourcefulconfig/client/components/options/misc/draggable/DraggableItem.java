@@ -7,7 +7,7 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
         this.remove = remove;
     }
 
-    public void render(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, @MagicConstant(flagsFromClass = DraggableFlags.class) int flags) {
+    public void extract(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, @MagicConstant(flagsFromClass = DraggableFlags.class) int flags) {
         var hovered = (flags & DraggableFlags.HOVERED) != 0;
         var dragging = (flags & DraggableFlags.DRAGGING) != 0;
         var canDelete = (flags & DraggableFlags.CAN_DELETE) != 0;
@@ -68,7 +68,7 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
         int right = x + getWidth() - 32;
         var renderer = graphics.textRendererForWidget(
                 this,
-                GuiGraphics.HoveredTextEffects.NONE
+                GuiGraphicsExtractor.HoveredTextEffects.NONE
         );
         renderer.acceptScrolling(
                 Translatable.toComponent(this.value).copy().withColor(fadeOut ? ARGB.color(0x80, color) : color),
@@ -82,7 +82,7 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (this.list.isDraggingItem() && this.list.getDraggingItem() == this) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(true), getX() + 1, getY(), getWidth() - 1, getHeight());
         } else {
@@ -91,7 +91,7 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
             if (this.list.isDraggingItem()) flags |= DraggableFlags.DRAGGING;
             if (this.list.canDelete()) flags |= DraggableFlags.CAN_DELETE;
 
-            render(graphics, getX(), getY(), mouseX, mouseY, flags);
+            extract(graphics, getX(), getY(), mouseX, mouseY, flags);
         }
     }
 

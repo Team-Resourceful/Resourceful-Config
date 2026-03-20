@@ -6,7 +6,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.text.multiline.MultilineTextBox;
 import com.teamresourceful.resourcefulconfig.client.screens.base.ModalOverlay;
 import com.teamresourceful.resourcefulconfig.client.utils.State;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ public class MultilineStringOptionWidget extends BaseWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 ModSprites.ofButton(this.isHovered()),
@@ -49,7 +49,7 @@ public class MultilineStringOptionWidget extends BaseWidget {
                 getX() + (getWidth() - contentWidth) / 2, getY() + PADDING,
                 SIZE, SIZE
         );
-        graphics.drawString(
+        graphics.text(
                 font, UIConstants.EDIT,
                 getX() + (getWidth() - contentWidth) / 2 + SIZE + SPACING,
                 getY() + (getHeight() - font.lineHeight) / 2 + 1,
@@ -93,8 +93,8 @@ public class MultilineStringOptionWidget extends BaseWidget {
         }
 
         @Override
-        public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-            super.renderBackground(graphics, mouseX, mouseY, partialTicks);
+        public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+            super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
             graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
@@ -102,7 +102,8 @@ public class MultilineStringOptionWidget extends BaseWidget {
                     left,
                     top,
                     contentWidth,
-                    contentHeight);
+                    contentHeight
+            );
         }
     }
 }

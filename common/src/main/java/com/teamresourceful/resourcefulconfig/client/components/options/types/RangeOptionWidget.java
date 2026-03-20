@@ -7,7 +7,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.range.OptionRange;
 import net.minecraft.client.InputType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -58,13 +58,13 @@ public class RangeOptionWidget extends BaseWidget {
     }
 
     @Override
-    public void applyCursor(GuiGraphics graphics) {
+    public void applyCursor(@NotNull GuiGraphicsExtractor graphics) {
         if (!this.isHovered()) return;
         graphics.requestCursor(this.isActive() ? CursorTypes.RESIZE_EW : CursorTypes.NOT_ALLOWED);
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
@@ -83,7 +83,7 @@ public class RangeOptionWidget extends BaseWidget {
         if (isHoveredOrFocused() && this.canBeFocused) {
             var renderer = graphics.textRendererForWidget(
                     this,
-                    GuiGraphics.HoveredTextEffects.NONE
+                    GuiGraphicsExtractor.HoveredTextEffects.NONE
             );
             renderer.acceptScrollingWithDefaultCenter(
                     this.minDisplay,

@@ -2,7 +2,7 @@ package com.teamresourceful.resourcefulconfig.client.components.options.misc.dra
 
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import com.teamresourceful.resourcefulconfig.client.utils.KeyCodeHelper;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
@@ -16,7 +16,7 @@ public class DraggableList<T> extends ListWidget {
 
     private final Vector2d draggingOffset = new Vector2d();
     private int draggingIndex = -1;
-    private Consumer<List<T>> onUpdate = value -> {};
+    private Consumer<List<T>> onUpdate = _ -> {};
     private boolean canDelete = true;
 
     public DraggableList(int x, int y, int width, int height) {
@@ -61,21 +61,21 @@ public class DraggableList<T> extends ListWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
 
         if (!this.isMouseOver(mouseX, mouseY) && this.draggingIndex != -1 && !KeyCodeHelper.isMouseKeyPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
             this.draggingIndex = -1;
         }
 
         graphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
-        renderPossiblePositionLine(graphics, mouseX, mouseY);
+        extractPossiblePositionLine(graphics, mouseX, mouseY);
         graphics.disableScissor();
 
-        renderDraggedItem(graphics, mouseX, mouseY);
+        extractDraggedItem(graphics, mouseX, mouseY);
     }
 
-    private void renderPossiblePositionLine(GuiGraphics graphics, int mouseX, int mouseY) {
+    private void extractPossiblePositionLine(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.draggingIndex == -1) return;
         int hoveredIndex = this.getItemOver(mouseX, mouseY);
         if (hoveredIndex != this.draggingIndex && hoveredIndex != -1) {
@@ -90,7 +90,7 @@ public class DraggableList<T> extends ListWidget {
         }
     }
 
-    private void renderDraggedItem(GuiGraphics graphics, int mouseX, int mouseY) {
+    private void extractDraggedItem(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.draggingIndex == -1) return;
         Item item = this.items.get(this.draggingIndex);
         if (!(item instanceof DraggableItem<?> draggableItem)) return;
@@ -99,7 +99,7 @@ public class DraggableList<T> extends ListWidget {
 
         int x = (int) (mouseX - this.draggingOffset.x);
         int y = (int) (mouseY - this.draggingOffset.y);
-        draggableItem.render(graphics, x, y, mouseX, mouseY, DraggableFlags.HOVERED | DraggableFlags.FADE_OUT);
+        draggableItem.extract(graphics, x, y, mouseX, mouseY, DraggableFlags.HOVERED | DraggableFlags.FADE_OUT);
     }
 
     public int getItemOver(double mouseX, double mouseY) {

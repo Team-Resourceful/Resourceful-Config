@@ -3,10 +3,11 @@ package com.teamresourceful.resourcefulconfig.client.components.base;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.CommonComponents;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseWidget extends AbstractWidget {
 
@@ -19,16 +20,16 @@ public abstract class BaseWidget extends AbstractWidget {
         this.font = this.minecraft.font;
     }
 
-    public void applyCursor(GuiGraphics graphics) {
+    public void applyCursor(@NotNull GuiGraphicsExtractor graphics) {
         if (!this.isHovered()) return;
         graphics.requestCursor(this.isActive() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
     }
 
     @Override
-    protected abstract void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
+    protected abstract void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks);
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
 
     }
 }

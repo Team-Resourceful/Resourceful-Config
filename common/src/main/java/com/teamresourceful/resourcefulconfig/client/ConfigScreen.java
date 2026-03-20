@@ -11,7 +11,7 @@ import com.teamresourceful.resourcefulconfig.client.components.options.OptionsLi
 import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -36,6 +36,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
 
     private StringOptionWidget searchWidget = null;
 
+    @Deprecated
     public ConfigScreen(Screen parent, ResourcefulConfig config) {
         this(parent, config, new ConfigScreenContext());
     }
@@ -120,7 +121,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.fill(0, 0, this.width, this.height, UIConstants.BACKGROUND);
     }
 

@@ -1,7 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.categories;
 
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
-import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreenContext;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
@@ -9,7 +8,7 @@ import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,7 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (this.isHovered()) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON_HOVER, getX() + 1, getY(), getWidth() - 2, getHeight());
         }
@@ -38,7 +37,7 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
 
         graphics.textRendererForWidget(
                 this,
-                GuiGraphics.HoveredTextEffects.NONE
+                GuiGraphicsExtractor.HoveredTextEffects.NONE
         ).acceptScrollingWithDefaultCenter(
                 this.config.info().title().toComponent().copy().withColor(color),
                 getX() + PADDING * 2, getX() + PADDING * 2 + getWidth() - PADDING * 4,

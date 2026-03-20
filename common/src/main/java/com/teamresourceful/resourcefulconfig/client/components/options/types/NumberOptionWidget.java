@@ -2,10 +2,11 @@ package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.function.Function;
@@ -24,6 +25,7 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
     private final Supplier<T> getter;
     private final Function<T, Boolean> setter;
     private final Function<String, T> parser;
+    private final Pattern filter;
 
     public NumberOptionWidget(Supplier<T> getter, Function<T, Boolean> setter, Function<String, T> parser, Pattern filter) {
         super(Minecraft.getInstance().font, WIDTH, 16, CommonComponents.EMPTY);
@@ -34,18 +36,18 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
         this.getter = getter;
         this.setter = setter;
         this.parser = parser;
+        this.filter = filter;
 
         DecimalFormat format = new DecimalFormat();
         format.setGroupingUsed(false);
         format.setMaximumFractionDigits(340);
 
         setValue(format.format(getter.get()));
-        setFilter(s -> s.isEmpty() || filter.matcher(s).matches());
         setResponder();
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         updateIfFocused();
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
@@ -55,7 +57,7 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
         var pose = graphics.pose();
         pose.pushMatrix();
         pose.translate(4, 4);
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
         pose.popMatrix();
 
         graphics.disableScissor();
@@ -73,8 +75,7 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
 
     @Override
     public void reset() {
-        setResponder(s -> {
-        });
+        setResponder(_ -> {});
         setValue(this.getter.get().toString());
         setResponder();
     }
@@ -82,6 +83,9 @@ public class NumberOptionWidget<T extends Number> extends EditBox implements Res
     public void setResponder() {
         setResponder(s -> {
             try {
+                if (s.isBlank()) throw new NumberFormatException();
+                if (!this.filter.matcher(s).matches()) throw new NumberFormatException();
+
                 T value = this.parser.apply(s);
                 if (this.setter.apply(value)) {
                     this.setTextColor(0xFFE0E0E0);

@@ -12,7 +12,7 @@ import com.teamresourceful.resourcefulconfig.client.components.options.OptionsLi
 import com.teamresourceful.resourcefulconfig.client.components.options.types.ObjectOptionWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -135,7 +135,7 @@ public class ListScreen extends Screen implements CloseableScreen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.fill(0, 0, this.width, this.height, UIConstants.BACKGROUND);
     }
 

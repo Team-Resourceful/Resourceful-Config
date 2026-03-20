@@ -5,17 +5,17 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.text.utils.TextBoxStringUtils;
 import com.teamresourceful.resourcefulconfig.client.utils.ListenableState;
-import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -241,7 +241,7 @@ public class TextBox extends BaseWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (this.isVisible()) {
             String value = this.state.get();
             boolean showPlaceholder = value.isEmpty() && !this.placeholder.isEmpty() && !this.isFocused();
@@ -267,7 +267,7 @@ public class TextBox extends BaseWidget {
 
             if (!truncatedValue.isEmpty()) {
                 String string2 = cursorVisible ? truncatedValue.substring(0, displayCursorDiff) : truncatedValue;
-                graphics.drawString(this.font, TextBoxStringUtils.format(string2), l, m, textColor, false);
+                graphics.text(this.font, TextBoxStringUtils.format(string2), l, m, textColor, false);
                 n = l + TextBoxStringUtils.width(font, string2) + 1;
             }
 
@@ -281,7 +281,7 @@ public class TextBox extends BaseWidget {
             }
 
             if (!truncatedValue.isEmpty() && cursorVisible && displayCursorDiff < truncatedValue.length()) {
-                graphics.drawString(
+                graphics.text(
                         this.font,
                         TextBoxStringUtils.format(truncatedValue.substring(displayCursorDiff)),
                         n,
@@ -303,7 +303,7 @@ public class TextBox extends BaseWidget {
         this.applyCursor(graphics);
     }
 
-    private void renderHighlight(GuiGraphics graphics, int minX, int minY, int maxX, int maxY) {
+    private void renderHighlight(GuiGraphicsExtractor graphics, int minX, int minY, int maxX, int maxY) {
         int x1 = Mth.clamp(Math.min(minX, maxX), this.getX(), this.getX() + this.width - PADDING);
         int x2 = Mth.clamp(Math.max(minX, maxX), this.getX(), this.getX() + this.width - PADDING);
         int y1 = Math.min(minY, maxY);
@@ -312,7 +312,7 @@ public class TextBox extends BaseWidget {
     }
 
     @Override
-    public void applyCursor(GuiGraphics graphics) {
+    public void applyCursor(@NotNull GuiGraphicsExtractor graphics) {
         if (!this.isHovered()) return;
         graphics.requestCursor(this.isActive() ? CursorTypes.IBEAM : CursorTypes.NOT_ALLOWED);
     }

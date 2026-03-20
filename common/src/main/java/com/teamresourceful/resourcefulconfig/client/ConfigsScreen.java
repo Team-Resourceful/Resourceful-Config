@@ -6,7 +6,7 @@ import com.teamresourceful.resourcefulconfig.client.components.configs.ConfigIte
 import com.teamresourceful.resourcefulconfig.client.components.configs.ConfigsListWidget;
 import com.teamresourceful.resourcefulconfig.common.config.Configurations;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
@@ -65,7 +65,7 @@ public class ConfigsScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.fill(0, 0, this.width, this.height, UIConstants.BACKGROUND);
     }
 

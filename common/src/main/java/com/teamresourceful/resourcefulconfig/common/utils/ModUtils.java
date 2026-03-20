@@ -1,34 +1,28 @@
 package com.teamresourceful.resourcefulconfig.common.utils;
 
 import com.mojang.logging.LogUtils;
-import dev.architectury.injectables.annotations.ExpectPlatform;
-import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Array;
 import java.nio.file.Path;
 
+@ApiStatus.Internal
 public final class ModUtils {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final ModLoaderService SERVICE = ModLoaderService.create();
 
-    @Contract(pure = true)
-    @ExpectPlatform
     public static Path getConfigPath() {
-        throw new NotImplementedException("Not implemented yet");
+        return SERVICE.getConfigPath();
     }
 
-    @Contract(pure = true)
-    @ExpectPlatform
     public static boolean isDev() {
-        throw new NotImplementedException("Not implemented yet");
+        return SERVICE.isDev();
     }
 
-    @Contract(pure = true)
-    @ExpectPlatform
     public static boolean isModLoaded(String modid) {
-        throw new NotImplementedException("Not implemented yet");
+        return SERVICE.isModLoaded(modid);
     }
 
     public static void log(String message) {

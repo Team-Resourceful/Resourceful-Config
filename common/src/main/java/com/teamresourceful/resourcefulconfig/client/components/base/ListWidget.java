@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.base;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -81,8 +82,12 @@ public class ListWidget extends ContainerWidget {
             int scrollBarHeight = (int) ((this.height / (double) this.lastHeight) * this.height) - SCROLLBAR_PADDING * 2;
             int scrollBarX = this.getX() + this.width - SCROLLBAR_WIDTH - 1;
             int scrollBarY = this.getY() + SCROLLBAR_PADDING + (int) ((this.scroll / (double) this.lastHeight) * this.height);
-            int scrollBarColor = this.isMouseOver(mouseX, mouseY) && mouseX >= scrollBarX && mouseX <= scrollBarX + SCROLLBAR_WIDTH && mouseY >= scrollBarY && mouseY <= scrollBarY + scrollBarHeight ? 0xFFF0F0F0 : 0xFFC0C0C0;
+            var scrollbarHovered = this.isMouseOver(mouseX, mouseY) && mouseX >= scrollBarX && mouseX <= scrollBarX + SCROLLBAR_WIDTH && mouseY >= scrollBarY && mouseY <= scrollBarY + scrollBarHeight;
+            int scrollBarColor = scrollbarHovered ? 0xFFF0F0F0 : 0xFFC0C0C0;
             graphics.fill(scrollBarX, scrollBarY, scrollBarX + SCROLLBAR_WIDTH, scrollBarY + scrollBarHeight, scrollBarColor);
+            if (scrollbarHovered || this.scrolling) {
+                graphics.requestCursor(CursorTypes.RESIZE_NS);
+            }
         }
     }
 

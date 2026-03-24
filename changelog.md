@@ -1,2 +1,1 @@
-- Fix draggable list not showing cursor (0xar-ds)
-- Add support for lists (0xar-ds)
+- Update to 26.1

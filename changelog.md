@@ -1,1 +1,1 @@
-- Update to 26.1
+- Allow for any list type as field type

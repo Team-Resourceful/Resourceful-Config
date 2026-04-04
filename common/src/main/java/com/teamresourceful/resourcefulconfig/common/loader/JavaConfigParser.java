@@ -255,7 +255,7 @@ public class JavaConfigParser implements ConfigParser {
 
     private static EntryType getEntryType(Field field) {
         Class<?> fieldType = field.getType();
-        if (fieldType == List.class) return EntryType.LIST;
+        if (List.class.isAssignableFrom(fieldType)) return EntryType.LIST;
         if (fieldType == Observable.class) fieldType = ((Observable<?>) ParsingUtils.getField(field, null)).type();
         if (fieldType.isArray()) fieldType = fieldType.getComponentType();
         return getEntryType(fieldType);
@@ -263,7 +263,7 @@ public class JavaConfigParser implements ConfigParser {
 
     private static EntryType getEntryType(Class<?> type) {
         if (type.getAnnotation(ConfigObject.class) != null) return EntryType.OBJECT;
-        if (type == List.class) return EntryType.LIST;
+        if (List.class.isAssignableFrom(type)) return EntryType.LIST;
         if (type == Long.TYPE || type == Long.class) return EntryType.LONG;
         if (type == Integer.TYPE || type == Integer.class) return EntryType.INTEGER;
         if (type == Short.TYPE || type == Short.class) return EntryType.SHORT;
@@ -279,9 +279,8 @@ public class JavaConfigParser implements ConfigParser {
     private static Class<?> getListObjectType(Field field) {
         Type generic = field.getGenericType();
         if (!(generic instanceof ParameterizedType pt)) return null;
-        Type arg = pt.getActualTypeArguments()[0];
-        if (!(arg instanceof Class<?> clazz)) return null;
-        return clazz;
+        var arguments = pt.getActualTypeArguments();
+        return arguments.length == 1 && arguments[0] instanceof Class<?> clazz ? clazz : null;
     }
 
     public static EntryType resolveElementType(Class<?> type) {

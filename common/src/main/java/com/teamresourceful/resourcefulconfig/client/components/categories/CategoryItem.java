@@ -47,7 +47,7 @@ public class CategoryItem extends BaseWidget implements ListWidget.Item {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
-        Minecraft.getInstance().setScreen(new ConfigScreen(this.screen, this.config, this.context));
+        Minecraft.getInstance().gui.setScreen(new ConfigScreen(this.screen, this.config, this.context));
     }
 
     @Override

@@ -52,7 +52,7 @@ public class ColorOptionWidget extends BaseWidget {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
-        Minecraft.getInstance().setScreen(new PresetsOverlay(this));
+        Minecraft.getInstance().gui.setScreen(new PresetsOverlay(this));
     }
 
     private static class PresetsOverlay extends OverlayScreen implements CloseableScreen {
@@ -67,7 +67,7 @@ public class ColorOptionWidget extends BaseWidget {
         private int height;
 
         protected PresetsOverlay(ColorOptionWidget widget) {
-            super(Minecraft.getInstance().screen);
+            super(Minecraft.getInstance().gui.screen());
             this.widget = widget;
             this.state = new HsbState(HsbColor.fromRgb(widget.getter.getAsInt()), color -> widget.setter.accept(color.toRgba()));
             this.type = State.of(

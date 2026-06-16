@@ -42,7 +42,7 @@ public class HeaderContentWidget extends ContainerWidget {
                     .padding(2)
                     .sprite(ModSprites.ofIcon(link.icon()))
                     .onPress(() -> {
-                        Screen screen = Minecraft.getInstance().screen;
+                        Screen screen = Minecraft.getInstance().gui.screen();
                         if (screen == null) return;
                         ConfirmLinkScreen.confirmLinkNow(screen, link.url());
                     })

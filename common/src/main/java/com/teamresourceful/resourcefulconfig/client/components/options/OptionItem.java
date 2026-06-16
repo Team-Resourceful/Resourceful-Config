@@ -112,7 +112,7 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
             switch (event) {
                 case ClickEvent.CopyToClipboard clipboard -> mc.keyboardHandler.setClipboard(clipboard.value());
                 case ClickEvent.OpenUrl link -> {
-                    Screen screen = Minecraft.getInstance().screen;
+                    Screen screen = Minecraft.getInstance().gui.screen();
                     if (screen == null) return;
                     ConfirmLinkScreen.confirmLinkNow(screen, link.uri());
                 }

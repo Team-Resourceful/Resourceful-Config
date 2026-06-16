@@ -21,10 +21,10 @@ public class EyedropperButton extends SpriteButton {
     public EyedropperButton(HsbState state) {
         super(12, 12, 2, ModSprites.EYE_DROPPER, () -> {
             Minecraft minecraft = Minecraft.getInstance();
-            Screenshot.takeScreenshot(minecraft.getMainRenderTarget(), image -> {
+            Screenshot.takeScreenshot(minecraft.gameRenderer.mainRenderTarget(), image -> {
                 DynamicTexture texture = new DynamicTexture(() -> "Resourceful Config Eyedropper Screenshot", image);
                 minecraft.getTextureManager().register(SCREEN_TEXTURE, texture);
-                minecraft.setScreen(new Overlay(minecraft.screen, texture.getPixels(), state));
+                minecraft.gui.setScreen(new Overlay(minecraft.gui.screen(), texture.getPixels(), state));
             });
         }, null);
     }

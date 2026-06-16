@@ -150,7 +150,7 @@ public class ListScreen extends Screen implements CloseableScreen {
 
     @Override
     public void onClose() {
-        Minecraft.getInstance().gui.screen();
+        Minecraft.getInstance().gui.setScreen(parent);
     }
 
     @Override

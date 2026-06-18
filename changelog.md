@@ -1,1 +1,2 @@
-- Allow for any list type as field type
+- Update to 26.2 (J10a1n15)
+- Made links in config open in custom modal (ThatGravyBoat)

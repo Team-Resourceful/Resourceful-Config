@@ -3,7 +3,6 @@ package com.teamresourceful.resourcefulconfig.demo;
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
 import com.teamresourceful.resourcefulconfig.api.types.entries.Observable;
 import com.teamresourceful.resourcefulconfig.api.types.info.ListEntryInfoProvider;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public final class DemoConfig {
             id = "demoEnum",
             translation = "enum"
     )
-    public static ChatFormatting demoEnum = ChatFormatting.RED;
+    public static DemoColorEnum demoEnum = DemoColorEnum.RED;
 
     @ConfigOption.Separator(
         value = "Separator",
@@ -117,9 +116,9 @@ public final class DemoConfig {
             translation = "select"
     )
     @ConfigOption.Select
-    public static ChatFormatting[] demoSelect = new ChatFormatting[]{
-            ChatFormatting.RED,
-            ChatFormatting.GREEN
+    public static DemoColorEnum[] demoSelect = new DemoColorEnum[]{
+            DemoColorEnum.RED,
+            DemoColorEnum.GREEN
     };
 
     @ConfigButton(title = "Test Button", text = "Click Me!")
@@ -134,9 +133,9 @@ public final class DemoConfig {
             value = "RED"
     )
     @ConfigOption.Range(min = 1, max = 10)
-    public static ChatFormatting[] demoDraggable = new ChatFormatting[]{
-            ChatFormatting.RED,
-            ChatFormatting.GREEN
+    public static DemoColorEnum[] demoDraggable = new DemoColorEnum[]{
+            DemoColorEnum.RED,
+            DemoColorEnum.GREEN
     };
 
 
@@ -185,7 +184,7 @@ public final class DemoConfig {
         public String name = "default";
 
         @ConfigEntry(id = "formatting")
-        public ChatFormatting formatting = ChatFormatting.WHITE;
+        public DemoColorEnum formatting = DemoColorEnum.WHITE;
 
         @ConfigEntry(id = "threshold")
         @ConfigOption.Range(min = 0, max = 100)

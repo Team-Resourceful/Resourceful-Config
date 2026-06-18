@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.client.components.options;
 
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigEntry;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
+import com.teamresourceful.resourcefulconfig.client.components.CustomLinkModal;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.MultiLineTextWidget;
@@ -11,8 +12,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -111,11 +110,7 @@ public class OptionItem extends ContainerWidget implements ListWidget.Item {
         if (event != null) {
             switch (event) {
                 case ClickEvent.CopyToClipboard clipboard -> mc.keyboardHandler.setClipboard(clipboard.value());
-                case ClickEvent.OpenUrl link -> {
-                    Screen screen = Minecraft.getInstance().gui.screen();
-                    if (screen == null) return;
-                    ConfirmLinkScreen.confirmLinkNow(screen, link.uri());
-                }
+                case ClickEvent.OpenUrl link -> CustomLinkModal.open(link.uri());
                 default -> {}
             }
         }

@@ -4,6 +4,7 @@ import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigInfoButton;
 import com.teamresourceful.resourcefulconfig.api.types.info.ResourcefulConfigLink;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
+import com.teamresourceful.resourcefulconfig.client.components.CustomLinkModal;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWidget;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
@@ -15,8 +16,6 @@ import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,11 +40,7 @@ public class HeaderContentWidget extends ContainerWidget {
             SpriteButton button = SpriteButton.builder(12, 12)
                     .padding(2)
                     .sprite(ModSprites.ofIcon(link.icon()))
-                    .onPress(() -> {
-                        Screen screen = Minecraft.getInstance().gui.screen();
-                        if (screen == null) return;
-                        ConfirmLinkScreen.confirmLinkNow(screen, link.url());
-                    })
+                    .onPress(() -> CustomLinkModal.open(link.url()))
                     .tooltip(link.text().toComponent())
                     .build();
             links.addChild(button, row, col);

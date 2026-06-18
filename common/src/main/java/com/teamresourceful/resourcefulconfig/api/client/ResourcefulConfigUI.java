@@ -5,6 +5,7 @@ import com.teamresourceful.resourcefulconfig.client.components.base.ContainerWid
 import com.teamresourceful.resourcefulconfig.client.components.base.CustomButton;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.Layout;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -47,8 +48,8 @@ public class ResourcefulConfigUI {
             @Override
             protected void positionUpdated() {
                 this.clear();
-                layout.setPosition(getX(), getY());
                 layout.arrangeElements();
+                FrameLayout.centerInRectangle(layout, getX(), getY(), getWidth(), getHeight());
                 layout.visitWidgets(this::addRenderableWidget);
             }
         };

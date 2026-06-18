@@ -124,13 +124,13 @@ public class DropdownWidget<T> extends BaseWidget {
             if (it.effectiveWidth() + addition <= this.width) return;
 
             this.setWidth(Math.min(it.effectiveWidth() + addition, DropdownWidget.MAX_WIDTH));
-            this.setX(this.ogX - (this.width - MIN_WIDTH) - 1);
+            this.setX(this.ogX - (this.width - MIN_WIDTH) + (this.width > MIN_WIDTH ? -1 : 1));
         }
 
         @Override
         public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ACCENT, getX() - 1, getY() - 1, getWidth() + 2, getHeight() + 2);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), getWidth(), getHeight());
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ACCENT, getX() - 1, getY() - 1, getWidth() + 2, getHeight() + 3);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), getWidth(), getHeight() + 1);
             super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
         }
     }
@@ -152,7 +152,7 @@ public class DropdownWidget<T> extends BaseWidget {
 
         @Override
         protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX() + 1, getY(), getWidth() - 1, getHeight());
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.ofButton(this.isHovered()), getX() + 1, getY(), getWidth() - 2, getHeight());
             int color = this.isHovered() ? UIConstants.TEXT_TITLE : UIConstants.TEXT_PARAGRAPH;
 
             graphics.textRendererForWidget(

@@ -63,7 +63,7 @@ public class DropdownWidget<T> extends BaseWidget {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
-        Minecraft.getInstance().setScreen(new DropdownOverlay<>(this));
+        Minecraft.getInstance().gui.setScreen(new DropdownOverlay<>(this));
     }
 
     private static class DropdownOverlay<T> extends OverlayScreen {
@@ -71,7 +71,7 @@ public class DropdownWidget<T> extends BaseWidget {
         private final DropdownWidget<T> widget;
 
         protected DropdownOverlay(DropdownWidget<T> widget) {
-            super(Minecraft.getInstance().screen);
+            super(Minecraft.getInstance().gui.screen());
             this.widget = widget;
         }
 

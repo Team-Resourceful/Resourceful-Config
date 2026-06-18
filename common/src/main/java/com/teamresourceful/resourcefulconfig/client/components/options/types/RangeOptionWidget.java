@@ -104,7 +104,7 @@ public class RangeOptionWidget extends BaseWidget {
             }
         }
 
-        if (tooltip != null && Minecraft.getInstance().screen != null && this.isHovered()) {
+        if (tooltip != null && Minecraft.getInstance().gui.screen() != null && this.isHovered()) {
             graphics.setTooltipForNextFrame(
                     List.of(tooltip.getVisualOrderText()),
                     mouseX, mouseY

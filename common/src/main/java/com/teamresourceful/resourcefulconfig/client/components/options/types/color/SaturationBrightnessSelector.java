@@ -127,12 +127,12 @@ public class SaturationBrightnessSelector extends BaseWidget {
         @Override
         public @Nullable ScreenRectangle bounds() {
             // This is ugly
-            return Optionull.map(Minecraft.getInstance().screen, Screen::getRectangle);
+            return Optionull.map(Minecraft.getInstance().gui.screen(), Screen::getRectangle);
         }
 
         @Override
         public @Nullable ScreenRectangle scissorArea() {
-            return Optionull.map(Minecraft.getInstance().screen, Screen::getRectangle);
+            return Optionull.map(Minecraft.getInstance().gui.screen(), Screen::getRectangle);
         }
     }
 }

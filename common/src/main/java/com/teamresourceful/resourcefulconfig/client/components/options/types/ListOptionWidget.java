@@ -49,6 +49,6 @@ public class ListOptionWidget extends BaseWidget {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
-        Minecraft.getInstance().setScreen(new ListScreen(Minecraft.getInstance().screen, entry));
+        Minecraft.getInstance().gui.setScreen(new ListScreen(Minecraft.getInstance().gui.screen(), entry));
     }
 }

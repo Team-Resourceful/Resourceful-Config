@@ -1,7 +1,7 @@
 package com.teamresourceful.resourcefulconfig.mixins.client;
 
 import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,10 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Minecraft.class)
-public class MinecraftMixin {
+@Mixin(Gui.class)
+public class GuiMixin {
 
-    @Shadow @Nullable public Screen screen;
+    @Shadow @Nullable
+    private Screen screen;
 
     @Inject(
             method = "setScreen",

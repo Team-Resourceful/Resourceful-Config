@@ -59,7 +59,7 @@ public class SelectWidget<T> extends BaseWidget {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent event, boolean bl) {
-        Minecraft.getInstance().setScreen(new SelectOverlay<>(this));
+        Minecraft.getInstance().gui.setScreen(new SelectOverlay<>(this));
     }
 
     private static class SelectOverlay<T> extends OverlayScreen {
@@ -67,7 +67,7 @@ public class SelectWidget<T> extends BaseWidget {
         private final SelectWidget<T> widget;
 
         protected SelectOverlay(SelectWidget<T> widget) {
-            super(Minecraft.getInstance().screen);
+            super(Minecraft.getInstance().gui.screen());
             this.widget = widget;
         }
 

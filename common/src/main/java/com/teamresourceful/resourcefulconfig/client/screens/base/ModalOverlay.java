@@ -29,7 +29,7 @@ public class ModalOverlay extends OverlayScreen {
     protected Component title = CommonComponents.EMPTY;
 
     protected ModalOverlay() {
-        super(Minecraft.getInstance().screen);
+        super(Minecraft.getInstance().gui.screen());
     }
 
     @Override
@@ -86,6 +86,6 @@ public class ModalOverlay extends OverlayScreen {
     }
 
     public void open() {
-        Minecraft.getInstance().setScreen(this);
+        Minecraft.getInstance().gui.setScreen(this);
     }
 }

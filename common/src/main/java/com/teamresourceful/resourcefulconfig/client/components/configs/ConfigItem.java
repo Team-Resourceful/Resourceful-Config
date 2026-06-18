@@ -68,10 +68,10 @@ public class ConfigItem extends ContainerWidget implements ListWidget.Item {
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
         if (this.isHoveredOrFocused()) {
-            Minecraft.getInstance().setScreen(
+            Minecraft.getInstance().gui.setScreen(
                     ResourcefulConfigScreen
                             .make(this.config)
-                            .withParent(Minecraft.getInstance().screen)
+                            .withParent(Minecraft.getInstance().gui.screen())
                             .build()
             );
         }

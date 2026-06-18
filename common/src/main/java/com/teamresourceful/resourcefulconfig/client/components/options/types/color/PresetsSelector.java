@@ -85,7 +85,7 @@ public class PresetsSelector extends BaseWidget {
             graphics.outline(x, y, size, size, 0xFFDDDDDD);
             if (mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size) {
                 graphics.outline(x, y, size, size, 0xFF000000);
-                Screen screen = Minecraft.getInstance().screen;
+                Screen screen = Minecraft.getInstance().gui.screen();
                 if (screen != null) {
                     if (!withAlpha) rgba &= 0x00FFFFFF;
                     var text = Component.literal("[").withColor(rgba | 0xFF000000)

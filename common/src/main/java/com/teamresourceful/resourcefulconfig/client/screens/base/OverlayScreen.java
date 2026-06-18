@@ -35,7 +35,7 @@ public abstract class OverlayScreen extends Screen {
         this.background.resize(this.width, this.height);
         if (this.background instanceof OverlayScreen overlay) overlay.isInitialized = false;
         if (this.isInitialized) {
-            Minecraft.getInstance().setScreen(this.background);
+            Minecraft.getInstance().gui.setScreen(this.background);
         } else {
             rebuildWidgets();
         }
@@ -49,6 +49,6 @@ public abstract class OverlayScreen extends Screen {
 
     @Override
     public void onClose() {
-        Minecraft.getInstance().setScreen(this.background);
+        Minecraft.getInstance().gui.setScreen(this.background);
     }
 }

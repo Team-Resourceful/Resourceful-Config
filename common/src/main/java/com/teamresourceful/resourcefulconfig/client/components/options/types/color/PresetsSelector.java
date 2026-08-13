@@ -43,8 +43,8 @@ public class PresetsSelector extends BaseWidget {
         this.presets = presets;
         this.type = type;
         this.state = state;
-        this.getColors();
         this.withAlpha = withAlpha;
+        this.getColors();
     }
 
     private Collection<HsbColor> getColors() {

@@ -25,8 +25,8 @@ public final class ParsingUtils {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static Enum<?> parseEnum(Class<?> clazz, String name) {
         try {
-            if (clazz.isEnum()) return Enum.valueOf((Class<Enum>) clazz, name.toUpperCase(Locale.ROOT));
-            if (clazz.getSuperclass().isEnum()) return Enum.valueOf((Class<Enum>) clazz.getSuperclass(), name.toUpperCase(Locale.ROOT));
+            if (clazz.isEnum()) return Enum.valueOf((Class<Enum>) clazz, name);
+            if (clazz.getSuperclass().isEnum()) return Enum.valueOf((Class<Enum>) clazz.getSuperclass(), name);
             return null;
         } catch (Exception e) {
             return null;

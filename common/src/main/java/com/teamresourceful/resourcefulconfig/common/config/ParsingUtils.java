@@ -1,8 +1,11 @@
 package com.teamresourceful.resourcefulconfig.common.config;
 
+import com.teamresourceful.resourcefulconfig.common.utils.ModUtils;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public final class ParsingUtils {
@@ -22,13 +25,36 @@ public final class ParsingUtils {
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked"})
     public static Enum<?> parseEnum(Class<?> clazz, String name) {
         try {
-            if (clazz.isEnum()) return Enum.valueOf((Class<Enum>) clazz, name);
-            if (clazz.getSuperclass().isEnum()) return Enum.valueOf((Class<Enum>) clazz.getSuperclass(), name);
-            return null;
-        } catch (Exception e) {
+            Class<Enum<?>> enumClass;
+            if (clazz.isEnum()) {
+                enumClass = (Class<Enum<?>>) clazz;
+            } else if (clazz.getSuperclass().isEnum()) {
+                enumClass = (Class<Enum<?>>) clazz.getSuperclass();
+            } else {
+                return null;
+            }
+
+            List<Enum<?>> result = Arrays.stream(enumClass.getEnumConstants())
+                    .filter(anEnum -> anEnum.name().equalsIgnoreCase(name))
+                    .toList();
+
+            if(result.isEmpty()) {
+                return null;
+            }
+
+            if(result.size() > 1) {
+                ModUtils.warn(String.format(
+                        "Enum class '%s' contains multiple constants that match the name '%s' case-insensitive. Using the first one.",
+                        enumClass.getSimpleName(),
+                        name
+                ));
+            }
+
+            return result.getFirst();
+        } catch (Exception ignored) {
             return null;
         }
     }

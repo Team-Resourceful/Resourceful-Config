@@ -25,6 +25,10 @@ public final class ModUtils {
         return SERVICE.isModLoaded(modid);
     }
 
+    public static void warn(String message) {
+        LOGGER.warn("[ResourcefulConfig] {}", message);
+    }
+
     public static void log(String message) {
         LOGGER.info("[ResourcefulConfig] {}", message);
     }

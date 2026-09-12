@@ -1,7 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.mixins.client.GuiGraphicsExtractorAccessor;
 import net.minecraft.Optionull;

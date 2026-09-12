@@ -1,12 +1,12 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.misc.draggable;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
 import com.teamresourceful.resourcefulconfig.client.utils.KeyCodeHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -64,7 +64,7 @@ public class DraggableList<T> extends ListWidget {
     public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
 
-        if (!this.isMouseOver(mouseX, mouseY) && this.draggingIndex != -1 && !KeyCodeHelper.isMouseKeyPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+        if (!this.isMouseOver(mouseX, mouseY) && this.draggingIndex != -1 && !KeyCodeHelper.isMouseKeyPressed(InputConstants.MOUSE_BUTTON_LEFT)) {
             this.draggingIndex = -1;
         }
 

@@ -1,12 +1,15 @@
 package com.teamresourceful.resourcefulconfig.client.utils;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import com.teamresourceful.resourcefulconfig.mixins.client.MouseHandlerAccessor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.Locale;
+import org.lwjgl.sdl.SDLEvents;
+import org.lwjgl.sdl.SDLMouse;
 
 public class KeyCodeHelper {
 
@@ -16,7 +19,7 @@ public class KeyCodeHelper {
         if (key < 0) {
             return HARD_CODED_KEYCODES.computeIfAbsent(
                     key,
-                    $ -> {
+                    _ -> {
                         int button = -key - 100;
                         return Component.translatable("key.mouse", button + 1);
                     }
@@ -24,19 +27,17 @@ public class KeyCodeHelper {
         }
         return HARD_CODED_KEYCODES.computeIfAbsent(
                 key,
-                $ -> {
-                    String keyName = GLFW.glfwGetKeyName(key, 0);
-                    if (keyName == null) {
-                        return Component.literal("???");
-                    }
-                    return Component.literal(keyName.toLowerCase(Locale.ROOT));
+                _ -> {
+                    return InputConstants.getKey(new KeyEvent(key, 0, 0)).getDisplayName(); // ??????
                 }
         );
     }
 
     public static boolean isMouseKeyPressed(int button) {
         Minecraft mc = Minecraft.getInstance();
-        return GLFW.glfwGetMouseButton(mc.getWindow().handle(), button) == GLFW.GLFW_PRESS;
+        MouseButtonInfo activeButton = ((MouseHandlerAccessor) mc.mouseHandler).resourcefulconfig$activeButton();
+        if (activeButton == null) return false;
+        return activeButton.button() == button;
     }
 
     static {

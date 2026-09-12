@@ -16,7 +16,7 @@
     "environment": "*",
     "depends": {
         "fabricloader": ">=0.14.21",
-        "minecraft": ">=26.2"
+        "minecraft": ">=26.3"
     },
     "mixins": [
         "resourcefulconfig.mixins.json"

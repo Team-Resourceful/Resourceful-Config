@@ -6,6 +6,8 @@ import com.teamresourceful.utils.getPlatform
 plugins {
     java
     id("maven-publish")
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.4.1"
+    id("net.neoforged.moddev") version "2.0.147"
     alias(libs.plugins.resourceful.gradle)
     alias(libs.plugins.resourceful.minecraft) apply false
 }

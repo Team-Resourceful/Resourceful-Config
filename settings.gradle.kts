@@ -12,9 +12,9 @@ pluginManagement {
 }
 
 plugins {
-    id("com.teamresourceful.resourcefulsettings") version "0.0.6"
+    id("com.teamresourceful.resourcefulsettings") version "0.0.12"
 }
 
 include("common")
 include("fabric")
-include("neoforge")
+//include("neoforge")

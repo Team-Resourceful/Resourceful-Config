@@ -1,9 +1,9 @@
 [versions]
 
 # Minecraft
-minecraft = "26.3-rc-2"
-neoform = "26.3-rc-2-1"
-fabric-api = "0.160.4+26.3"
+minecraft = "26.3"
+neoform = "26.3-1"
+fabric-api = "0.160.5+26.3"
 neoforge = "26.3.0.0-beta"
 
 # Libraries

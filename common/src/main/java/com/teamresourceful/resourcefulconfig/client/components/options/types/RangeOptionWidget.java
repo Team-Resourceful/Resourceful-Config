@@ -149,7 +149,7 @@ public class RangeOptionWidget extends BaseWidget {
 
     @Override
     public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
-        if (this.isHovered() && event.button() == 0) {
+        if (this.isHovered() && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             this.setValueFromMouse(event.x());
             return true;
         }
@@ -163,9 +163,8 @@ public class RangeOptionWidget extends BaseWidget {
             return true;
         } else {
             if (this.canChangeValue) {
-                boolean leftArrow = event.input() == InputConstants.KEY_LEFT;
-                if (leftArrow || event.input() == InputConstants.KEY_RIGHT) {
-                    double step = leftArrow ? -this.step : this.step;
+                if (event.isLeft() || event.isRight()) {
+                    double step = event.isLeft() ? -this.step : this.step;
                     step *= event.hasShiftDown() ? 10 : 1;
                     double value = (this.getter.getAsDouble() + step) / (float) (this.width - 8);
                     this.setter.accept(Mth.clamp(value, 0.0D, 1.0D));

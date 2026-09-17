@@ -144,7 +144,7 @@ public class ConfigScreen extends Screen implements CloseableScreen {
         if (super.keyPressed(event)) {
             return true;
         }
-        if (event.input() == InputConstants.KEY_ESCAPE) {
+        if (event.isEscape()) {
             this.onClose();
             return true;
         }

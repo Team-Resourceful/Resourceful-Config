@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
@@ -70,7 +71,7 @@ public class EyedropperButton extends SpriteButton {
 
         @Override
         public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
-            if (event.input() != 0) return false;
+            if (event.input() != InputConstants.MOUSE_BUTTON_LEFT) return false;
             double guiScale = Minecraft.getInstance().getWindow().getGuiScale();
             int pixelX = (int) (event.x() * guiScale);
             int pixelY = (int) (event.y() * guiScale);

@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
@@ -60,7 +61,7 @@ public class SaturationBrightnessSelector extends BaseWidget {
 
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
-        if (event.input() != 0) return false;
+        if (event.input() != InputConstants.MOUSE_BUTTON_LEFT) return false;
         if (!isMouseOver(event.x(), event.y())) return false;
         int x = (int) event.x() - this.getX();
         int y = (int) event.y() - this.getY();

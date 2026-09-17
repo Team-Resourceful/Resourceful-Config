@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.GuiMixin",
-      "client.GuiGraphicsExtractorAccessor",
-    "client.MouseHandlerAccessor"
+    "client.GuiGraphicsExtractorAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

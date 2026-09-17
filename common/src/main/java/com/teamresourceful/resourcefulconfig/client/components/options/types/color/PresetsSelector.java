@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.ColorOptionWidget;
@@ -103,7 +104,7 @@ public class PresetsSelector extends BaseWidget {
 
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
-        if (event.input() != 0) return false;
+        if (event.input() != InputConstants.MOUSE_BUTTON_LEFT) return false;
         int size = (this.getWidth() - 18) / 8;
         int i = 0;
         for (HsbColor color : getColors()) {

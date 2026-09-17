@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -31,7 +32,7 @@ public class HueSelector extends BaseWidget {
 
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
-        if (event.input() != 0) return false;
+        if (event.input() != InputConstants.MOUSE_BUTTON_LEFT) return false;
         if (!isMouseOver(event.x(), event.y())) return false;
         float hue = Mth.clamp((float) (event.x() - getX()) / (float) getWidth(), 0f, 1f);
         this.state.set(this.state.get().withHue(hue));

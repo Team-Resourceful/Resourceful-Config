@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.base;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
@@ -125,7 +126,7 @@ public class ListWidget extends ContainerWidget {
 
     @Override
     public boolean mouseReleased(@NotNull MouseButtonEvent event) {
-        if (event.input() == 0) {
+        if (event.input() == InputConstants.MOUSE_BUTTON_LEFT) {
             this.scrolling = false;
         }
         return super.mouseReleased(event);

@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.api.client.options.ResourcefulConfigOptionUI;
 import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
@@ -45,8 +46,8 @@ public class ColorOptionWidget extends BaseWidget {
 
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.height, this.height);
-        graphics.fill(getX() + 1, getY() + 1, getX() + this.height - 1, getY() + this.height - 1, this.getter.getAsInt());
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModSprites.BUTTON, getX(), getY(), this.width, this.height);
+        graphics.fill(getX() + 1, getY() + 1, getX() + this.width - 1, getY() + this.height - 1, this.getter.getAsInt());
         this.applyCursor(graphics);
     }
 
@@ -138,7 +139,7 @@ public class ColorOptionWidget extends BaseWidget {
 
         @Override
         public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
-            if (event.button() != 0 || this.isMouseOver(event.x(), event.y())) {
+            if (event.button() != InputConstants.MOUSE_BUTTON_LEFT || this.isMouseOver(event.x(), event.y())) {
                 return super.mouseClicked(event, bl);
             }
             this.onClose();

@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.misc.draggable;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.api.types.info.TooltipProvider;
 import com.teamresourceful.resourcefulconfig.api.types.info.Translatable;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
@@ -97,7 +98,7 @@ public class DraggableItem<T> extends BaseWidget implements ListWidget.Item {
 
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
-        if (this.isHovered() && event.button() == 0 && event.x() >= getX() + getWidth() - 16) {
+        if (this.isHovered() && event.button() == InputConstants.MOUSE_BUTTON_LEFT && event.x() >= getX() + getWidth() - 16) {
             this.remove.run();
             return true;
         }

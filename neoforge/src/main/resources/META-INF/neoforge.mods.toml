@@ -8,7 +8,6 @@ issueTrackerURL = "https://github.com/Team-Resourceful/Resourceful-Config/issues
     modId = "resourcefulconfig"
     version = "${version}"
     displayName = "Resourcefulconfig"
-    logoFile = "icon.png"
     description = "A library for creating config files for your mod across multiple platforms."
 
 [[mixins]]
@@ -17,6 +16,6 @@ issueTrackerURL = "https://github.com/Team-Resourceful/Resourceful-Config/issues
 [[dependencies.resourcefulconfig]]
     modId = "neoforge"
     type = "required"
-    versionRange = "[26.2.0.0-beta,)"
+    versionRange = "[26.3.0.0-beta,)"
     ordering = "NONE"
     side = "BOTH"

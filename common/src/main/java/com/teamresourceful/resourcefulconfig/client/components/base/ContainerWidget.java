@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components.base;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -134,7 +135,7 @@ public abstract class ContainerWidget extends AbstractWidget implements Containe
             GuiEventListener guiEventListener = optional.get();
             if (guiEventListener.mouseClicked(event, bl)) {
                 this.setFocused(guiEventListener);
-                if (event.input() == 0) {
+                if (event.input() == InputConstants.MOUSE_BUTTON_LEFT) {
                     this.setDragging(true);
                 }
 

@@ -22,7 +22,7 @@ class MultilineTextInput extends MultilineTextState {
     }
 
     public boolean onMouseClick(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
             int lineX = Mth.floor(mouseX);
             int lineY = Mth.floor(mouseY / 9.0);
             MultilineStringView line = this.lines.get(Mth.clamp(lineY, 0, this.lines.size() - 1));

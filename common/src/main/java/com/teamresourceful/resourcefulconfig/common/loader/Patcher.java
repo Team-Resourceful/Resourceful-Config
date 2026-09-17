@@ -32,7 +32,7 @@ public class Patcher {
             if (version > currentVersion) {
                 throw new IllegalStateException("Patch version is greater than current version");
             }
-            patches.compute(version, (key, value) -> value == null ? patcher : andThen(value, patcher));
+            patches.compute(version, (_, value) -> value == null ? patcher : andThen(value, patcher));
         });
         return (version) -> patches.getOrDefault(version, UnaryOperator.identity());
     }

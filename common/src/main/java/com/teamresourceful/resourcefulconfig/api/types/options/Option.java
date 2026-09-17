@@ -54,7 +54,7 @@ public class Option<T extends Annotation, D> {
     public static final Option<ConfigOption.Select, Component> SELECT = Option.create(
             ConfigOption.Select.class,
             type -> type.isArray() && type.getComponentType().isEnum(),
-            (type, data) -> Component.translatable(data.value())
+            (_, data) -> Component.translatable(data.value())
     );
     public static final Option<ConfigOption.Separator, ConfigOption.Separator> SEPARATOR = Option.create(
             ConfigOption.Separator.class
@@ -62,21 +62,23 @@ public class Option<T extends Annotation, D> {
     public static final Option<ConfigOption.Regex, Pattern> REGEX = Option.create(
             ConfigOption.Regex.class,
             type -> type == String.class,
-            (type, data) -> Pattern.compile(data.value())
+            (_, data) -> Pattern.compile(data.value())
     );
+
+    @Deprecated
     public static final Option<ConfigOption.Keybind, ConfigOption.Keybind> KEYBIND = Option.create(
             ConfigOption.Keybind.class,
             type -> type == int.class || type == Integer.class
     );
     public static final Option<ConfigOption.SearchTerm, List<String>> SEARCH_TERM = Option.create(
             ConfigOption.SearchTerm.class,
-            type -> true,
-            (type, data) -> List.of(data.value())
+            _ -> true,
+            (_, data) -> List.of(data.value())
     );
     public static final Option<ConfigOption.Renderer, Identifier> RENDERER = Option.create(
             ConfigOption.Renderer.class,
-            type -> true,
-            (type, data) -> {
+            _ -> true,
+            (_, data) -> {
                 String value = data.value();
                 if (value.isEmpty()) return null;
                 return Identifier.tryParse(value);
@@ -113,13 +115,13 @@ public class Option<T extends Annotation, D> {
     }
 
     private static <T extends Annotation> Option<T, T> create(Class<T> annotation) {
-        Option<T, T> option = new Option<>(annotation, type -> true, (c, a) -> a);
+        Option<T, T> option = new Option<>(annotation, _ -> true, (_, a) -> a);
         REGISTERED.add(option);
         return option;
     }
 
     private static <T extends Annotation> Option<T, T> create(Class<T> annotation, Predicate<Class<?>> isAllowed) {
-        Option<T, T> option = new Option<>(annotation, isAllowed, (c, a) -> a);
+        Option<T, T> option = new Option<>(annotation, isAllowed, (_, a) -> a);
         REGISTERED.add(option);
         return option;
     }

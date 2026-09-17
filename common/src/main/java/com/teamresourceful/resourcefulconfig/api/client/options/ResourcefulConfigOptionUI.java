@@ -1,10 +1,13 @@
 package com.teamresourceful.resourcefulconfig.api.client.options;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.api.types.options.data.DraggableOptionEntry;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.DraggableListOptionWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.DropdownWidget;
+import com.teamresourceful.resourcefulconfig.client.components.options.types.KeybindOptionWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.SelectWidget;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
@@ -49,5 +52,17 @@ public class ResourcefulConfigOptionUI {
             Supplier<T> getter, Consumer<T> setter
     ) {
         return new DropdownWidget<>(title, options, getter, setter);
+    }
+
+    public static AbstractWidget key(
+            KeyMapping mapping
+    ) {
+        return new KeybindOptionWidget(
+            mapping::getTranslatedKeyMessage,
+            event -> mapping.setKey(event.map(
+                    it -> InputConstants.Type.MOUSE.getOrCreate(it.input()),
+                    it -> InputConstants.Type.KEYBOARD.getOrCreate(it.input())
+            ))
+        );
     }
 }

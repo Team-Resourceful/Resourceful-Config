@@ -1,16 +1,15 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.datafixers.util.Either;
 import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
-import com.teamresourceful.resourcefulconfig.client.utils.KeyCodeHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -21,30 +20,47 @@ public class KeybindOptionWidget extends BaseWidget {
     public static final int WIDTH = 80;
     public static final int HEIGHT = 16;
 
-    private final Supplier<Integer> getter;
-    private final Consumer<Integer> setter;
+    private final Supplier<Component> display;
+    private final Consumer<Either<MouseButtonEvent, KeyEvent>> setter;
 
     private boolean isEditing = false;
 
-    public KeybindOptionWidget(Supplier<Integer> getter, Consumer<Integer> setter) {
+    public KeybindOptionWidget(Supplier<Component> display, Consumer<Either<MouseButtonEvent, KeyEvent>> setter) {
         super(WIDTH, HEIGHT);
 
-        this.getter = getter;
+        this.display = display;
         this.setter = setter;
     }
 
+    public static KeybindOptionWidget forLegacy(Supplier<Integer> getter, Consumer<Integer> setter) {
+        return new KeybindOptionWidget(
+            () -> {
+                var key = getter.get();
+                if (key < 0) {
+                    return InputConstants.Type.MOUSE.getOrCreate(key + 100).getDisplayName();
+                } else if (key == 0) {
+                    return Component.literal("None");
+                } else {
+                    return InputConstants.Type.KEYBOARD.getOrCreate(key).getDisplayName();
+                }
+            },
+            event -> {
+                event.ifLeft(mouseEvent -> setter.accept(mouseEvent.input() - 100));
+                event.ifRight(keyEvent -> setter.accept(keyEvent.isEscape() ? 0 : keyEvent.input()));
+            }
+        );
+    }
+
     private Component getDisplay() {
-        int key = getter.get();
-        MutableComponent display = key == 0 ? Component.literal("None") : KeyCodeHelper.getKeyName(key).copy();
         if (this.isEditing) {
             boolean strikethrough = System.currentTimeMillis() / 500 % 2 == 0;
             return Component.literal("> ")
                     .withColor(UIConstants.TEXT_PARAGRAPH)
-                    .append(display.withStyle(style -> style.withUnderlined(strikethrough)
+                    .append(display.get().copy().withStyle(style -> style.withUnderlined(strikethrough)
                             .withColor(UIConstants.TEXT_TITLE)))
                     .append(Component.literal(" <"));
         }
-        return display;
+        return display.get();
     }
 
     @Override
@@ -76,7 +92,7 @@ public class KeybindOptionWidget extends BaseWidget {
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
         if (this.isEditing) {
-            this.setter.accept(-100 - event.input());
+            this.setter.accept(Either.left(event));
             this.isEditing = false;
             return true;
         }
@@ -86,7 +102,7 @@ public class KeybindOptionWidget extends BaseWidget {
     @Override
     public boolean keyPressed(@NotNull KeyEvent event) {
         if (this.isEditing) {
-            this.setter.accept(event.input() == InputConstants.KEY_ESCAPE ? 0 : event.input());
+            this.setter.accept(Either.right(event));
             this.isEditing = false;
             return true;
         }

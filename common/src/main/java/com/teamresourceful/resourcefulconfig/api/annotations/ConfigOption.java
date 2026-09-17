@@ -78,8 +78,13 @@ public class ConfigOption {
         String[] value() default {};
     }
 
+    /**
+     * @deprecated Keybinds should not be handled by the config system and instead should be in the vanilla keybind system.
+     * You can use the ResourcefulConfigUI to create a keybind option in your config screen, but the value should be stored in the vanilla keybind system.
+     */
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
+    @Deprecated
     public @interface Keybind {
 
 

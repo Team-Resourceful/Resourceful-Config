@@ -147,7 +147,7 @@ public final class Options {
                             false
                     ));
                 } else if (data.hasOption(Option.KEYBIND)) {
-                    widgets.add(new KeybindOptionWidget(entry::getInt, entry::setInt));
+                    widgets.add(KeybindOptionWidget.forLegacy(entry::getInt, entry::setInt));
                 } else {
                     widgets.add(new NumberOptionWidget<>(
                             entry::getInt, entry::setInt,

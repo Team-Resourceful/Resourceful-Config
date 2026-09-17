@@ -1,5 +1,6 @@
 package com.teamresourceful.resourcefulconfig.client.components;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigUI;
 import com.teamresourceful.resourcefulconfig.client.components.base.MultiLineTextWidget;
 import net.minecraft.client.Minecraft;
@@ -8,7 +9,6 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.layouts.SpacerElement;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
 
 import java.net.URI;
 
@@ -50,7 +50,7 @@ public class CustomLinkModal {
                             0, 0, (int) buttonWidth, 20,
                             CommonComponents.GUI_OPEN_IN_BROWSER,
                             () -> {
-                                Util.getPlatform().openUri(link);
+                                Blaze3D.openUri(URI.create(link));
                                 CustomLinkModal.close();
                             }
                     ));

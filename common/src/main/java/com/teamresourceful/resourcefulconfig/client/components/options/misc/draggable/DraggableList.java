@@ -1,12 +1,11 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.misc.draggable;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.teamresourceful.resourcefulconfig.client.components.base.ListWidget;
-import com.teamresourceful.resourcefulconfig.client.utils.KeyCodeHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,6 +17,8 @@ public class DraggableList<T> extends ListWidget {
     private int draggingIndex = -1;
     private Consumer<List<T>> onUpdate = _ -> {};
     private boolean canDelete = true;
+
+    private boolean leftMouseDown = false;
 
     public DraggableList(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -64,7 +65,7 @@ public class DraggableList<T> extends ListWidget {
     public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
 
-        if (!this.isMouseOver(mouseX, mouseY) && this.draggingIndex != -1 && !KeyCodeHelper.isMouseKeyPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+        if (!this.isMouseOver(mouseX, mouseY) && this.draggingIndex != -1 && !this.leftMouseDown) {
             this.draggingIndex = -1;
         }
 
@@ -113,8 +114,11 @@ public class DraggableList<T> extends ListWidget {
 
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean bl) {
+        this.leftMouseDown = this.leftMouseDown || event.input() == InputConstants.MOUSE_BUTTON_LEFT;
+
+
         if (super.mouseClicked(event, bl)) return true;
-        if (event.input() == 0) {
+        if (event.input() == InputConstants.MOUSE_BUTTON_LEFT) {
             this.draggingIndex = this.getItemOver(event.x(), event.y());
             if (this.draggingIndex != -1) {
                 Item item = this.items.get(this.draggingIndex);
@@ -127,7 +131,9 @@ public class DraggableList<T> extends ListWidget {
 
     @Override
     public boolean mouseReleased(@NotNull MouseButtonEvent event) {
-        if (event.input() == 0 && this.draggingIndex != -1) {
+        this.leftMouseDown = this.leftMouseDown && event.input() != InputConstants.MOUSE_BUTTON_LEFT;
+
+        if (event.input() == InputConstants.MOUSE_BUTTON_LEFT && this.draggingIndex != -1) {
             int newIndex = this.getItemOver(event.x(), event.y());
             if (newIndex != -1 && newIndex != this.draggingIndex) {
                 this.items.add(newIndex, this.items.remove(this.draggingIndex));

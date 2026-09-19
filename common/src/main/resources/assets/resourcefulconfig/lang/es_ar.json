@@ -29,10 +29,13 @@
     "rconfig.ui.constant.edit.object": "Editar Objeto",
     "rconfig.ui.constant.choose_item": "Elegir Elemento: ",
     "rconfig.ui.constant.add_item": "Agregar Elemento: ",
+    "rconfig.ui.constant.add_item.tooltip": "Agregar Elemento",
+    "rconfig.ui.constant.remove_item": "Eliminar Elemento",
+    "rconfig.ui.constant.move_up": "Subir",
+    "rconfig.ui.constant.move_down": "Bajar",
     "rconfig.ui.constant.mod_configs": "Configuraciones del Mod",
     "rconfig.ui.constant.mod_configs.description": "Seleccioná una configuración para ver o editar.",
 
-  
     "rconfig.color.preset.defaults": "Predeterminados",
     "rconfig.color.preset.recents": "Recientes",
     "rconfig.color.preset.mc_colors": "Colores de Texto"

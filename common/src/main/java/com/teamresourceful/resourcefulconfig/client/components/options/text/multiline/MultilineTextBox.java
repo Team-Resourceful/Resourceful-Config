@@ -9,12 +9,16 @@ import com.teamresourceful.resourcefulconfig.client.utils.State;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.IMEPreeditOverlay;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.PreeditEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 public class MultilineTextBox extends BaseWidget {
 
@@ -26,6 +30,8 @@ public class MultilineTextBox extends BaseWidget {
     private double scroll = - 1;
     private int lastHeight;
     private boolean scrollbarHovered = false;
+    private @Nullable IMEPreeditOverlay preeditOverlay;
+    private final Vector2i cursor = new Vector2i();
 
     public MultilineTextBox(State<String> state) {
         super(WIDTH, 16);
@@ -62,6 +68,8 @@ public class MultilineTextBox extends BaseWidget {
             if (line.contains(cursor)) {
                 var first = text.substring(0, cursor - line.start());
                 var cursorX = TextBoxStringUtils.width(this.font, first) + x;
+                this.cursor.x = cursorX;
+                this.cursor.y = y;
                 graphics.fill(cursorX, y, cursorX + 1, y + this.font.lineHeight, System.currentTimeMillis() % 1000 < 500 ? 0xFFFFFFFF : 0x00000000);
             }
 
@@ -118,8 +126,25 @@ public class MultilineTextBox extends BaseWidget {
             );
         }
 
+        if (this.preeditOverlay == null) {
+            if (this.active && this.visible && this.isFocused()) {
+                Minecraft.getInstance().textInputManager().setTextInputArea(this.cursor.x, this.cursor.y, this.cursor.x + 1, this.cursor.y + 10);
+            }
+        } else {
+            this.preeditOverlay.updateInputPosition(this.cursor.x, this.cursor.y);
+            graphics.setPreeditOverlay(this.preeditOverlay);
+        }
+
         this.applyCursor(graphics);
     }
+
+
+    @Override
+    public boolean preeditUpdated(@Nullable PreeditEvent event) {
+        this.preeditOverlay = event != null ? new IMEPreeditOverlay(event, this.font, 9 + 1) : null;
+        return true;
+    }
+
 
     @Override
     public void applyCursor(@NotNull GuiGraphicsExtractor graphics) {
@@ -184,5 +209,11 @@ public class MultilineTextBox extends BaseWidget {
 
     public boolean isVisible() {
         return this.visible;
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        Minecraft.getInstance().onTextInputFocusChange(this, focused);
+        super.setFocused(focused);
     }
 }

@@ -9,10 +9,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.IMEPreeditOverlay;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.PreeditEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
@@ -29,6 +31,7 @@ public class TextBox extends BaseWidget {
     private int displayPos;
     private int cursorPos;
     private int highlightPos;
+    private @Nullable IMEPreeditOverlay preeditOverlay;
 
     protected int placeholderColor = -1;
     protected String placeholder = "";
@@ -222,6 +225,13 @@ public class TextBox extends BaseWidget {
     }
 
     @Override
+    public boolean preeditUpdated(@org.jspecify.annotations.Nullable PreeditEvent event) {
+        this.preeditOverlay = event != null ? new IMEPreeditOverlay(event, this.font, 9 + 1) : null;
+        return true;
+    }
+
+
+    @Override
     public boolean charTyped(@NotNull CharacterEvent event) {
         if (!this.isVisible() || !this.isFocused()) {
             return false;
@@ -298,6 +308,15 @@ public class TextBox extends BaseWidget {
                 int p = l + TextBoxStringUtils.width(this.font, truncatedValue.substring(0, displayHighlightDiff));
                 this.renderHighlight(graphics, o, m - 1, p - 1, m + 1 + 9);
             }
+
+            if (this.preeditOverlay == null) {
+                if (this.active && this.visible && this.isFocused()) {
+                    Minecraft.getInstance().textInputManager().setTextInputArea(o - 1, m - 1, o, m + 11);
+                }
+            } else {
+                this.preeditOverlay.updateInputPosition(o - 1, m - 1);
+                graphics.setPreeditOverlay(this.preeditOverlay);
+            }
         }
 
         this.applyCursor(graphics);
@@ -373,5 +392,11 @@ public class TextBox extends BaseWidget {
     public void setPlaceholder(String placeholder, int color) {
         this.placeholder = placeholder;
         this.placeholderColor = color;
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        Minecraft.getInstance().onTextInputFocusChange(this, focused);
+        super.setFocused(focused);
     }
 }

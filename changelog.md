@@ -1,1 +1,1 @@
-- Update to 26.2 (J10a1n15)
+- Fix mixin name clashing causing crash with other mods (Noobanidus)

@@ -88,7 +88,7 @@ public class SaturationBrightnessSelector extends BaseWidget {
     ) {
         var access = (GuiGraphicsExtractorAccessor) graphics;
 
-        access.getGuiRenderState().addGuiElement(new GradientRenderState(
+        access.rconfig$getGuiRenderState().addGuiElement(new GradientRenderState(
                 new Matrix3x2f(graphics.pose()),
                 x, y, x + width, y + height,
                 topLeft, topRight, bottomLeft, bottomRight

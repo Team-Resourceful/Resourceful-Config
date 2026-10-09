@@ -35,7 +35,10 @@
     "rconfig.ui.constant.move_down": "Move Down",
     "rconfig.ui.constant.mod_configs": "Mod Configs",
     "rconfig.ui.constant.mod_configs.description": "Select a config to view or edit.",
-
+    "rconfig.ui.constant.select": "Select",
+    "rconfig.ui.constant.none": "None",
+    "rconfig.ui.constant.remove": "Remove",
+    "rconfig.ui.constant.search_placeholder": "Search...",
 
     "rconfig.color.preset.defaults": "Defaults",
     "rconfig.color.preset.recents": "Recents",

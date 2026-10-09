@@ -39,7 +39,7 @@ public class KeybindOptionWidget extends BaseWidget {
                 if (key < 0) {
                     return InputConstants.Type.MOUSE.getOrCreate(key + 100).getDisplayName();
                 } else if (key == 0) {
-                    return Component.literal("None");
+                    return UIConstants.NONE;
                 } else {
                     return InputConstants.Type.KEYBOARD.getOrCreate(key).getDisplayName();
                 }

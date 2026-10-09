@@ -26,4 +26,9 @@ public class UIConstants {
     public static final Component MOVE_DOWN = Component.translatable("rconfig.ui.constant.move_down");
     public static final Component MOD_CONFIGS = Component.translatable("rconfig.ui.constant.mod_configs").withColor(UIConstants.TEXT_TITLE);
     public static final Component MOD_CONFIGS_DESCRIPTION = Component.translatable("rconfig.ui.constant.mod_configs.description").withColor(UIConstants.TEXT_PARAGRAPH);
+    public static final Component SELECT = Component.translatable("rconfig.ui.constant.select");
+    public static final Component NONE = Component.translatable("rconfig.ui.constant.none");
+    public static final Component REMOVE = Component.translatable("rconfig.ui.constant.remove");
+    public static final Component SEARCH_PLACEHOLDER = Component.translatable("rconfig.ui.constant.search_placeholder");
+
 }

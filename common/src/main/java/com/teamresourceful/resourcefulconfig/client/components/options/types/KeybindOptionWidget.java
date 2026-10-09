@@ -39,7 +39,7 @@ public class KeybindOptionWidget extends BaseWidget {
                 if (key < 0) {
                     return InputConstants.Type.MOUSE.getOrCreate(key + 100).getDisplayName();
                 } else if (key == 0) {
-                    return Component.literal("None");
+                    return UIConstants.NONE;
                 } else {
                     return InputConstants.Type.KEYBOARD.getOrCreate(key).getDisplayName();
                 }
@@ -54,11 +54,10 @@ public class KeybindOptionWidget extends BaseWidget {
     private Component getDisplay() {
         if (this.isEditing) {
             boolean strikethrough = System.currentTimeMillis() / 500 % 2 == 0;
-            return Component.literal("> ")
-                    .withColor(UIConstants.TEXT_PARAGRAPH)
-                    .append(display.get().copy().withStyle(style -> style.withUnderlined(strikethrough)
+            return  UIConstants.KEYBIND_OPEN.copy().append(display.get().copy().withStyle(style -> style.withUnderlined(strikethrough)
                             .withColor(UIConstants.TEXT_TITLE)))
-                    .append(Component.literal(" <"));
+                    .append(UIConstants.KEYBIND_CLOSE);
+
         }
         return display.get();
     }

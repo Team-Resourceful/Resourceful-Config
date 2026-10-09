@@ -98,7 +98,7 @@ public final class Options {
                         widgets.add(DraggableListOptionWidget.of(entry, data));
                     } else {
                         widgets.add(ResourcefulConfigOptionUI.select(
-                                data.getOrDefaultOption(Option.SELECT, Component.literal("Select")),
+                                data.getOrDefaultOption(Option.SELECT, UIConstants.SELECT),
                                 List.of(ModUtils.getEnumConstants(entry.objectType())),
                                 () -> List.of(entry.getArray()),
                                 it -> entry.setArray(it.toArray())

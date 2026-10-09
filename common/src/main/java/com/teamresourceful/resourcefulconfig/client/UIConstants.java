@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.client;
 
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class UIConstants {
     public static final int BACKGROUND = 0xFF131517;
@@ -26,4 +27,27 @@ public class UIConstants {
     public static final Component MOVE_DOWN = Component.translatable("rconfig.ui.constant.move_down");
     public static final Component MOD_CONFIGS = Component.translatable("rconfig.ui.constant.mod_configs").withColor(UIConstants.TEXT_TITLE);
     public static final Component MOD_CONFIGS_DESCRIPTION = Component.translatable("rconfig.ui.constant.mod_configs.description").withColor(UIConstants.TEXT_PARAGRAPH);
+    public static final Component SELECT = Component.translatable("rconfig.ui.constant.select");
+    public static final Component NONE = Component.translatable("rconfig.ui.constant.none");
+    public static final Component REMOVE = Component.translatable("rconfig.ui.constant.remove");
+    public static final Component SEARCH_PLACEHOLDER = Component.translatable("rconfig.ui.constant.search_placeholder");
+
+    public static final Component LINK_OPEN = Component.translatable("rconfig.ui.constant.link.open").withColor(0xFFFFFF);
+    public static final Component LINK_VERIFICATION = Component.translatable("rconfig.ui.constant.link.verification").withColor(0xFFFFFF);
+    public static final String LINK = "rconfig.ui.constant.link";
+    public static final MutableComponent KEYBIND_OPEN = Component.translatable("rconfig.ui.constant.keybind.open").withColor(UIConstants.TEXT_PARAGRAPH);
+    public static final MutableComponent KEYBIND_CLOSE = Component.translatable("rconfig.ui.constant.keybind.close").withColor(UIConstants.TEXT_PARAGRAPH);
+
+    public static final String RANGE = "rconfig.ui.constant.range";
+    public static final String RANGE_MAX = "rconfig.ui.constant.range.max";
+    public static final String RANGE_MIN = "rconfig.ui.constant.range.min";
+    public static final String COLOR_EYEDROPPER = "rconfig.ui.constant.eyedropper";
+    public static final MutableComponent PRESET_SELECTOR_OPEN = Component.translatable("rconfig.ui.constant.preset_selector.open");
+    public static final MutableComponent PRESET_SELECTOR_CLOSE = Component.translatable("rconfig.ui.constant.preset_selector.close");
+    public static final String PRESET_SELECTOR = "rconfig.ui.constant.preset_selector";
+
+
+    public static MutableComponent argComponent(String key, Object... args) {
+        return Component.translatable(key, args);
+    }
 }

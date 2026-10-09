@@ -1,6 +1,7 @@
 package com.teamresourceful.resourcefulconfig.client.components.options.types.color;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.BaseWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.types.ColorOptionWidget;
@@ -10,7 +11,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -89,9 +89,11 @@ public class PresetsSelector extends BaseWidget {
                 Screen screen = Minecraft.getInstance().gui.screen();
                 if (screen != null) {
                     if (!withAlpha) rgba &= 0x00FFFFFF;
-                    var text = Component.literal("[").withColor(rgba | 0xFF000000)
-                            .append(Component.literal(String.format(Locale.ROOT, "#%06X", rgba)).withColor(0xFFFFFFFF))
-                            .append(Component.literal("]")).withColor(rgba | 0xFF000000);
+
+
+                    var text = UIConstants.PRESET_SELECTOR_OPEN.withColor(rgba | 0xFF000000)
+                            .append(UIConstants.argComponent(UIConstants.PRESET_SELECTOR, String.format(Locale.ROOT, "#%06X", rgba)).withColor(0xFFFFFFFF))
+                            .append(UIConstants.PRESET_SELECTOR_CLOSE.withColor(rgba | 0xFF000000));
 
                     graphics.setTooltipForNextFrame(text, mouseX, mouseY);
                 }

@@ -1,0 +1,42 @@
+{
+  "rconfig.server.title": "Serveur dédié",
+  "rconfig.server.desc": "Propriétés pouvant être mises à jour en temps réel.",
+  "rconfig.server.wiki": "Wiki",
+
+  "rconfig.server.properties.white-list": "Liste blanche",
+  "rconfig.server.properties.white-list.desc": "Si cette option est activée, seuls les utilisateurs présents dans la liste blanche peuvent accéder au serveur.",
+
+  "rconfig.server.properties.max-players": "Nombre maximum de joueurs",
+  "rconfig.server.properties.max-players.desc": "Le nombre maximum de joueurs pouvant jouer en même temps sur le serveur.",
+
+  "rconfig.server.properties.motd": "Message du jour",
+  "rconfig.server.properties.motd.desc": "Le message affiché dans la liste des serveurs.",
+
+  "rconfig.server.properties.allow-flight": "Autoriser le vol",
+  "rconfig.server.properties.allow-flight.desc": "Si cette option est activée, les joueurs peuvent voler sur le serveur. Cette option est généralement nécessaire sur un serveur moddé.",
+
+  "rconfig.server.properties.pvp": "Joueur contre joueur",
+  "rconfig.server.properties.pvp.desc": "Si cette option est activée, les joueurs peuvent s'attaquer entre eux.",
+
+  "rconfig.server.properties.enforce-whitelist": "Forcer la liste blanche",
+  "rconfig.server.properties.enforce-whitelist.desc": "Si cette option est activée, seuls les utilisateurs de la liste blanche peuvent accéder au serveur. Si des utilisateurs non présents dans la liste blanche sont sur le serveur, ils seront expulsés.",
+
+  "rconfig.ui.constant.close": "Fermer",
+  "rconfig.ui.constant.reset": "Réinitialiser",
+  "rconfig.ui.constant.edit": "Modifier",
+  "rconfig.ui.constant.edit.string": "Modifier le texte",
+  "rconfig.ui.constant.edit.list": "Modifier la liste",
+  "rconfig.ui.constant.edit.object": "Modifier l'objet",
+  "rconfig.ui.constant.choose_item": "Choisir un objet : ",
+  "rconfig.ui.constant.add_item": "Ajouter un objet : ",
+  "rconfig.ui.constant.add_item.tooltip": "Ajouter un objet",
+  "rconfig.ui.constant.remove_item": "Supprimer un objet",
+  "rconfig.ui.constant.move_up": "Déplacer vers le haut",
+  "rconfig.ui.constant.move_down": "Déplacer vers le bas",
+  "rconfig.ui.constant.mod_configs": "Configurations des mods",
+  "rconfig.ui.constant.mod_configs.description": "Sélectionner une configuration pour la consulter ou la modifier.",
+
+  "rconfig.color.preset.defaults": "Valeurs par défaut",
+  "rconfig.color.preset.recents": "Récents",
+  "rconfig.color.preset.mc_colors": "Couleurs du texte"
+}

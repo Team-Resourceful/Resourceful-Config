@@ -2,6 +2,7 @@ package com.teamresourceful.resourcefulconfig.client.components.options.types.co
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import com.teamresourceful.resourcefulconfig.client.components.ModSprites;
 import com.teamresourceful.resourcefulconfig.client.components.base.SpriteButton;
 import com.teamresourceful.resourcefulconfig.client.screens.base.OverlayScreen;
@@ -11,7 +12,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,7 +66,7 @@ public class EyedropperButton extends SpriteButton {
 
             int pixel = this.image.getPixel(pixelX, pixelY);
 
-            graphics.setTooltipForNextFrame(Component.literal(String.format("#%08X", pixel)).withColor(pixel), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(UIConstants.argComponent(UIConstants.COLOR_EYEDROPPER, String.format("#%08X", pixel)).withColor(pixel), mouseX, mouseY);
         }
 
         @Override

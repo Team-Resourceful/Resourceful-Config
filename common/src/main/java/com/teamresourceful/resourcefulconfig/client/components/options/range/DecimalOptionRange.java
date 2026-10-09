@@ -4,6 +4,7 @@ import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -44,17 +45,17 @@ public record DecimalOptionRange(DoubleConsumer setter, DoubleSupplier getter, d
 
     @Override
     public Component toComponent() {
-        return Component.literal(String.format("%.2f", this.getter.getAsDouble()));
+        return UIConstants.argComponent(UIConstants.RANGE, String.format("%.2f", this.getter.getAsDouble()));
     }
 
     @Override
     public Component minComponent() {
-        return Component.literal(String.format("%.2f", this.min));
+        return UIConstants.argComponent(UIConstants.RANGE_MIN, String.format("%.2f", this.min));
     }
 
     @Override
     public Component maxComponent() {
-        return Component.literal(String.format("%.2f", this.max));
+        return UIConstants.argComponent(UIConstants.RANGE_MAX, String.format("%.2f", this.max));
     }
 
     @Override

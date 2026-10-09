@@ -40,6 +40,21 @@
     "rconfig.ui.constant.remove": "Remove",
     "rconfig.ui.constant.search_placeholder": "Search...",
 
+    "rconfig.ui.constant.link.open": "Open Link",
+    "rconfig.ui.constant.link.verification": "Do you want to open this link?",
+    "rconfig.ui.constant.link": "%s",
+
+    "rconfig.ui.constant.keybind.open": ">",
+    "rconfig.ui.constant.keybind.close": "<",
+
+    "rconfig.ui.constant.range": "%s",
+    "rconfig.ui.constant.range.max": "%s",
+    "rconfig.ui.constant.range.min": "%s",
+    "rconfig.ui.constant.eyedropper": "%s",
+    "rconfig.ui.constant.preset_selector.open": "[",
+    "rconfig.ui.constant.preset_selector.close": "]",
+    "rconfig.ui.constant.preset_selector": "%s",
+
     "rconfig.color.preset.defaults": "Defaults",
     "rconfig.color.preset.recents": "Recents",
     "rconfig.color.preset.mc_colors": "Text Colors"

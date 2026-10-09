@@ -4,6 +4,7 @@ import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 import com.teamresourceful.resourcefulconfig.api.types.options.Option;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryData;
 import com.teamresourceful.resourcefulconfig.api.types.entries.ResourcefulConfigValueEntry;
+import com.teamresourceful.resourcefulconfig.client.UIConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -72,18 +73,19 @@ public record WholeOptionRange(LongConsumer setter, LongSupplier getter, long mi
 
     @Override
     public Component toComponent() {
-        return Component.literal(String.valueOf(this.getter.getAsLong()));
+        return UIConstants.argComponent(UIConstants.RANGE, String.valueOf(this.getter.getAsLong()));
     }
 
     @Override
     public Component minComponent() {
-        return Component.literal(String.valueOf(this.min));
+        return UIConstants.argComponent(UIConstants.RANGE_MIN, String.valueOf(this.min));
     }
 
     @Override
     public Component maxComponent() {
-        return Component.literal(String.valueOf(this.max));
+        return UIConstants.argComponent(UIConstants.RANGE_MAX, String.valueOf(this.max));
     }
+
 
     @Override
     public void setPercent(double value) {

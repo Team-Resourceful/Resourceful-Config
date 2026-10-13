@@ -8,7 +8,7 @@ import com.teamresourceful.resourcefulconfig.client.components.categories.Catego
 import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
-import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
+import com.teamresourceful.resourcefulconfig.client.components.options.SeparatorItem;import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
-import org.jetbrains.annotations.ApiStatus;
+import net.minecraft.network.chat.Component;import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,12 +102,32 @@ public class ConfigScreen extends Screen implements CloseableScreen {
 
     public void updateOptions() {
         this.optionsList.clear();
-        List<ResourcefulConfigElement> elements = new ArrayList<>();
-        for (ResourcefulConfigElement element : this.config.elements()) {
-            if (!this.context.fulfillsSearch(element)) continue;
-            elements.add(element);
+        Options.populateOptions(this.optionsList, matching(this.config));
+
+        if (this.context.getQuery().isBlank()) { return; }
+        addCategoryResults(this.config, "");
+
+    }
+
+    private void addCategoryResults(ResourcefulConfig parent, String parentPath) {
+        for (ResourcefulConfig category : parent.categories().values()) {
+            if (category.info().isHidden()) continue;
+            if (!this.context.fulfillsSearch(category)) continue;
+
+            String path = parentPath.isEmpty() ? title(category) : parentPath + " > " + title(category);
+            List<ResourcefulConfigElement> hits = matching(category);
+            if (!hits.isEmpty()) {
+                this.optionsList.add(new SeparatorItem(Component.literal(path), Component.empty()));
+                Options.populateOptions(this.optionsList, hits);
+            }
+            addCategoryResults(category, path);
         }
-        Options.populateOptions(this.optionsList, elements);
+    }
+    private List<ResourcefulConfigElement> matching(ResourcefulConfig config) {
+        return config.elements().stream().filter(this.context::fulfillsSearch).toList();
+    }
+    private static String title(ResourcefulConfig config) {
+        return config.info().title().toLocalizedString();
     }
 
     public void updateCategories() {

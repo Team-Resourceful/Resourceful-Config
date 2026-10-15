@@ -8,7 +8,8 @@ import com.teamresourceful.resourcefulconfig.client.components.categories.Catego
 import com.teamresourceful.resourcefulconfig.client.components.header.HeaderWidget;
 import com.teamresourceful.resourcefulconfig.client.components.options.Options;
 import com.teamresourceful.resourcefulconfig.client.components.options.OptionsListWidget;
-import com.teamresourceful.resourcefulconfig.client.components.options.SeparatorItem;import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
+import com.teamresourceful.resourcefulconfig.client.components.options.SeparatorItem;
+import com.teamresourceful.resourcefulconfig.client.components.options.types.StringOptionWidget;
 import com.teamresourceful.resourcefulconfig.client.screens.base.CloseableScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

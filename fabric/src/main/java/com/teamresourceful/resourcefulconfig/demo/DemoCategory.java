@@ -2,13 +2,11 @@ package com.teamresourceful.resourcefulconfig.demo;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.Category;
 import com.teamresourceful.resourcefulconfig.api.annotations.ConfigEntry;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption;
 
-@ConfigOption.Hidden
-@Category("category")
+@Category(value = "category", categories = { DemoSubCategory.class })
 public class DemoCategory {
 
-    // This category will be hidden
+    // TEMP: made visible with a sub category to test recursive search
 
     @ConfigEntry(
             id = "demoInteger",
@@ -16,3 +14,5 @@ public class DemoCategory {
     )
     public static int demoInteger = 1;
 }
+
+

@@ -29,6 +29,10 @@
   "rconfig.ui.constant.edit.object": "Редактировать объект",
   "rconfig.ui.constant.choose_item": "Выбрать предмет: ",
   "rconfig.ui.constant.add_item": "Добавить предмет: ",
+  "rconfig.ui.constant.add_item.tooltip": "Добавить предмет",
+  "rconfig.ui.constant.remove_item": "Удалить предмет",
+  "rconfig.ui.constant.move_up": "Переместить вверх",
+  "rconfig.ui.constant.move_down": "Переместить вниз",
   "rconfig.ui.constant.mod_configs": "Настройки модов",
   "rconfig.ui.constant.mod_configs.description": "Выберите конфигурацию для просмотра или редактирования.",
 

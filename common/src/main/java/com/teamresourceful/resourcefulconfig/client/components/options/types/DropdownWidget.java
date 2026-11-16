@@ -160,7 +160,7 @@ public class DropdownWidget<T> extends BaseWidget {
                     GuiGraphicsExtractor.HoveredTextEffects.NONE
             ).acceptScrollingWithDefaultCenter(
                     Translatable.toComponent(this.option).copy().withColor(color),
-                    getX() + 4, getX() + getWidth() - 16,
+                    getX() + 4, getX() + getWidth() - 4,
                     getY() + 1, getY() + getHeight() - 1
             );
 
